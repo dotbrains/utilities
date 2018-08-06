@@ -8,10 +8,10 @@ In order to use [`utils.sh`](utils.sh) you must `source` the script at the begin
 
 Do this using the following code snippet:
 
-`source <(curl -s "")`
+`source <(curl -s "https://github.com/nicholasadamou/Dotfile-Utilities/raw/master/utils.sh")`
 
 -   _This assumes `curl` is installed on you're system._
 
 **Note**: _Due to an [issue pertaining to bash 3.2 on MacOS](https://stackoverflow.com/a/32596626/5290011) please use the following snippet instead:_
 
-`source /dev/stdin <<<"$(curl -s "")"`
+`source /dev/stdin <<<"$(curl -s "https://github.com/nicholasadamou/Dotfile-Utilities/raw/master/utils.sh")"`
