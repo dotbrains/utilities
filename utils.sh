@@ -77,15 +77,15 @@ append_to_bashrc() {
 cmd_exists() {
 
     LOCAL_BASH_CONFIG_FILE="$HOME/.bash.local"
-    
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    
+
     # Check if `.bash.local` exists within the `$HOME` directory
-    
+
     if [ -f "$LOCAL_BASH_CONFIG_FILE" ]; then
         . "$LOCAL_BASH_CONFIG_FILE"
     fi
-    
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     command -v "$1" &> /dev/null
@@ -229,7 +229,7 @@ is_connected_to_internet() {
     else
         return 0
     fi
-    
+
 }
 
 read_os_name() {
@@ -369,7 +369,7 @@ symlink() {
         if ! $skipQuestions; then
 
             ask_for_confirmation "'$targetFile' already exists, do you want to overwrite it?"
-            
+
             if answer_is_yes; then
 
                 sudo rm -rf "$targetFile"
@@ -571,7 +571,7 @@ function extract {
     else
         echo "'$1' is not a valid file"
     fi
-    
+
 }
 
 #see: https://stackoverflow.com/a/8106460/5290011
@@ -596,7 +596,7 @@ uncomment_str() {
     KEY="$2"
 
     sed -i "$FILE" -e "/$KEY/s/#//g"
-    
+
 }
 
 # see: https://unix.stackexchange.com/a/416596/173825
@@ -607,7 +607,7 @@ add_value_and_uncomment() {
     VALUE="$3"
 
     sed -i "$FILE" -e "/^$KEY/{s/.//; s|.$|$VALUE\"|}"
-    
+
 }
 
 replace_str() {
@@ -618,7 +618,7 @@ replace_str() {
     REPLACEMENT="$4"
 
 	sed -i "$FILE" -e "/$KEY/s/$PATTERN/$REPLACEMENT/g"
-    
+
 }
 
 jq_replace() {
@@ -634,7 +634,7 @@ jq_replace() {
 
 		jq ".\"$field\" |= \"$value\"" "$x" > tmp.$$.json && mv tmp.$$.json "$x"
 	fi
-    
+
 }
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -686,16 +686,16 @@ add_gpg_key_with_dearmor() {
 
     sudo curl -s "$1" | gpg --dearmor > "$2" \
         && sudo mv "$2" /etc/apt/trusted.gpg.d/"$2"
-        
+
 }
 
 add_to_source_list() {
 
-    
+
     if ! [ -e "/etc/apt/sources.list.d/$2" ]; then
         sudo sh -c "printf 'deb $1' >> '/etc/apt/sources.list.d/$2'" \
             && sudo apt update --fix-missing &> /dev/null
-    fi 
+    fi
 
 }
 
@@ -736,25 +736,25 @@ remove_system_package() {
 
     declare -r PACKAGE_READABLE_NAME="$1"
     local PACKAGE="$2"
-    
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    
+
     execute \
         "sudo apt remove $PACKAGE -qqy \
             && sudo apt purge $PACKAGE -qqy \
             && sudo apt autoremove -qqy \
             && sudo apt clean" \
         "APT remove ($PACKAGE_READABLE_NAME)"
-        
+
 }
 
 remove_package() {
 
     declare -r PACKAGE_READABLE_NAME="$1"
     local PACKAGE="$2"
-    
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    
+
     if package_is_installed "$PACKAGE"; then
         execute \
             "sudo apt remove $PACKAGE -qqy \
@@ -762,14 +762,14 @@ remove_package() {
                 && sudo apt autoremove -qqy \
                 && sudo apt clean" \
             "APT remove ($PACKAGE_READABLE_NAME)"
-    else 
+    else
         print_warning "($PACKAGE_READABLE_NAME) is not installed"
     fi
 
 }
 
 upgrade_package() {
-    
+
     declare -r PACKAGE_READABLE_NAME="$1"
     declare -r PACKAGE="$2"
 
@@ -800,7 +800,7 @@ install_package() {
 apt_install_from_file() {
 
     declare -r FILE_PATH="$1"
-    
+
     declare -A regex
     regex["comment"]='^#(.*)'
     regex["ppa"]='ppa "(.*)"'
@@ -817,11 +817,11 @@ apt_install_from_file() {
     # Install package(s)
 
     if [ -e "$FILE_PATH" ]; then
-        
+
         # Update & upgrade system prior to installing packages
         apt_update
         apt_upgrade
-        
+
         printf "\n"
 
         cat < "$FILE_PATH" | while read -r LINE; do
@@ -839,33 +839,33 @@ apt_install_from_file() {
                 TARGET_PATH=${BASH_REMATCH[3]}
                 FILE_NAME=${BASH_REMATCH[4]}
                 DEB_FILE_PATH="$TARGET_PATH/$FILE_NAME"
-                
+
                 install_deb "$URL" "$DEB_FILE_PATH" "$PACKAGE_READABLE_NAME"
             elif [[ $LINE =~ ${regex[gpg_dearmor]} ]]; then
                 FILE_NAME=${BASH_REMATCH[1]}
                 URL=${BASH_REMATCH[2]}
-                
+
                 add_gpg_key_with_dearmor "$URL" "$FILE_NAME"
             elif [[ $LINE =~ ${regex[gpg]} ]]; then
                 URL=${BASH_REMATCH[1]}
-                
+
                 add_key "$URL"
             elif [[ $LINE =~ ${regex[source]} ]]; then
                 FILE_NAME=${BASH_REMATCH[1]}
                 DATA=${BASH_REMATCH[2]}
-                
+
                 add_to_source_list "$DATA" "$FILE_NAME"
             elif [[ $LINE =~ ${regex[remove]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
-                
+
                 remove_package "$PACKAGE" "$PACKAGE"
             elif [[ $LINE =~ ${regex[remove_system]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
-                
+
                 remove_system_package "$PACKAGE" "$PACKAGE"
             fi
         done
-        
+
         printf "\n"
 
     fi
@@ -1067,9 +1067,9 @@ is_pyenv_plugin_installed() {
 
     local PLUGIN_READABLE_NAME="$1"
     local PYENV_PLUGINS_DIRECTORY="$HOME/.pyenv/plugins/"
-    
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    
+
     if [ ! -d "$PYENV_PLUGINS_DIRECTORY/$PLUGIN_READABLE_NAME" ]; then
         return 1
     fi
@@ -1085,23 +1085,23 @@ pyenv_install() {
         cut -d "." -f1
     )"
     local PYENV_PLUGINS_DIRECTORY="$HOME/.pyenv/plugins/"
-    
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    
+
     # Check if `pyenv` is installed.
 
     is_pyenv_installed || return 1
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    
+
     # Make sure the pyenv plugin's directory exists
-    
+
     if [ ! -d "$PYENV_PLUGINS_DIRECTORY" ]; then
         mkdir -p "$PYENV_PLUGINS_DIRECTORY"
     fi
-    
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    
+
     if ! is_pyenv_plugin_installed "$PLUGIN_READABLE_NAME"; then
         execute \
             "cd $PYENV_PLUGINS_DIRECTORY \
@@ -1110,7 +1110,7 @@ pyenv_install() {
     else
          print_success "($PLUGIN_READABLE_NAME) is already installed"
     fi
-    
+
 }
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1154,7 +1154,7 @@ brew_cleanup() {
 brew_bundle_install() {
 
     declare -r FILE_PATH="$1"
-    
+
     local LOCAL_BASH_CONFIG_FILE="$HOME/.bash.local"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1176,7 +1176,7 @@ brew_install() {
     declare -r CMD="$3"
     declare -r FORMULA="$1"
     declare -r TAP_VALUE="$2"
-    
+
     local LOCAL_BASH_CONFIG_FILE="$HOME/.bash.local"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1201,7 +1201,7 @@ brew_install() {
 
     # Install the specified formula.
 
-    if brew "$CMD" list "$FORMULA" &> /dev/null; then
+    if brew "$CMD" list | grep "$FORMULA" &> /dev/null; then
         print_success "$FORMULA"
     else
         execute \
@@ -1233,18 +1233,18 @@ brew_tap() {
     local LOCAL_BASH_CONFIG_FILE="$HOME/.bash.local"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    
+
     . "$LOCAL_BASH_CONFIG_FILE" \
         && brew tap "$1" &> /dev/null
 
 }
 
 brew_update() {
-    
+
     local LOCAL_BASH_CONFIG_FILE="$HOME/.bash.local"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    
+
     execute \
         ". $LOCAL_BASH_CONFIG_FILE \
             && brew update" \
@@ -1304,7 +1304,7 @@ is_npm_pkg_installed() {
 npm_install() {
 
     declare -r PACKAGE="$1"
-    
+
     local LOCAL_BASH_CONFIG_FILE="$HOME/.bash.local"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1537,7 +1537,7 @@ is_tacklebox_installed() {
 
 is_ruby_installed() {
 
-    if ! cmd_exists "gem"; then 
+    if ! cmd_exists "gem"; then
         return 1
     fi
 
@@ -1546,7 +1546,7 @@ is_ruby_installed() {
 gem_install() {
 
     local gem="$1"
-    
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     # Check if `ruby` is installed.
@@ -1554,7 +1554,7 @@ gem_install() {
     is_ruby_installed || return 1
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    
+
     if ! gem query -i -n "$gem" > /dev/null 2>&1; then
         execute \
             "sudo gem install $gem" \
@@ -1562,7 +1562,7 @@ gem_install() {
     else
         print_success "($gem) is already installed"
     fi
-    
+
 }
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1571,7 +1571,7 @@ gem_install() {
 
 is_go_installed() {
 
-    if ! cmd_exists "go"; then 
+    if ! cmd_exists "go"; then
         return 1
     fi
 
@@ -1584,7 +1584,7 @@ go_install() {
         echo $package | \
         cut -d "/" -f3
     )"
-    
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     # Check if `go` is installed.
@@ -1592,7 +1592,7 @@ go_install() {
     is_go_installed || return 1
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    
+
     if ! ls "$GOBIN" | grep "$PACKAGE_READABLE_NAME" > /dev/null 2>&1; then
         execute \
             "go get $package" \
@@ -1600,5 +1600,5 @@ go_install() {
     else
         print_success "($PACKAGE_READABLE_NAME) is already installed"
     fi
-    
+
 }
