@@ -1202,7 +1202,7 @@ brew_install() {
     # Install the specified formula.
 
     if brew "$CMD" list | grep "$FORMULA" &> /dev/null; then
-        print_success "$FORMULA"
+        print_success "($FORMULA) is already installed"
     else
         execute \
             ". $LOCAL_BASH_CONFIG_FILE \
