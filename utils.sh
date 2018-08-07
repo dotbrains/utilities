@@ -432,6 +432,10 @@ print_error() {
 print_error_stream() {
 
     while read -r line; do
+        if [[ -z "$line" ]]; then
+            continue;
+        fi
+
         print_error "↳ ERROR: $line"
     done
 
