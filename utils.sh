@@ -293,6 +293,8 @@ get_os() {
         os="macos"
     elif [ "$kernelName" == "Linux" ] && [ -e "/etc/os-release" ] || [ -e "/usr/lib/os-release" ]; then
         if [ "$(read_os_name)" == "ubuntu" ]; then
+            os="ubuntu"
+
             if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
                 os="windows"
             fi
@@ -892,7 +894,7 @@ install_deb() {
 
         if ! package_is_installed "$PACKAGE"; then
             execute \
-            "wget $URL -O $FILE_PATH && \
+            "wget $URL -qO $FILE_PATH && \
             sudo dpkg -i $FILE_PATH && sudo apt install -f && \
             sudo rm -rf $FILE_PATH && sudo apt autoremove -qqy" \
             "$PACKAGE_READABLE_NAME"
