@@ -894,10 +894,10 @@ install_deb() {
 
         if ! package_is_installed "$PACKAGE"; then
             execute \
-            "wget $URL -qO $FILE_PATH && \
-            sudo dpkg -i $FILE_PATH && sudo apt install -f && \
-            sudo rm -rf $FILE_PATH && sudo apt autoremove -qqy" \
-            "$PACKAGE_READABLE_NAME"
+                "wget $URL -qO $FILE_PATH && \
+                sudo dpkg -i $FILE_PATH && sudo apt install -f && \
+                sudo rm -rf $FILE_PATH && sudo apt autoremove -qqy" \
+                "$PACKAGE_READABLE_NAME"
         else
             print_success "($PACKAGE_READABLE_NAME) is already installed."
         fi
