@@ -890,7 +890,7 @@ install_deb() {
 
     # Install deb
 
-    if [ -e "$FILE_PATH" ]; then
+    if [ ! -e "$FILE_PATH" ]; then
 
         if ! package_is_installed "$PACKAGE"; then
             execute \
