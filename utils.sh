@@ -846,7 +846,7 @@ apt_install_from_file() {
                 FILE_NAME=${BASH_REMATCH[4]}
                 DEB_FILE_PATH="$TARGET_PATH/$FILE_NAME"
 
-                install_deb "$URL" "$DEB_FILE_PATH" "$PACKAGE_READABLE_NAME"
+                install_deb "$URL" "$DEB_FILE_PATH" "$PACKAGE_READABLE_NAME" "$PACKAGE_READABLE_NAME"
             elif [[ $LINE =~ ${regex[gpg_dearmor]} ]]; then
                 FILE_NAME=${BASH_REMATCH[1]}
                 URL=${BASH_REMATCH[2]}
