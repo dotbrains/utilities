@@ -846,7 +846,7 @@ apt_install_from_file() {
                 FILE_NAME=${BASH_REMATCH[4]}
                 DEB_FILE_PATH="$TARGET_PATH/$FILE_NAME"
 
-                install_deb "$URL" "$DEB_FILE_PATH" "$PACKAGE_READABLE_NAME" "$PACKAGE_READABLE_NAME"
+                install_gdebi "$URL" "$DEB_FILE_PATH" "$PACKAGE_READABLE_NAME" "$PACKAGE_READABLE_NAME"
             elif [[ $LINE =~ ${regex[gpg_dearmor]} ]]; then
                 FILE_NAME=${BASH_REMATCH[1]}
                 URL=${BASH_REMATCH[2]}
@@ -876,6 +876,39 @@ apt_install_from_file() {
 
     fi
 
+}
+
+# see: https://unix.stackexchange.com/a/332979/173825
+install_gdebi() {
+
+    declare -r URL="$1"
+    declare -r FILE_PATH="$2"
+    declare -r PACKAGE="$3"
+    declare -r PACKAGE_READABLE_NAME="$4"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    if ! cmd_exists "gdebi"; then
+        install_package "gdebi" "gdebi"
+    fi
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Install deb using gdebi
+
+    if [ ! -e "$FILE_PATH" ]; then
+
+        if ! package_is_installed "$PACKAGE"; then
+            execute \
+                "wget $URL -qO $FILE_PATH && \
+                sudo gdebi -n -q $FILE_PATH && \
+                sudo rm -rf $FILE_PATH && sudo apt autoremove -qqy" \
+                "$PACKAGE_READABLE_NAME"
+        else
+            print_success "($PACKAGE_READABLE_NAME) is already installed."
+        fi
+
+    fi
 }
 
 # see: https://unix.stackexchange.com/a/159114/173825
@@ -913,7 +946,8 @@ apt_update() {
     # Resynchronize the package index files from their sources and fix any missing dependencies.
 
     execute \
-        "sudo apt-get update --fix-missing" \
+        "sudo apt-get update --fix-missing && \
+        sudo apt-get install -f" \
         "APT (update)"
 
 }
