@@ -1651,8 +1651,7 @@ go_install() {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     PACKAGE_READABLE_NAME="$(
-        echo $package | \
-        cut -d "/" -f3
+        basename "$package"
     )"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
