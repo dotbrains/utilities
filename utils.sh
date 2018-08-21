@@ -1646,7 +1646,11 @@ is_go_installed() {
 go_install() {
 
     local package="$1"
-    local PACKAGE_READABLE_NAME="$(
+    local PACKAGE_READABLE_NAME
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    PACKAGE_READABLE_NAME="$(
         echo $package | \
         cut -d "/" -f3
     )"
@@ -1659,7 +1663,7 @@ go_install() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    if ! ls "$GOBIN" | grep "$PACKAGE_READABLE_NAME" > /dev/null 2>&1; then
+    if ! echo "$GOBIN"/*"$PACKAGE_READABLE_NAME"* > /dev/null 2>&1; then
         execute \
             "go get $package" \
             "go install ($PACKAGE_READABLE_NAME)"
