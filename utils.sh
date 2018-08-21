@@ -322,6 +322,8 @@ get_os() {
             if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
                 os="windows"
             fi
+        elif [ "$(read_os_name)" == "kali" ]; then
+            os="kali-linux"
         fi
     else
         os="$kernelName"
