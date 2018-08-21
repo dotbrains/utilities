@@ -1663,7 +1663,7 @@ go_install() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    if ! echo "$GOBIN"/*"$PACKAGE_READABLE_NAME"* > /dev/null 2>&1; then
+    if [ ! -d "$GOBIN/$PACKAGE_READABLE_NAME" ]; then
         execute \
             "go get $package" \
             "go install ($PACKAGE_READABLE_NAME)"
