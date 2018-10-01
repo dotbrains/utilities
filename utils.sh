@@ -1209,11 +1209,6 @@ brew_cleanup() {
             && brew cleanup" \
         "brew (cleanup)"
 
-    execute \
-        ". $LOCAL_BASH_CONFIG_FILE \
-            && brew cask cleanup" \
-        "brew (cask cleanup)"
-
 }
 
 
