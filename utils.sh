@@ -1535,7 +1535,7 @@ fisher_install() {
 
     if ! is_fisher_pkg_installed "$PACKAGE"; then
         execute \
-            "fish -c \"fisher $PACKAGE\"" \
+            "fish -c \"fisher add $PACKAGE\"" \
             "fisher (install $PACKAGE)"
     else
         print_success "($PACKAGE) is already installed."
