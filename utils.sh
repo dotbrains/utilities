@@ -1505,9 +1505,13 @@ omf_update() {
 
 # fisher functions
 
+does_fishfile_exist() {
+    [ -f "$HOME"/.config/fish/fishfile ]
+}
+
 is_fisher_installed() {
 
-    if ! fish_cmd_exists "fisher"; then
+    if ! fish_cmd_exists "fisher" && ! does_fishfile_exist; then
         return 1
     fi
 
@@ -1515,7 +1519,7 @@ is_fisher_installed() {
 
 is_fisher_pkg_installed() {
 
-    fish -c "fisher ls | grep $1" &> /dev/null
+    [ -f "$HOME"/.config/fish/fishfile ] && fish -c "fisher ls | grep $1" &> /dev/null
 
 }
 
