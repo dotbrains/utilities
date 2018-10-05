@@ -1575,7 +1575,7 @@ fisher_update() {
     # Update package(s)
 
     execute \
-        "fish -c \"fisher up\"" \
+        "fish -c \"fisher ;and fisher self-update\"" \
         "fisher (update)"
 
 }
