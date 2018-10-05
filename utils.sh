@@ -1519,13 +1519,13 @@ is_fisher_installed() {
 
 is_fisher_pkg_installed() {
 
-    [ -f "$HOME"/.config/fish/fishfile ] && fish -c "fisher ls | grep $1" &> /dev/null
+    does_fishfile_exist && fish -c "fisher ls | grep $1" &> /dev/null
 
 }
 
 fisher_install() {
 
-    declare -r PACKAGE="$(echo "$1" | cut -d '/' -f 2)"
+    declare -r PACKAGE="$1"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
