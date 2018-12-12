@@ -1506,7 +1506,9 @@ omf_update() {
 # fisher functions
 
 does_fishfile_exist() {
+
     [ -f "$HOME"/.config/fish/fishfile ]
+    
 }
 
 is_fisher_installed() {
