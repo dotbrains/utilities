@@ -1340,6 +1340,72 @@ brew_upgrade_formulae() {
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+# mas functions
+
+is_mas_installed() {
+
+    if ! cmd_exists "mas"; then
+        print_error "(mas) is not installed."
+        return 1
+    fi
+
+}
+
+is_mas_pkg_installed() {
+
+    mas list | grep "$1" &> /dev/null
+
+}
+
+mas_install() {
+
+    declare -r PACKAGE_READABLE_NAME="$1"
+    declare -r IDENTIFIER="$2"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Check if `nas` is installed.
+
+    is_mas_installed || return 1
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Install the specified package.
+
+    if ! is_mas_pkg_installed "$IDENTIFIER"; then
+        execute \
+            "mas install $IDENTIFIER" \
+            "$PACKAGE_READABLE_NAME"
+    else
+        print_success "($PACKAGE_READABLE_NAME) is already installed."
+    fi
+
+}
+
+mas_install_from_file() {
+
+    declare -r FILE_PATH="$1"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Install package(s)
+
+    if [ -e "$FILE_PATH" ]; then
+
+        cat < "$FILE_PATH" | while read -r PACKAGE; do
+            if [[ "$PACKAGE" == *"#"* || -z "$PACKAGE" ]]; then
+                continue
+            fi
+
+            mas_install "$PACKAGE"
+        done
+
+    fi
+
+}
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 # node functions
 
 is_npm_installed() {
