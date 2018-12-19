@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# shellcheck source=/dev/null
+
 set_default_shell() {
 
     declare -r EXECUTABLE_PATH="$1"
@@ -341,8 +343,8 @@ get_os_version() {
 
 is_supported_version() {
 
-    declare -a v1=(${1//./ })
-    declare -a v2=(${2//./ })
+    declare -a v1=("${1//./ }")
+    declare -a v2=("${2//./ }")
     local i=""
 
     # Fill empty positions in v1 with zeros.
@@ -1145,12 +1147,16 @@ is_pyenv_plugin_installed() {
 pyenv_install() {
 
     local PLUGIN_GIT_URL="$1"
-    local PLUGIN_READABLE_NAME="$(
-        echo "$PLUGIN_GIT_URL" | \
-        cut -d "/" -f5 | \
-        cut -d "." -f1
-    )"
+    local PLUGIN_READABLE_NAME
     local PYENV_PLUGINS_DIRECTORY="$HOME/.pyenv/plugins/"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    PLUGIN_READABLE_NAME="$(
+            echo "$PLUGIN_GIT_URL" | \
+            cut -d "/" -f5 | \
+            cut -d "." -f1
+        )"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
