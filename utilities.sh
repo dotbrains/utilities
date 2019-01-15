@@ -18,7 +18,7 @@ main() {
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	# System
-	source_file_from_utilities "modulessystem/system.sh"
+	source_file_from_utilities "modules/system/system.sh"
 	source_file_from_utilities "modules/system/network.sh"
 
 	# APT (Only required for 'linux'-based systems)

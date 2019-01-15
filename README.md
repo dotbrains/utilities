@@ -4,9 +4,14 @@ This is a set of useful bash utilities that I have curated over the years.
 
 ## How to Use
 
-In order to use `utils.sh` you must `checkout` the branch for your operating-system.
+In order to use [`utils.sh`](utils.sh) you must `source` the script at the beginning of your bash script.
 
-`Utilities` supports:
+Do this using the following code snippet:
 
-- `linux`-based operating-systems via the `linux` branch.
-- `unix`-based operating-systems via the `macos` branch.
+`source <(curl -s "https://raw.githubusercontent.com/nicholasadamou/utilities/master/utilities.sh")`
+
+- _This assumes `curl` is installed on your system._
+
+**Note**: _Due to an [issue pertaining to bash 3.2 on MacOS](https://stackoverflow.com/a/32596626/5290011) please use the following snippet instead:_
+
+`source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamou/utilities/master/utilities.sh")"`
