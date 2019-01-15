@@ -8,6 +8,12 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamo
 
 # System functions
 
+read_kernel_name() {
+
+	uname -s
+
+}
+
 read_os_name() {
 
     local kernelName=""
