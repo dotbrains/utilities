@@ -20,7 +20,7 @@ read_os_name() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    kernelName="$(uname -s)"
+    kernelName="$(read_kernel_name)"
 
     if [ "$kernelName" == "Darwin" ]; then
         printf "macos"
