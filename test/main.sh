@@ -7,8 +7,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")" \
 
 main() {
 
-    # ' At first you're like "shellcheck is awesome" but then you're
-    #   like "wtf[,] [why] are we still using bash[?]"'.
+    # 'At first you're like "shellcheck is awesome" but then you're
+    #  like "wtf[,] [why] are we still using bash[?]"'.
     #
     #  (from: https://twitter.com/astarasikov/status/568825996532707330)
 
