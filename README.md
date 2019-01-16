@@ -4,7 +4,7 @@ This is a set of useful bash utilities that I have curated over the years.
 
 ## How to Use
 
-In order to use [`utils.sh`](utils.sh) you must `source` the script at the beginning of your bash script.
+In order to use [`utilities.sh`](utilities.sh) you must `source` the script at the beginning of your bash script.
 
 Do this using the following code snippet:
 
