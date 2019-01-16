@@ -12,6 +12,11 @@ source_file_from_utilities() {
 
 main() {
 
+	# ' At first you're like "shellcheck is awesome" but then you're
+    #   like "wtf[,] [why] are we still using bash[?]" '.
+    #
+    #  (from: https://twitter.com/astarasikov/status/568825996532707330)
+
 	# Base
 	source_file_from_utilities "base/base.sh"
 
