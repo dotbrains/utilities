@@ -1,4 +1,4 @@
-# Utilities
+# Utilities [![Build Status](https://travis-ci.org/nicholasadamou/utilities.svg?branch=master)](https://travis-ci.org/nicholasadamou/utilities)
 
 This is a set of useful bash utilities that I have curated over the years.
 
