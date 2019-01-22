@@ -169,11 +169,13 @@ apt_install_from_file() {
                 FILE_NAME=${BASH_REMATCH[1]}
                 URL=${BASH_REMATCH[2]}
 
-                add_gpg_key_with_dearmor "$URL" "$FILE_NAME"
+                add_gpg_key_with_dearmor "$URL" "$FILE_NAME" && \
+					sudo apt update &> /dev/null
             elif [[ $LINE =~ ${regex[gpg]} ]]; then
                 URL=${BASH_REMATCH[1]}
 
-                add_key "$URL"
+                add_key "$URL" && \
+					sudo apt update &> /dev/null
             elif [[ $LINE =~ ${regex[source]} ]]; then
                 FILE_NAME=${BASH_REMATCH[1]}
                 DATA=${BASH_REMATCH[2]}
