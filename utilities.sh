@@ -24,6 +24,7 @@ main() {
 	# APT (Only required for 'linux'-based systems)
 	if [ "$(read_kernel_name)" == "Linux" ] && grep -qEi 'debian|buntu|kali' /etc/*release; then
 		source_file_from_utilities "modules/system/debian/apt.sh"
+		source_file_from_utilities "modules/system/debian/apt.sh"
 	fi
 
 	# Homebrew
