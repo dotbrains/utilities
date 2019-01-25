@@ -75,6 +75,10 @@ execute() {
         print_error_stream < "$TMP_FILE"
     fi
 
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+	# Remove temporary files.
+
     rm -rf "$TMP_FILE"
 
 	[ -n "$XAUTHORITY" ] && \
