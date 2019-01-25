@@ -9,7 +9,7 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamo
 
 # Modfied 'execute()' from base/base.sh
 # Allows the executing of a command within
-# a 'x-terminal-emulator'
+# a 'x-terminal-emulator'.
 # see: https://unix.stackexchange.com/questions/137782/launching-a-terminal-emulator-without-knowing-which-ones-are-installed
 # see: https://stackoverflow.com/a/54371378/5290011
 # see: https://stackoverflow.com/q/54359083/5290011
