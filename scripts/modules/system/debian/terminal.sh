@@ -18,6 +18,7 @@ execute() {
 	local -r MSG="${2:-$1}"
 
 	local -r TMP_FILE="$(mktemp /tmp/XXXXX)"
+
 	[ -n "$XAUTHORITY" ] && \
 		local -r EXIT_STATUS_FILE="$(mktemp /tmp/XXXXX)"
 
