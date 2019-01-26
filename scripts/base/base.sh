@@ -141,7 +141,7 @@ execute() {
 
 	local -r TMP_FILE="$(mktemp /tmp/XXXXX)"
 
-	[ -n "$XAUTHORITY" ] || [ -n "$DISPLAY" ] ||  [ -n "$SSH_TTY" ] && \
+	[ -n "$SSH_TTY" ] && \
 		local -r EXIT_STATUS_FILE="$(mktemp /tmp/XXXXX)"
 
 	local exitCode=0
@@ -149,7 +149,7 @@ execute() {
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	if [ -z "$XAUTHORITY" ] || [ -z "$DISPLAY" ] || [ -z "$SSH_TTY" ]; then
+	if [ -z "$SSH_TTY" ]; then
 		eval "$CMDS" \
 			&> /dev/null \
 			2> "$TMP_FILE" &
@@ -207,7 +207,7 @@ execute() {
 	# Wait for the commands to no longer be executing
 	# in the background, and then get their exit code.
 
-	if [ -z "$XAUTHORITY" ] || [ -z "$DISPLAY" ] || [ -z "$SSH_TTY" ]; then
+	if [ -z "$SSH_TTY" ]; then
 		wait "$cmdsPID" &> /dev/null
 
 		exitCode=$?
@@ -236,7 +236,7 @@ execute() {
 
 	rm -rf "$TMP_FILE"
 
-	[ -n "$XAUTHORITY" ] || [ -n "$DISPLAY" ] || [ -n "$SSH_TTY" ] && \
+	[ -n "$SSH_TTY" ] && \
 		rm -rf "$EXIT_STATUS_FILE"
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
