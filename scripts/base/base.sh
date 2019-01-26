@@ -149,16 +149,6 @@ execute() {
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	# Make sure 'xquartz' is installed.
-
-	if [ "$(uname -a)" == "Darwin" ]; then
-		if [ ! -f "/Applications/Utilities/XQuartz.app" ]; then
-			install_dmg "https://dl.bintray.com/xquartz/downloads/XQuartz-2.7.11.dmg" &> /dev/null
-		fi
-	fi
-
-	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 	if [ -z "$XAUTHORITY" ] || [ -z "$DISPLAY" ] || [ -z "$SSH_TTY" ]; then
 		eval "$CMDS" \
 			&> /dev/null \
@@ -181,6 +171,7 @@ execute() {
 		fi
 
 		# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 		if [ "$(uname -a)" == "Linux" ]; then
 			cmdsPID="$(\
 						ps ax | \
