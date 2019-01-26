@@ -15,7 +15,7 @@ main() {
     find \
         ../scripts \
         -type f \
-		-prune ../scripts/plugins \
+		! -path '../scripts/plugins' \
         -exec shellcheck \
                 -e SC1090 \
                 -e SC1091 \
