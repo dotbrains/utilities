@@ -81,7 +81,7 @@ execute() {
 
 	local -r TMP_FILE="$(mktemp /tmp/XXXXX)"
 
-	uname -a | grep "Linux" || [ -z "$SSH_TTY" ] && \
+	uname -a | grep -q "Linux" || [ -z "$SSH_TTY" ] && \
 		local -r EXIT_STATUS_FILE="$(mktemp /tmp/XXXXX)"
 
 	local exitCode=0
@@ -89,7 +89,7 @@ execute() {
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	if uname -a | grep "Darwin" || [ -n "$SSH_TTY" ]; then
+	if uname -a | grep -q "Darwin" || [ -n "$SSH_TTY" ]; then
 		eval "$CMDS" \
 			&> /dev/null \
 			2> "$TMP_FILE" &
@@ -121,7 +121,7 @@ execute() {
 	# Wait for the commands to no longer be executing
 	# in the background, and then get their exit code.
 
-	if uname -a | grep "Darwin" || [ -n "$SSH_TTY" ]; then
+	if uname -a | grep -q "Darwin" || [ -n "$SSH_TTY" ]; then
 		wait "$cmdsPID" &> /dev/null
 
 		exitCode=$?
@@ -150,7 +150,7 @@ execute() {
 
 	rm -rf "$TMP_FILE"
 
-	uname -a | grep "Linux" || [ -z "$SSH_TTY" ] && \
+	uname -a | grep -q "Linux" || [ -z "$SSH_TTY" ] && \
 		rm -rf "$EXIT_STATUS_FILE"
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
