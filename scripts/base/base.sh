@@ -181,9 +181,9 @@ execute() {
 						cut -d ' ' -f 1\
 					)"
 		elif uname -a | grep -q "Darwin"; then
-			PIDPATH="$(ps ax | grep -v "grep" | grep "winex_" | xargs | cut -d ' ' -f 6)"
+			PIDPATH="$(ps ax | grep -v "grep" | grep "winex_" | xargs | cut -d ' ' -f 8)"
 
-			if [ "$(grep -q "$CMD" "$PIDPATH")" == "$CMD" ];then
+			if grep -q "$CMD" "$PIDPATH";then
 				cmdsPID="$(\
 							ps ax | \
 							grep -v "grep" | \
