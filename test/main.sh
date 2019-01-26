@@ -16,6 +16,7 @@ main() {
 
     find \
         ../scripts \
+		../test \
         -type f \
 		! -path '../scripts/plugins' \
         -exec shellcheck \
