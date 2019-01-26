@@ -141,7 +141,7 @@ execute() {
 
 	local -r TMP_FILE="$(mktemp /tmp/XXXXX)"
 
-	[ -n "$SSH_TTY" ] && \
+	[ -z "$SSH_TTY" ] && \
 		local -r EXIT_STATUS_FILE="$(mktemp /tmp/XXXXX)"
 
 	local exitCode=0
@@ -149,7 +149,7 @@ execute() {
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	if [ -z "$SSH_TTY" ]; then
+	if [ -n "$SSH_TTY" ]; then
 		eval "$CMDS" \
 			&> /dev/null \
 			2> "$TMP_FILE" &
@@ -160,11 +160,11 @@ execute() {
 
 		# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-		if [ "$(uname -a)" == "Linux" ]; then
+		if uname -a | grep -q "Linux"; then
 			python <(curl -sL "https://raw.githubusercontent.com/skywind3000/terminal/master/terminal.py") -m "xterm" \
 				$CMD \
 				&> /dev/null
-		elif [ "$(uname -a)" == "Darwin" ]; then
+		elif uname -a | grep -q "Darwin"; then
 			python <(curl -sL "https://raw.githubusercontent.com/skywind3000/terminal/master/terminal.py") \
 				$CMD \
 				&> /dev/null
@@ -172,7 +172,7 @@ execute() {
 
 		# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-		if [ "$(uname -a)" == "Linux" ]; then
+		if uname -a | grep -q "Linux"; then
 			cmdsPID="$(\
 						ps ax | \
 						grep -v "grep" | \
@@ -180,7 +180,7 @@ execute() {
 						xargs | \
 						cut -d ' ' -f 1\
 					)"
-		elif [ "$(uname -a)" == "Darwin" ]; then
+		elif uname -a | grep -q "Darwin"; then
 			PIDPATH="$(ps ax | grep -v "grep" | grep "winex_" | xargs | cut -d ' ' -f 6)"
 
 			if [ "$(grep -q "$CMD" "$PIDPATH")" == "$CMD" ];then
@@ -207,7 +207,7 @@ execute() {
 	# Wait for the commands to no longer be executing
 	# in the background, and then get their exit code.
 
-	if [ -z "$SSH_TTY" ]; then
+	if [ -n "$SSH_TTY" ]; then
 		wait "$cmdsPID" &> /dev/null
 
 		exitCode=$?
@@ -236,7 +236,7 @@ execute() {
 
 	rm -rf "$TMP_FILE"
 
-	[ -n "$SSH_TTY" ] && \
+	[ -z "$SSH_TTY" ] && \
 		rm -rf "$EXIT_STATUS_FILE"
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

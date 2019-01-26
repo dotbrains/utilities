@@ -22,7 +22,7 @@ main() {
 	source_file_from_utilities "modules/system/network.sh"
 
 	# APT & other system functions (Only required for 'linux'-based systems)
-	if [ "$(read_kernel_name)" == "Linux" ] && grep -qEi 'debian|buntu|kali' /etc/*release; then
+	if uname -a | grep -q "Linux" && grep -qEi 'debian|buntu|kali' /etc/*release; then
 		source_file_from_utilities "modules/system/debian/apt.sh"
 	fi
 
