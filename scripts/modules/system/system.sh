@@ -363,3 +363,63 @@ jq_replace() {
 	fi
 
 }
+
+# see: https://apple.stackexchange.com/a/311511/291269
+function install_dmg {
+
+    set -x
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Initialize a variable for the URL to the '.dmg'
+
+    local -r URL="$1"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Create temporary directory to store '.dmg'
+
+    TMP_DIRECTORY="$(mktemp -d)"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    #  Obtain the '.dmg' via cURL
+
+    curl -s "$URL" > "$TMP_DIRECTORY/pkg.dmg"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Mount the '.dmg' then grab its PATH
+
+    DISK="$(sudo hdiutil attach "$TMP_DIRECTORY"/pkg.dmg | grep Volumes)"
+    VOLUME="$(echo "$DISK" | cut -f 3)"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Install the program within the '.dmg'
+
+    if [ -e "$VOLUME"/*.app ]; then
+      sudo cp -rf "$VOLUME"/*.app /Applications
+    elif [ -e "$VOLUME"/*.pkg ]; then
+      package="$(ls -1 | grep *.pkg | head -1)"
+
+      sudo installer -pkg "$VOLUME"/"$package".pkg -target /
+    fi
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Eject the '.dmg'
+
+    sudo hdiutil detach "$(echo "$DISK" | cut -f 1)"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Remove the temporary directory
+
+    rm -rf "$TMP_DIRECTORY"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    set +x
+
+}
