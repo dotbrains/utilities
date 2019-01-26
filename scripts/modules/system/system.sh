@@ -78,7 +78,7 @@ get_os() {
         if [ "$(read_os_name)" == "ubuntu" ]; then
             os="ubuntu"
 
-            if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null ; then
+            if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null; then
                 os="windows"
             fi
         elif [ "$(read_os_name)" == "kali" ]; then

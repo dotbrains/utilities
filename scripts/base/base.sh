@@ -69,6 +69,11 @@ kill_all_subprocesses() {
 # Allows the executing of a command within
 # a 'x-terminal-emulator', whilist, showing
 # a spinner within the parent shell.
+#
+# Does not open a new terminal window on:
+# 1. Darwin-based Operating Systems (Mac OS)
+# 2. Windows-Subsystem-Linux (WSL)
+#
 # see: https://stackoverflow.com/a/54371378/5290011
 # see: https://stackoverflow.com/q/54359083/5290011
 # see: https://stackoverflow.com/q/54358021/5290011
@@ -81,7 +86,7 @@ execute() {
 
 	local -r TMP_FILE="$(mktemp /tmp/XXXXX)"
 
-	uname -a | grep -q "Linux" || [ -z "$SSH_TTY" ] && \
+	uname -a | grep -q "Linux"  && ! grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null || [ -z "$SSH_TTY" ] && \
 		local -r EXIT_STATUS_FILE="$(mktemp /tmp/XXXXX)"
 
 	local exitCode=0
@@ -89,7 +94,7 @@ execute() {
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	if uname -a | grep -q "Darwin" || [ -n "$SSH_TTY" ]; then
+	if uname -a | grep -q "Darwin" || grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null || [ -n "$SSH_TTY" ]; then
 		eval "$CMDS" \
 			&> /dev/null \
 			2> "$TMP_FILE" &
@@ -121,7 +126,7 @@ execute() {
 	# Wait for the commands to no longer be executing
 	# in the background, and then get their exit code.
 
-	if uname -a | grep -q "Darwin" || [ -n "$SSH_TTY" ]; then
+	if uname -a | grep -q "Darwin" || grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null || [ -n "$SSH_TTY" ]; then
 		wait "$cmdsPID" &> /dev/null
 
 		exitCode=$?
@@ -150,7 +155,7 @@ execute() {
 
 	rm -rf "$TMP_FILE"
 
-	uname -a | grep -q "Linux" || [ -z "$SSH_TTY" ] && \
+	uname -a | grep -q "Linux" && ! grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null || [ -z "$SSH_TTY" ] && \
 		rm -rf "$EXIT_STATUS_FILE"
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
