@@ -4,12 +4,6 @@
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#!/bin/bash
-
-# shellcheck source=/dev/null
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 # Base functions
 
 answer_is_yes() {
