@@ -15,11 +15,13 @@ main() {
     find \
         ../scripts \
         -type f \
+		-prune ../scripts/plugins \
         -exec shellcheck \
                 -e SC1090 \
                 -e SC1091 \
                 -e SC2155 \
                 -e SC2164 \
+				-e SC2009 \
         {} +
 
     print_result $? "Run code through ShellCheck"
