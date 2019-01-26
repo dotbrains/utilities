@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # shellcheck source=/dev/null
-# shellcheck disable=SC2086
+# shellcheck disable=SC2086,SC2009
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -81,7 +81,7 @@ execute() {
 
 	local -r TMP_FILE="$(mktemp /tmp/XXXXX)"
 
-	[ -z "$SSH_TTY" ] && \
+	uname -a | grep "Linux" || [ -z "$SSH_TTY" ] && \
 		local -r EXIT_STATUS_FILE="$(mktemp /tmp/XXXXX)"
 
 	local exitCode=0
@@ -89,50 +89,24 @@ execute() {
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	if [ -n "$SSH_TTY" ]; then
+	if uname -a | grep "Darwin" || [ -n "$SSH_TTY" ]; then
 		eval "$CMDS" \
 			&> /dev/null \
 			2> "$TMP_FILE" &
 
 		cmdsPID=$!
 	else
-		CMD="$CMDS 2> $TMP_FILE ; echo \$? > $EXIT_STATUS_FILE"
+		x-terminal-emulator -e "$CMDS 2> $TMP_FILE ; echo \$? > $EXIT_STATUS_FILE" &> /dev/null
 
 		# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-		if uname -a | grep -q "Linux"; then
-			python <(curl -sL "https://raw.githubusercontent.com/skywind3000/terminal/master/terminal.py") -m "xterm" \
-				$CMD \
-				&> /dev/null
-		elif uname -a | grep -q "Darwin"; then
-			python <(curl -sL "https://raw.githubusercontent.com/skywind3000/terminal/master/terminal.py") \
-				$CMD \
-				&> /dev/null
-		fi
-
-		# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-		if uname -a | grep -q "Linux"; then
-			cmdsPID="$(\
+		cmdsPID="$(\
 						ps ax | \
 						grep -v "grep" | \
-						grep "$(command -v xterm) -e" | grep "$CMDS" | grep "$TMP_FILE" | grep "$EXIT_STATUS_FILE" | \
+						grep "sh -c" | grep "$CMDS" | grep "$TMP_FILE" | grep "$EXIT_STATUS_FILE" | \
 						xargs | \
 						cut -d ' ' -f 1\
-					)"
-		elif uname -a | grep -q "Darwin"; then
-			PIDPATH="$(ps ax | grep -v "grep" | grep "winex_" | xargs | cut -d ' ' -f 8)"
-
-			if grep -q "$CMD" "$PIDPATH";then
-				cmdsPID="$(\
-							ps ax | \
-							grep -v "grep" | \
-							grep "winex_" | \
-							xargs | \
-							cut -d ' ' -f 1\
-						)"
-			fi
-		fi
+				)"
 	fi
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -147,7 +121,7 @@ execute() {
 	# Wait for the commands to no longer be executing
 	# in the background, and then get their exit code.
 
-	if [ -n "$SSH_TTY" ]; then
+	if uname -a | grep "Darwin" || [ -n "$SSH_TTY" ]; then
 		wait "$cmdsPID" &> /dev/null
 
 		exitCode=$?
@@ -176,7 +150,7 @@ execute() {
 
 	rm -rf "$TMP_FILE"
 
-	[ -z "$SSH_TTY" ] && \
+	uname -a | grep "Linux" || [ -z "$SSH_TTY" ] && \
 		rm -rf "$EXIT_STATUS_FILE"
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
