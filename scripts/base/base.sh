@@ -96,10 +96,15 @@ if [ "$(uname -a)" == "Linux" ] && grep -qEi 'debian|buntu|kali' /etc/*release; 
 
 			cmdsPID=$!
 		else
-			x-terminal-emulator -e "($CMDS) 2> $TMP_FILE ; echo \$? > $EXIT_STATUS_FILE" \
-				&> /dev/null
+			x-terminal-emulator -e "$CMDS 2> $TMP_FILE ; echo \$? > $EXIT_STATUS_FILE" &> /dev/null
 
-			cmdsPID="$(ps ax | grep -v "grep" | grep -v "S+" | grep "sh -c" | grep "$CMDS" | xargs | cut -d ' ' -f 1)"
+			cmdsPID="$(\
+						ps ax | \
+						grep -v "grep" | \
+						grep "sh -c" | grep "$CMDS" | grep "$TMP_FILE" | grep "$EXIT_STATUS_FILE" | \
+						xargs | \
+						cut -d ' ' -f 1\
+					)"
 		fi
 
 		# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
