@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # shellcheck source=/dev/null
-# shellcheck disable=2144,2010,2062,2063,2035,2086,2009
+# shellcheck disable=2144,2010,2062,2063,2035,2009
 
 source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamou/utilities/master/scripts/base/base.sh")"
 

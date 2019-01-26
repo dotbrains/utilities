@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # shellcheck source=/dev/null
+# shellcheck disable=SC2086
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
