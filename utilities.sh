@@ -13,11 +13,7 @@ source_file_from_utilities() {
 main() {
 
 	# Base
-	if [ "$(uname -a)" == "Linux" ] && grep -qEi 'debian|buntu|kali' /etc/*release; then
-		source_file_from_utilities "base/debian/base.sh"
-	elif [ "$(uname -a)" == "Darwin" ]; then
-		 source_file_from_utilities "base/darwin/base.sh"
-	fi
+	source_file_from_utilities "base/base.sh"
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

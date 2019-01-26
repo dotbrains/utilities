@@ -1,3 +1,0 @@
-[submodule "scripts/plugins/terminal"]
-	path = scripts/plugins/terminal
-	url = https://github.com/skywind3000/terminal

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # shellcheck source=/dev/null
+# shellcheck disable=2144,2010,2062,2063,2035,2086,2009
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -65,6 +66,66 @@ kill_all_subprocesses() {
 
 }
 
+# see: https://apple.stackexchange.com/a/311511/291269
+function install_dmg {
+
+    set -x
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Initialize a variable for the URL to the '.dmg'
+
+    local -r URL="$1"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Create temporary directory to store '.dmg'
+
+    TMP_DIRECTORY="$(mktemp -d)"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    #  Obtain the '.dmg' via cURL
+
+    curl -s "$URL" > "$TMP_DIRECTORY/pkg.dmg"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Mount the '.dmg' then grab its PATH
+
+    DISK="$(sudo hdiutil attach "$TMP_DIRECTORY"/pkg.dmg | grep Volumes)"
+    VOLUME="$(echo "$DISK" | cut -f 3)"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Install the program within the '.dmg'
+
+    if [ -e "$VOLUME"/*.app ]; then
+      sudo cp -rf "$VOLUME"/*.app /Applications
+    elif [ -e "$VOLUME"/*.pkg ]; then
+      package="$(ls -1 | grep *.pkg | head -1)"
+
+      sudo installer -pkg "$VOLUME"/"$package".pkg -target /
+    fi
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Eject the '.dmg'
+
+    sudo hdiutil detach "$(echo "$DISK" | cut -f 1)"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Remove the temporary directory
+
+    rm -rf "$TMP_DIRECTORY"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    set +x
+
+}
+
 # Allows the executing of a command within
 # a 'x-terminal-emulator', whilist, showing
 # a spinner within the parent shell.
@@ -78,9 +139,11 @@ execute() {
 	local -r CMDS="$1"
 	local -r MSG="${2:-$1}"
 
+	local -r TERMINAL="xterm"
+
 	local -r TMP_FILE="$(mktemp /tmp/XXXXX)"
 
-	[ -n "$XAUTHORITY" ] && \
+	[ -n "$XAUTHORITY" ] || [ -n "$DISPLAY" ] && \
 		local -r EXIT_STATUS_FILE="$(mktemp /tmp/XXXXX)"
 
 	local exitCode=0
@@ -88,19 +151,37 @@ execute() {
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	if [ -z "$XAUTHORITY" ]; then
+	# Make sure 'xquartz' is installed.
+
+	if [ "$(uname -a)" == "Darwin" ]; then
+		if [ ! -f "/Applications/Utilities/XQuartz.app" ]; then
+			install_dmg "https://dl.bintray.com/xquartz/downloads/XQuartz-2.7.11.dmg" &> /dev/null
+		fi
+	fi
+
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+	if [ -z "$XAUTHORITY" ] || [ -z "$DISPLAY" ]; then
 		eval "$CMDS" \
 			&> /dev/null \
 			2> "$TMP_FILE" &
 
 		cmdsPID=$!
 	else
-		x-terminal-emulator -e "$CMDS 2> $TMP_FILE ; echo \$? > $EXIT_STATUS_FILE" &> /dev/null
+		PLUGIN="terminal/terminal.py"
+		REPOITORY="skywind3000/terminal"
+		BRANCH="master"
+
+		CMD="$CMDS 2> $TMP_FILE ; echo \$? > $EXIT_STATUS_FILE"
+
+		python <(curl -s "https://raw.githubusercontent.com/$REPOITORY/$BRANCH/$PLUGIN") -m "$TERMINAL" \
+			$CMD \
+			&> /dev/null
 
 		cmdsPID="$(\
 					ps ax | \
 					grep -v "grep" | \
-					grep "sh -c" | grep "$CMDS" | grep "$TMP_FILE" | grep "$EXIT_STATUS_FILE" | \
+					grep "$(command -v xterm) -e" | grep "$CMDS" | grep "$TMP_FILE" | grep "$EXIT_STATUS_FILE" | \
 					xargs | \
 					cut -d ' ' -f 1\
 				)"
@@ -118,7 +199,7 @@ execute() {
 	# Wait for the commands to no longer be executing
 	# in the background, and then get their exit code.
 
-	if [ -z "$XAUTHORITY" ]; then
+	if [ -z "$XAUTHORITY" ] || [ -z "$DISPLAY" ]; then
 		wait "$cmdsPID" &> /dev/null
 
 		exitCode=$?
@@ -147,7 +228,7 @@ execute() {
 
 	rm -rf "$TMP_FILE"
 
-	[ -n "$XAUTHORITY" ] && \
+	[ -n "$XAUTHORITY" ] || [ -n "$DISPLAY" ] && \
 		rm -rf "$EXIT_STATUS_FILE"
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
