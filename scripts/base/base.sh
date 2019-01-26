@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # shellcheck source=/dev/null
-# shellcheck disable=2144,2010,2062,2063,2035,2086,2009
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
