@@ -139,11 +139,9 @@ execute() {
 	local -r CMDS="$1"
 	local -r MSG="${2:-$1}"
 
-	local -r TERMINAL="xterm"
-
 	local -r TMP_FILE="$(mktemp /tmp/XXXXX)"
 
-	[ -n "$XAUTHORITY" ] || [ -n "$DISPLAY" ] && \
+	[ -n "$XAUTHORITY" ] || [ -n "$DISPLAY" ] ||  [ -n "$SSH_TTY" ] && \
 		local -r EXIT_STATUS_FILE="$(mktemp /tmp/XXXXX)"
 
 	local exitCode=0
@@ -161,30 +159,49 @@ execute() {
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	if [ -z "$XAUTHORITY" ] || [ -z "$DISPLAY" ]; then
+	if [ -z "$XAUTHORITY" ] || [ -z "$DISPLAY" ] || [ -z "$SSH_TTY" ]; then
 		eval "$CMDS" \
 			&> /dev/null \
 			2> "$TMP_FILE" &
 
 		cmdsPID=$!
 	else
-		PLUGIN="terminal/terminal.py"
-		REPOITORY="skywind3000/terminal"
-		BRANCH="master"
-
 		CMD="$CMDS 2> $TMP_FILE ; echo \$? > $EXIT_STATUS_FILE"
 
-		python <(curl -s "https://raw.githubusercontent.com/$REPOITORY/$BRANCH/$PLUGIN") -m "$TERMINAL" \
-			$CMD \
-			&> /dev/null
+		# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-		cmdsPID="$(\
-					ps ax | \
-					grep -v "grep" | \
-					grep "$(command -v xterm) -e" | grep "$CMDS" | grep "$TMP_FILE" | grep "$EXIT_STATUS_FILE" | \
-					xargs | \
-					cut -d ' ' -f 1\
-				)"
+		if [ "$(uname -a)" == "Linux" ]; then
+			python <(curl -sL "https://raw.githubusercontent.com/skywind3000/terminal/master/terminal.py") -m "xterm" \
+				$CMD \
+				&> /dev/null
+		elif [ "$(uname -a)" == "Darwin" ]; then
+			python <(curl -sL "https://raw.githubusercontent.com/skywind3000/terminal/master/terminal.py") \
+				$CMD \
+				&> /dev/null
+		fi
+
+		# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+		if [ "$(uname -a)" == "Linux" ]; then
+			cmdsPID="$(\
+						ps ax | \
+						grep -v "grep" | \
+						grep "$(command -v xterm) -e" | grep "$CMDS" | grep "$TMP_FILE" | grep "$EXIT_STATUS_FILE" | \
+						xargs | \
+						cut -d ' ' -f 1\
+					)"
+		elif [ "$(uname -a)" == "Darwin" ]; then
+			PIDPATH="$(ps ax | grep -v "grep" | grep "winex_" | xargs | cut -d ' ' -f 6)"
+
+			if [ "$(grep -q "$CMD" "$PIDPATH")" == "$CMD" ];then
+				cmdsPID="$(\
+							ps ax | \
+							grep -v "grep" | \
+							grep "winex_" | \
+							xargs | \
+							cut -d ' ' -f 1\
+						)"
+			fi
+		fi
 	fi
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -199,7 +216,7 @@ execute() {
 	# Wait for the commands to no longer be executing
 	# in the background, and then get their exit code.
 
-	if [ -z "$XAUTHORITY" ] || [ -z "$DISPLAY" ]; then
+	if [ -z "$XAUTHORITY" ] || [ -z "$DISPLAY" ] || [ -z "$SSH_TTY" ]; then
 		wait "$cmdsPID" &> /dev/null
 
 		exitCode=$?
@@ -228,7 +245,7 @@ execute() {
 
 	rm -rf "$TMP_FILE"
 
-	[ -n "$XAUTHORITY" ] || [ -n "$DISPLAY" ] && \
+	[ -n "$XAUTHORITY" ] || [ -n "$DISPLAY" ] || [ -n "$SSH_TTY" ] && \
 		rm -rf "$EXIT_STATUS_FILE"
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
