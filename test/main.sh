@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# shellcheck source=/dev/null
+
 cd "$(dirname "${BASH_SOURCE[0]}")" \
     && source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamou/utilities/master/utilities.sh")"
 
