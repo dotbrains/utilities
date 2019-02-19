@@ -57,6 +57,12 @@ package_is_installed() {
 
 }
 
+snap_is_installed() {
+
+    snap list | grep "$1" &> /dev/null
+
+}
+
 remove_system_package() {
 
     declare -r PACKAGE_READABLE_NAME="$1"
@@ -112,9 +118,22 @@ install_package() {
     declare -r PACKAGE="$2"
 
     if ! package_is_installed "$PACKAGE"; then
-        execute "sudo apt-get install --allow-unauthenticated -qqy $PACKAGE" "$PACKAGE_READABLE_NAME"
+        execute "sudo apt install --allow-unauthenticated -qqy $PACKAGE" "$PACKAGE_READABLE_NAME"
         #                                      suppress output ─┘│
         #            assume "yes" as the answer to all prompts ──┘
+    else
+        print_success "($PACKAGE_READABLE_NAME) is already installed."
+    fi
+
+}
+
+install_snap_package() {
+
+    declare -r PACKAGE_READABLE_NAME="$1"
+    declare -r PACKAGE="$2"
+
+    if ! snap_is_installed "$PACKAGE"; then
+        execute "sudo snap install $PACKAGE" "$PACKAGE_READABLE_NAME"
     else
         print_success "($PACKAGE_READABLE_NAME) is already installed."
     fi
@@ -129,6 +148,7 @@ apt_install_from_file() {
     regex["comment"]='^#(.*)'
     regex["ppa"]='ppa "(.*)"'
     regex["apt"]='apt "(.*)"'
+    regex["snap"]='apt "(.*)"'
     regex["deb"]='deb "(.*)" \[args: "(.*)", "(.*)", "(.*)"\]'
     regex["gpg_dearmor"]='gpg-dearmor "(.*)" \[args: "(.*)"\]'
     regex["gpg"]='gpg "(.*)" \[args: "(.*)"\]'
@@ -157,6 +177,9 @@ apt_install_from_file() {
             elif [[ $LINE =~ ${regex[apt]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
                 install_package "$PACKAGE" "$PACKAGE"
+            elif [[ $LINE =~ ${regex[apt]} ]]; then
+                PACKAGE=${BASH_REMATCH[1]}
+                install_snap_package "$PACKAGE" "$PACKAGE"
             elif [[ $LINE =~ ${regex[deb]} ]]; then
                 PACKAGE_READABLE_NAME=${BASH_REMATCH[1]}
                 URL=${BASH_REMATCH[2]}
