@@ -119,8 +119,8 @@ install_package() {
 
     if ! package_is_installed "$PACKAGE"; then
         execute "sudo apt install --allow-unauthenticated -qqy $PACKAGE" "$PACKAGE_READABLE_NAME"
-        #                                      suppress output ─┘│
-        #            assume "yes" as the answer to all prompts ──┘
+        #                                  suppress output ─┘│
+        #        assume "yes" as the answer to all prompts ──┘
     else
         print_success "($PACKAGE_READABLE_NAME) is already installed."
     fi
