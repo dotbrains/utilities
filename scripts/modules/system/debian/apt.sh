@@ -177,7 +177,7 @@ apt_install_from_file() {
             elif [[ $LINE =~ ${regex[apt]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
                 install_package "$PACKAGE" "$PACKAGE"
-            elif [[ $LINE =~ ${regex[apt]} ]]; then
+            elif [[ $LINE =~ ${regex[snap]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
                 install_snap_package "$PACKAGE" "$PACKAGE"
             elif [[ $LINE =~ ${regex[deb]} ]]; then
