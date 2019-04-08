@@ -130,10 +130,11 @@ install_package() {
 install_snap_package() {
 
     declare -r PACKAGE_READABLE_NAME="$1"
-    declare -r PACKAGE="$2"
+	declare -r ARGUMENTS="$2"
+    declare -r PACKAGE="$3"
 
     if ! snap_is_installed "$PACKAGE"; then
-        execute "sudo snap install $PACKAGE" "$PACKAGE_READABLE_NAME"
+        execute "sudo snap install $PACKAGE $ARGUMENTS" "$PACKAGE_READABLE_NAME"
     else
         print_success "($PACKAGE_READABLE_NAME) is already installed."
     fi
@@ -148,7 +149,7 @@ apt_install_from_file() {
     regex["comment"]='^#(.*)'
     regex["ppa"]='ppa "(.*)"'
     regex["apt"]='apt "(.*)"'
-    regex["snap"]='apt "(.*)"'
+    regex["snap"]='snap "(.*)" \[args: "(.*)"\]'
     regex["deb"]='deb "(.*)" \[args: "(.*)", "(.*)", "(.*)"\]'
     regex["gpg_dearmor"]='gpg-dearmor "(.*)" \[args: "(.*)"\]'
     regex["gpg"]='gpg "(.*)" \[args: "(.*)"\]'
@@ -173,13 +174,17 @@ apt_install_from_file() {
                 continue
             elif [[ $LINE =~ ${regex[ppa]} ]]; then
                 PPA=${BASH_REMATCH[1]}
-                add_ppa "$PPA"
+
+				add_ppa "$PPA"
             elif [[ $LINE =~ ${regex[apt]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
-                install_package "$PACKAGE" "$PACKAGE"
-            elif [[ $LINE =~ ${regex[apt]} ]]; then
+
+				install_package "$PACKAGE" "$PACKAGE"
+            elif [[ $LINE =~ ${regex[snap]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
-                install_snap_package "$PACKAGE" "$PACKAGE"
+				ARGS=${BASH_REMATCH[2]}
+
+				install_snap_package "$PACKAGE" "$ARGS" "$PACKAGE"
             elif [[ $LINE =~ ${regex[deb]} ]]; then
                 PACKAGE_READABLE_NAME=${BASH_REMATCH[1]}
                 URL=${BASH_REMATCH[2]}
