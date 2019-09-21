@@ -151,11 +151,11 @@ apt_install_from_file() {
     regex["apt"]='apt "(.*)"'
     regex["snap"]='snap "(.*)" \[args: "(.*)"\]'
     regex["deb"]='deb "(.*)" \[args: "(.*)", "(.*)", "(.*)"\]'
-    regex["gpg_dearmor"]='gpg-dearmor "(.*)" \[args: "(.*)"\]'
+    regex["gpg_dearmor"]='gpg_dearmor "(.*)" \[args: "(.*)"\]'
     regex["gpg"]='gpg "(.*)" \[args: "(.*)"\]'
     regex["source"]='source "(.*)" \[args: "(.*)"\]'
     regex["remove"]='remove "(.*)"'
-    regex["remove_system"]='remove-system "(.*)"'
+    regex["remove_system"]='remove_system "(.*)"'
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
