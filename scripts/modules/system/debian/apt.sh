@@ -133,6 +133,24 @@ install_snap_package() {
 	declare -r ARGUMENTS="$2"
     declare -r PACKAGE="$3"
 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    if ! package_is_installed "snapd"; then
+        install_package "snapd" "snapd"
+
+        execute \
+            "sudo systemctl start snapd && \
+            sudo systemctl enable snapd" \
+            "systemctl (enable snapd)"
+
+        execute \
+            "sudo systemctl start apparmor && \
+            sudo systemctl enable apparmor" \
+            "systemctl (enable apparmor)"
+    fi
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
     if ! snap_is_installed "$PACKAGE"; then
         execute "sudo snap install $PACKAGE $ARGUMENTS" "$PACKAGE_READABLE_NAME"
     else
