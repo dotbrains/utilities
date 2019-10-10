@@ -23,7 +23,13 @@ main() {
 
 	# APT & other system functions (Only required for 'linux'-based systems)
 	if uname -a | grep -q "Linux" && grep -qEi 'debian|buntu|kali' /etc/*release; then
+		source_file_from_utilities "modules/system/debian/system.sh"
 		source_file_from_utilities "modules/system/debian/apt.sh"
+	fi
+
+	# System functions (Only required for 'darwin'-based systems)
+	if uname -a | grep -q "Darwin"; then
+		source_file_from_utilities "modules/system/darwin/system.sh"
 	fi
 
 	# Homebrew
