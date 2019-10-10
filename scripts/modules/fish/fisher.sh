@@ -10,7 +10,7 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamo
 
 does_fishfile_exist() {
 
-    [ -f "$HOME"/.config/fish/fishfile ] || [ -f fishfile ]
+    [ -f fishfile ] || [ -f "$HOME"/.config/fish/fishfile ]
 
 }
 
