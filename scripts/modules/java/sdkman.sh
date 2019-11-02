@@ -19,7 +19,6 @@ is_sdkman_installed() {
 sdk_install() {
 
     local -r candidate="${1}"
-    local -r version="${2}"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -30,8 +29,8 @@ sdk_install() {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     execute \
-        "sdk install $candidate $version" \
-        "sdk install ($candidate $version)"
+        "sdk install $candidate" \
+        "sdk install ($candidate)"
 
 }
 
