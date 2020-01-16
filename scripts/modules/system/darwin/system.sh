@@ -5,6 +5,8 @@
 
 source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamou/utilities/master/scripts/base/base.sh")"
 
+export MAC_OS_WORK_PATH=/tmp/downloads
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # see: https://apple.stackexchange.com/a/311511/291269
@@ -524,7 +526,7 @@ function caffeinate_machine() {
 
 # Answers the root install path for file name.
 # Parameters: $1 (required) - The file name.
-function et_install_root() {
+function get_install_root() {
   local file_name="$1"
   local file_extension=$(get_file_extension "$file_name")
 
@@ -558,8 +560,13 @@ function get_file_extension() {
 
 # Answers the file name.
 # Parameters: $1 (required) - The file path.
-function et_file_name() {
+function get_file_name() {
   printf "${1##*/}" # Answers file or directory name.
+}
+
+# Cleans work path for temporary processing of installs.
+function clean_work_path() {
+  rm -rf "$MAC_OS_WORK_PATH"
 }
 
 # dock.sh - contributed by @rpavlick
