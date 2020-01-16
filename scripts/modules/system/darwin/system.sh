@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # shellcheck source=/dev/null
-# shellcheck disable=2144,2010,2062,2063,2035
+# shellcheck disable=2144,2010,2062,2063,2035,2059,2086,2046
 
 source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamou/utilities/master/scripts/base/base.sh")"
 
@@ -239,7 +239,7 @@ function install_file() {
 
   if [[ ! -e "$install_path" ]]; then
     download_file "$file_url" "$file_name"
-    mkdir -p $(dirname "$install_path")
+    mkdir -p "$(dirname "$install_path")"
     mv "$MAC_OS_WORK_PATH/$file_name" "$install_path"
     printf "Installed: $file_name.\n"
     verify_path "$install_path"
@@ -370,7 +370,7 @@ function verify_homebrew_formulas() {
 
   local applications="$(brew list)"
 
-  while read line; do
+  while read -r line; do
     # Skip blank or comment lines.
     if [[ "$line" == "brew install"* ]]; then
       local application=$(printf "$line" | awk '{print $3}')
@@ -398,7 +398,7 @@ function verify_homebrew_casks() {
 
   local applications="$(brew cask list)"
 
-  while read line; do
+  while read -r line; do
     # Skip blank or comment lines.
     if [[ "$line" == "brew cask install"* ]]; then
       local application=$(printf "$line" | awk '{print $4}')
@@ -426,7 +426,7 @@ function verify_app_store_applications() {
 
   local applications="$(mas list)"
 
-  while read line; do
+  while read -r line; do
     # Skip blank or comment lines.
     if [[ "$line" == "mas install"* ]]; then
       local application=$(printf "$line" | awk '{print $3}')
@@ -449,7 +449,7 @@ function verify_listed_application() {
 }
 
 # Checks for missing applications suffixed by "APP_NAME" as defined in settings.sh.
-function erify_applications() {
+function verify_applications() {
   printf "\nChecking application software...\n"
 
   # Only use environment keys that end with "APP_NAME".
