@@ -317,7 +317,7 @@ function uninstall_application() {
   done
   printf "  q: Quit/Exit\n\n"
 
-  read -p "Enter selection: " response
+  read -p -r "Enter selection: " response
   printf "\n"
 
   local regex="^[0-9]+$"
@@ -341,7 +341,7 @@ function uninstall_extension() {
   done
   printf "  q: Quit/Exit\n\n"
 
-  read -p "Enter selection: " response
+  read -p -r "Enter selection: " response
   printf "\n"
 
   local regex="^[0-9]+$"
