@@ -80,7 +80,8 @@ kill_all_subprocesses() {
 #     Inspired by tab.bash by @bobthecow
 #     link: https://gist.github.com/bobthecow/757788
 
-function terminal() {
+terminal() {
+
 	# Mac OS only
 	[ "$(uname -s)" != "Darwin" ] && {
 		echo 'Mac OS Only'
@@ -108,10 +109,11 @@ tell application "Terminal" to tell the front window
 	close it
 end tell
 EOF
+
 }
 
 # Allows the executing of a command within
-# a 'x-terminal-emulator', whilist, showing
+# a 'x-terminal-emulator' or 'Terminal.app', whilist, showing
 # a spinner within the parent shell.
 #
 # Does not open a new terminal window on:
@@ -155,8 +157,9 @@ execute() {
 				ps ax | \
 				grep -v grep | \
 				grep -v terminal | \
-				grep "$CMDS" | grep "$TMP_FILE" | grep "$EXIT_STATUS_FILE" \
-				awk "{print $1}"\
+				grep "$CMDS" | grep "$TMP_FILE" | grep "$EXIT_STATUS_FILE" | \
+				xargs | \
+				cut -d ' ' -f 1\
 			)"
 	else
 		x-terminal-emulator -e "$CMDS 2> $TMP_FILE ; echo \$? > $EXIT_STATUS_FILE" &> /dev/null
