@@ -66,6 +66,50 @@ kill_all_subprocesses() {
 
 }
 
+# Open new terminal window from the command line using v3 syntax for applescript as needed in terminal Version 3+
+# This script blocks until the cmd is executed in the new terminal window then closes the new terminal window.
+#
+# Usage:
+#     terminal [CMD]             Open a new terminal window and execute CMD
+#
+# Example:
+#     terminal cd "$HOME"
+#
+# Credit:
+#     Forked from https://gist.github.com/vyder/96891b93f515cb4ac559e9132e1c9086
+#     Inspired by tab.bash by @bobthecow
+#     link: https://gist.github.com/bobthecow/757788
+
+function terminal() {
+	# Mac OS only
+	[ "$(uname -s)" != "Darwin" ] && {
+		echo 'Mac OS Only'
+		return
+	}
+
+    local cmd=""
+    local args="$*"
+
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    if [ -n "$args" ]; then
+        cmd="$args"
+    fi
+
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+osascript <<-EOF
+tell application "Terminal" to tell the front window
+    set w to do script "cd $wd; $cmd"
+	repeat
+		delay 1
+		if not busy of w then exit repeat
+	end repeat
+	close it
+end tell
+EOF
+}
+
 # Allows the executing of a command within
 # a 'x-terminal-emulator', whilist, showing
 # a spinner within the parent shell.
@@ -86,7 +130,9 @@ execute() {
 
 	local -r TMP_FILE="$(mktemp /tmp/XXXXX)"
 
-	uname -a | grep -q "Linux"  && ! grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null || [ -z "$SSH_TTY" ] && \
+	uname -a | grep -q "Linux"  && \
+		uname -a | grep -q "Darwin" && \
+		! grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null || [ -z "$SSH_TTY" ] && \
 		local -r EXIT_STATUS_FILE="$(mktemp /tmp/XXXXX)"
 
 	local exitCode=0
@@ -94,24 +140,36 @@ execute() {
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	if uname -a | grep -q "Darwin" || grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null || [ -n "$SSH_TTY" ]; then
+	if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null || [ -n "$SSH_TTY" ]; then
 		eval "$CMDS" \
 			&> /dev/null \
 			2> "$TMP_FILE" &
 
 		cmdsPID=$!
+	elif uname -a | grep -q "Darwin" || [ -n "$SSH_TTY" ]; then
+		terminal "$CMDS 2> $TMP_FILE ; echo \$? > $EXIT_STATUS_FILE" &> /dev/null
+
+		# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+		cmdsPID="$(\
+				ps ax | \
+				grep -v grep | \
+				grep -v terminal | \
+				grep "$CMDS" | grep "$TMP_FILE" | grep "$EXIT_STATUS_FILE" \
+				awk "{print $1}"\
+			)"
 	else
 		x-terminal-emulator -e "$CMDS 2> $TMP_FILE ; echo \$? > $EXIT_STATUS_FILE" &> /dev/null
 
 		# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 		cmdsPID="$(\
-						ps ax | \
-						grep -v "grep" | \
-						grep "sh -c" | grep "$CMDS" | grep "$TMP_FILE" | grep "$EXIT_STATUS_FILE" | \
-						xargs | \
-						cut -d ' ' -f 1\
-				)"
+				ps ax | \
+				grep -v "grep" | \
+				grep "sh -c" | grep "$CMDS" | grep "$TMP_FILE" | grep "$EXIT_STATUS_FILE" | \
+				xargs | \
+				cut -d ' ' -f 1\
+			)"
 	fi
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -126,7 +184,7 @@ execute() {
 	# Wait for the commands to no longer be executing
 	# in the background, and then get their exit code.
 
-	if uname -a | grep -q "Darwin" || grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null || [ -n "$SSH_TTY" ]; then
+	if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null || [ -n "$SSH_TTY" ]; then
 		wait "$cmdsPID" &> /dev/null
 
 		exitCode=$?
@@ -155,7 +213,9 @@ execute() {
 
 	rm -rf "$TMP_FILE"
 
-	uname -a | grep -q "Linux" && ! grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null || [ -z "$SSH_TTY" ] && \
+	uname -a | grep -q "Darwin" && \
+		uname -a | grep -q "Linux" && \
+		! grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null || [ -z "$SSH_TTY" ] && \
 		rm -rf "$EXIT_STATUS_FILE"
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
