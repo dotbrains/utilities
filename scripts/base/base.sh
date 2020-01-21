@@ -100,7 +100,7 @@ function terminal() {
 
 osascript <<-EOF
 tell application "Terminal" to tell the front window
-    set w to do script "cd $wd; $cmd"
+    set w to do script "$cmd"
 	repeat
 		delay 1
 		if not busy of w then exit repeat
