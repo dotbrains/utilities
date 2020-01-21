@@ -214,9 +214,7 @@ execute() {
 
 	rm -rf "$TMP_FILE"
 
-	uname -a | grep -q "Darwin" && \
-		uname -a | grep -q "Linux" && \
-		! grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null || [ -z "$SSH_TTY" ] && \
+	! grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null || [ -z "$SSH_TTY" ] && \
 		rm -rf "$EXIT_STATUS_FILE"
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
