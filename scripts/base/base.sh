@@ -99,21 +99,27 @@ terminal() {
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-osascript <<-EOF
-tell application "Terminal" to tell the front window
-    set w to do script "$cmd"
-	repeat
-		delay 1
-		if not busy of w then exit repeat
-	end repeat
-	close it
-end tell
+	osascript <<EOF
+tell application "Terminal"
+        set newTab to do script
+        set theWindow to first window of (every window whose tabs contains newTab)
+
+        do script "$cmd" in newTab
+        repeat
+            delay 0.05
+            if not busy of newTab then exit repeat
+        end repeat
+
+        repeat with i from 1 to the count of theWindow's tabs
+            if item i of theWindow's tabs is newTab then close theWindow
+        end repeat
+    end tell
 EOF
 
 }
 
 # Allows the executing of a command within
-# a 'x-terminal-emulator' or 'Terminal.app', whilist, showing
+# a 'x-terminal-emulator' or 'Terminal.app', whilst, showing
 # a spinner within the parent shell.
 #
 # Does not open a new terminal window on:
@@ -147,7 +153,7 @@ execute() {
 
 		cmdsPID=$!
 	elif uname -a | grep -q "Darwin" || [ -n "$SSH_TTY" ]; then
-		terminal "$CMDS 2> $TMP_FILE ; echo \$? > $EXIT_STATUS_FILE" &> /dev/null
+		terminal "$CMDS 2> $TMP_FILE ; echo \$? > $EXIT_STATUS_FILE" &> /dev/null &
 
 		# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
