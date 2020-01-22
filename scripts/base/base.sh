@@ -161,7 +161,7 @@ execute() {
 				xargs | \
 				cut -d ' ' -f 1\
 			)"
-	else
+	elif uname -a | grep -q "Linux" || [ -n "$SSH_TTY" ]; then
 		x-terminal-emulator -e "$CMDS 2> $TMP_FILE ; echo \$? > $EXIT_STATUS_FILE" &> /dev/null
 
 		# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
