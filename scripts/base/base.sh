@@ -100,20 +100,16 @@ terminal() {
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	osascript <<EOF
-tell application "Terminal"
-        set newTab to do script
-        set theWindow to first window of (every window whose tabs contains newTab)
-
-        do script "$cmd" in newTab
-        repeat
-            delay 0.05
-            if not busy of newTab then exit repeat
-        end repeat
-
-        repeat with i from 1 to the count of theWindow's tabs
-            if item i of theWindow's tabs is newTab then close theWindow
-        end repeat
-    end tell
+tell application id "com.apple.Terminal"
+	set T to do script
+	set W to the id of window 1 where its tab 1 = T
+	do script "$cmd" in T
+	repeat
+		delay 0.05
+		if not busy of T then exit repeat
+	end repeat
+	close window id W
+end tell
 EOF
 
 }
