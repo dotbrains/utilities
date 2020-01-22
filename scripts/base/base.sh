@@ -134,7 +134,7 @@ execute() {
 
 	local -r TMP_FILE="$(mktemp /tmp/XXXXX)"
 
-	! grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null || [ -z "$SSH_TTY" ] && \
+	! grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null || [ -n "$SSH_TTY" ] && \
 		local -r EXIT_STATUS_FILE="$(mktemp /tmp/XXXXX)"
 
 	local exitCode=0
