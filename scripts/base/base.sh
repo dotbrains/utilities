@@ -153,7 +153,7 @@ execute() {
 
 		cmdsPID=$!
 	elif uname -a | grep -q "Darwin" || [ -n "$SSH_TTY" ]; then
-		terminal "$CMDS 2> $TMP_FILE ; echo \$? > $EXIT_STATUS_FILE" &> /dev/null &
+		terminal "$CMDS 2> $TMP_FILE ; echo \$? > $EXIT_STATUS_FILE"
 
 		# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
