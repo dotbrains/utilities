@@ -371,7 +371,7 @@ print_warning() {
 
 skip_questions() {
 
-     while :; do
+	while :; do
         case $1 in
             -y|--yes) return 0;;
                    *) break;;
