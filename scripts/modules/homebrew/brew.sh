@@ -43,6 +43,12 @@ brew_bundle_install() {
 
     local LOCAL_BASH_CONFIG_FILE="$HOME/.bash.local"
 
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Check if `brew` is installed.
+
+    is_brew_installed || return 1
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     # Install formulae.
@@ -102,6 +108,12 @@ brew_prefix() {
 
     local path=""
 
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Check if `brew` is installed.
+
+    is_brew_installed || return 1
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if path="$(brew --prefix 2> /dev/null)"; then
@@ -118,6 +130,12 @@ brew_tap() {
 
     local LOCAL_BASH_CONFIG_FILE="$HOME/.bash.local"
 
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Check if `brew` is installed.
+
+    is_brew_installed || return 1
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     . "$LOCAL_BASH_CONFIG_FILE" \
@@ -128,6 +146,12 @@ brew_tap() {
 brew_update() {
 
     local LOCAL_BASH_CONFIG_FILE="$HOME/.bash.local"
+
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Check if `brew` is installed.
+
+    is_brew_installed || return 1
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -154,6 +178,12 @@ brew_upgrade() {
 brew_upgrade_formulae() {
 
     local LOCAL_BASH_CONFIG_FILE="$HOME/.bash.local"
+
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Check if `brew` is installed.
+
+    is_brew_installed || return 1
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     execute \
