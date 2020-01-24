@@ -45,9 +45,7 @@ autoremove() {
     # Remove packages that were automatically installed to satisfy
     # dependencies for other packages and are no longer needed.
 
-    execute \
-        "sudo apt-get autoremove -qqy" \
-        "APT (autoremove)"
+    sudo apt-get autoremove -qqy
 
 }
 
@@ -70,12 +68,10 @@ remove_system_package() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    execute \
-        "sudo apt remove $PACKAGE -qqy \
-            && sudo apt purge $PACKAGE -qqy \
+    sudo apt remove "$PACKAGE" -qqy \
+            && sudo apt purge "$PACKAGE" -qqy \
             && sudo apt autoremove -qqy \
-            && sudo apt clean" \
-        "APT remove ($PACKAGE_READABLE_NAME)"
+            && sudo apt clean
 
 }
 
@@ -87,14 +83,10 @@ remove_package() {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if package_is_installed "$PACKAGE"; then
-        execute \
-            "sudo apt remove $PACKAGE -qqy \
-                && sudo apt purge $PACKAGE -qqy \
+        sudo apt remove "$PACKAGE" -qqy \
+                && sudo apt purge "$PACKAGE" -qqy \
                 && sudo apt autoremove -qqy \
-                && sudo apt clean" \
-            "APT remove ($PACKAGE_READABLE_NAME)"
-    else
-        print_warning "($PACKAGE_READABLE_NAME) is not installed"
+                && sudo apt clean
     fi
 
 }
@@ -105,9 +97,7 @@ upgrade_package() {
     declare -r PACKAGE="$2"
 
     if package_is_installed "$PACKAGE"; then
-       execute \
-            "sudo apt install --only-upgrade -qqy $PACKAGE" \
-            "$PACKAGE_READABLE_NAME (upgrade)"
+		sudo apt install --only-upgrade -qqy "$PACKAGE"
     fi
 
 }
@@ -118,11 +108,9 @@ install_package() {
     declare -r PACKAGE="$2"
 
     if ! package_is_installed "$PACKAGE"; then
-        execute "sudo apt install --allow-unauthenticated -qqy $PACKAGE" "$PACKAGE_READABLE_NAME"
-        #                                  suppress output ─┘│
-        #        assume "yes" as the answer to all prompts ──┘
-    else
-        print_success "($PACKAGE_READABLE_NAME) is already installed."
+        sudo apt install --allow-unauthenticated -qqy "$PACKAGE"
+    #                            suppress output ─┘│
+    #  assume "yes" as the answer to all prompts ──┘
     fi
 
 }
@@ -138,23 +126,17 @@ install_snap_package() {
     if ! package_is_installed "snapd"; then
         install_package "snapd" "snapd"
 
-        execute \
-            "sudo systemctl start snapd && \
-            sudo systemctl enable snapd" \
-            "systemctl (enable snapd)"
+		sudo systemctl start snapd && \
+            sudo systemctl enable snapd
 
-        execute \
-            "sudo systemctl start apparmor && \
-            sudo systemctl enable apparmor" \
-            "systemctl (enable apparmor)"
+        sudo systemctl start apparmor && \
+            sudo systemctl enable apparmor
     fi
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if ! snap_is_installed "$PACKAGE"; then
-        execute "sudo snap install $PACKAGE $ARGUMENTS" "$PACKAGE_READABLE_NAME"
-    else
-        print_success "($PACKAGE_READABLE_NAME) is already installed."
+        sudo snap install "$PACKAGE" "$ARGUMENTS"
     fi
 
 }
@@ -310,7 +292,6 @@ apt_upgrade() {
 
     # Install the newest versions of all packages installed.
 
-	export DEBIAN_FRONTEND="noninteractive" \
-            && sudo apt -o Dpkg::Options::="--force-confnew" upgrade -qqy --allow-unauthenticated
+	sudo apt upgrade -y
 
 }
