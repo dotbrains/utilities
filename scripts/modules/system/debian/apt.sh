@@ -40,7 +40,7 @@ add_to_source_list() {
 
 }
 
-autoremove() {
+auto_remove() {
 
     # Remove packages that were automatically installed to satisfy
     # dependencies for other packages and are no longer needed.
@@ -244,13 +244,9 @@ install_gdebi() {
     if [ ! -e "$FILE_PATH" ]; then
 
         if ! package_is_installed "$PACKAGE"; then
-            execute \
-                "wget $URL -qO $FILE_PATH && \
-                sudo gdebi -n -q $FILE_PATH && \
-                sudo rm -rf $FILE_PATH && sudo apt autoremove -qqy" \
-                "$PACKAGE_READABLE_NAME"
-        else
-            print_success "($PACKAGE_READABLE_NAME) is already installed."
+            wget "$URL" -qO "$FILE_PATH" && \
+                sudo gdebi -n -q "$FILE_PATH" && \
+                sudo rm -rf "$FILE_PATH" && sudo apt autoremove -qqy
         fi
 
     fi
