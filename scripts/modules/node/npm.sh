@@ -59,7 +59,7 @@ npm_install() {
 
     if ! is_npm_pkg_installed "$PACKAGE"; then
         . "$LOCAL_BASH_CONFIG_FILE" \
-                && npx yarn glboal add --silent "$PACKAGE" --prefix /usr/local
+                && npx yarn global add "$PACKAGE" --prefix /usr/local
     fi
 
 }
