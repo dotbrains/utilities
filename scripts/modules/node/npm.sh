@@ -51,6 +51,29 @@ npm_install() {
 
     # Check if `npx` is installed.
 
+    is_npm_installed || return 1
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Install the specified package.
+
+    if ! is_npm_pkg_installed "$PACKAGE"; then
+        . "$LOCAL_BASH_CONFIG_FILE" \
+                && npm install --global "$PACKAGE"
+    fi
+
+}
+
+npx_install() {
+
+    declare -r PACKAGE="$1"
+
+    local LOCAL_BASH_CONFIG_FILE="$HOME/.bash.local"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Check if `npx` is installed.
+
     is_npx_installed || return 1
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
