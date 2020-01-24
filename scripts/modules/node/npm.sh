@@ -16,6 +16,14 @@ is_npm_installed() {
 
 }
 
+is_npx_installed() {
+
+    if ! cmd_exists "npx"; then
+        return 1
+    fi
+
+}
+
 is_npm_pkg_installed() {
 
     local LOCAL_BASH_CONFIG_FILE="$HOME/.bash.local"
@@ -41,11 +49,17 @@ npm_install() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+    # Check if `npx` is installed.
+
+    is_npx_installed || return 1
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
     # Install the specified package.
 
     if ! is_npm_pkg_installed "$PACKAGE"; then
         . "$LOCAL_BASH_CONFIG_FILE" \
-                && npm install --global --silent "$PACKAGE"
+                && npx yarn glboal add --silent "$PACKAGE" --prefix /usr/local
     fi
 
 }
