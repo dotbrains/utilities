@@ -146,9 +146,7 @@ symlink() {
 
     if [ ! -e "$targetFile" ]; then
 
-        execute \
-            "sudo ln -fs $sourceFile $targetFile" \
-            "$targetFile → $sourceFile"
+        sudo ln -fs "$sourceFile" "$targetFile"
 
     elif [ "$(readlink "$targetFile")" == "$sourceFile" ]; then
         print_success "$targetFile → $sourceFile"
@@ -159,9 +157,7 @@ symlink() {
 
                 sudo rm -rf "$targetFile"
 
-                execute \
-                    "sudo ln -fs $sourceFile $targetFile" \
-                    "$targetFile → $sourceFile"
+                sudo ln -fs "$sourceFile" "$targetFile"
 
             else
                 print_error "$targetFile → $sourceFile"
@@ -198,7 +194,7 @@ mkd() {
                 print_success "$1"
             fi
         else
-            execute "mkdir -p $1" "$1"
+            mkdir -p "$1"
         fi
     fi
 
@@ -207,22 +203,15 @@ mkd() {
 set_default_shell() {
 
     declare -r EXECUTABLE_PATH="$1"
-    declare -r SHELL_READABLE_NAME="basename $1"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if ! grep -q "$EXECUTABLE_PATH" "/etc/shells"; then
-        execute \
-            "echo $EXECUTABLE_PATH | sudo tee -a /etc/shells" \
-            "Add ($SHELL_READABLE_NAME) to '/etc/shells'"
+        echo "$EXECUTABLE_PATH" | sudo tee -a /etc/shells
     fi
 
     if [[ "$SHELL" != "$EXECUTABLE_PATH" ]]; then
-        execute \
-            "sudo chsh -s $EXECUTABLE_PATH" \
-            "\$SHELL -> ($EXECUTABLE_PATH)"
-    else
-        print_success "($SHELL_READABLE_NAME) is already the default \$SHELL"
+        sudo chsh -s "$EXECUTABLE_PATH"
     fi
 
 }
@@ -337,8 +326,6 @@ jq_replace() {
 				brew install jq
 
 				jq ".\"$field\" |= \"$value\"" "$x" > tmp.$$.json && mv tmp.$$.json "$x"
-			else
-				print_error "(jq)" "could not be installed"
 			fi
 		fi
 	fi

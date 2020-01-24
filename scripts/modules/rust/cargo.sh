@@ -29,11 +29,7 @@ cargo_install() {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if [ ! -f "$HOME/.cargo/bin/$package" ]; then
-        execute \
-            "cargo install --quiet $package" \
-            "cargo install ($package)"
-    else
-        print_success "($package) is already installed"
+        cargo install --quiet "$package"
     fi
 
 }

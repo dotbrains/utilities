@@ -11,7 +11,6 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamo
 is_pip3_installed() {
 
     if ! cmd_exists "pip3"; then
-        print_error "(pip3) is not installed."
         return 1
     fi
 
@@ -36,11 +35,7 @@ pip3_install() {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if ! is_pip3_pkg_installed "$PACKAGE"; then
-        execute \
-            "sudo pip3 install --quiet $PACKAGE" \
-            "$PACKAGE"
-    else
-        print_success "($PACKAGE) is already installed."
+        sudo pip3 install --quiet "$PACKAGE"
     fi
 
 }

@@ -28,9 +28,7 @@ sdk_install() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    execute \
-        "sdk install $candidate" \
-        "sdk install ($candidate)"
+    sdk install "$candidate"
 
 }
 
@@ -41,8 +39,6 @@ set_default_sdk() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    execute \
-        "sdk default $candidate $version" \
-        "sdk set default ($candidate $version)"
+    sdk default "$candidate" "$version"
 
 }

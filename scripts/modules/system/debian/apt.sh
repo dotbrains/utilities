@@ -289,13 +289,9 @@ install_deb() {
     if [ ! -e "$FILE_PATH" ]; then
 
         if ! package_is_installed "$PACKAGE"; then
-            execute \
-                "wget $URL -qO $FILE_PATH && \
-                sudo dpkg -i $FILE_PATH && sudo apt install -f && \
-                sudo rm -rf $FILE_PATH && sudo apt autoremove -qqy" \
-                "$PACKAGE_READABLE_NAME"
-        else
-            print_success "($PACKAGE_READABLE_NAME) is already installed."
+            wget "$URL" -qO "$FILE_PATH" && \
+                sudo dpkg -i "$FILE_PATH" && sudo apt install -f && \
+                sudo rm -rf "$FILE_PATH" && sudo apt autoremove -qqy
         fi
 
     fi
@@ -306,9 +302,7 @@ apt_update() {
 
     # Resynchronize the package index files.
 
-    execute \
-        "sudo apt update" \
-        "APT (update)"
+    sudo apt update
 
 }
 
@@ -316,9 +310,7 @@ apt_upgrade() {
 
     # Install the newest versions of all packages installed.
 
-    execute \
-        "export DEBIAN_FRONTEND=\"noninteractive\" \
-            && sudo apt -o Dpkg::Options::=\"--force-confnew\" upgrade -qqy --allow-unauthenticated" \
-        "APT (upgrade)"
+	export DEBIAN_FRONTEND="noninteractive" \
+            && sudo apt -o Dpkg::Options::="--force-confnew" upgrade -qqy --allow-unauthenticated
 
 }

@@ -41,11 +41,7 @@ fisher_install() {
     # Install the specified package.
 
     if ! is_fisher_pkg_installed "$PACKAGE"; then
-        execute \
-            "fish -c \"fisher add $PACKAGE\"" \
-            "fisher (install $PACKAGE)"
-    else
-        print_success "($PACKAGE) is already installed."
+        fish -c "fisher add $PACKAGE"
     fi
 
 }
@@ -81,8 +77,6 @@ fisher_update() {
 
     # Update package(s)
 
-    execute \
-        "fish -c \"fisher ;and fisher self-update\"" \
-        "fisher (update)"
+    fish -c "fisher ;and fisher self-update"
 
 }

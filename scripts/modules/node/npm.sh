@@ -11,7 +11,6 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamo
 is_npm_installed() {
 
     if ! cmd_exists "npm"; then
-        print_error "(npm) is not installed."
         return 1
     fi
 
@@ -45,12 +44,8 @@ npm_install() {
     # Install the specified package.
 
     if ! is_npm_pkg_installed "$PACKAGE"; then
-        execute \
-            ". $LOCAL_BASH_CONFIG_FILE \
-                && npm install --global --silent $PACKAGE" \
-            "$PACKAGE"
-    else
-        print_success "($PACKAGE) is already installed."
+        . "$LOCAL_BASH_CONFIG_FILE" \
+                && npm install --global --silent "$PACKAGE"
     fi
 
 }

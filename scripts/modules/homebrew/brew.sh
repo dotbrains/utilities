@@ -11,7 +11,6 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamo
 is_brew_installed() {
 
     if ! cmd_exists "brew"; then
-        print_error "(brew) is not installed."
         return 1
     fi
 
@@ -29,10 +28,8 @@ brew_cleanup() {
     #
     # https://github.com/Homebrew/brew/blob/496fff643f352b0943095e2b96dbc5e0f565db61/share/doc/homebrew/FAQ.md#how-do-i-uninstall-old-versions-of-a-formula
 
-    execute \
-        ". $LOCAL_BASH_CONFIG_FILE \
-            && brew cleanup" \
-        "brew (cleanup)"
+    . "$LOCAL_BASH_CONFIG_FILE" \
+            && brew cleanup
 
 }
 
@@ -55,10 +52,8 @@ brew_bundle_install() {
 
     if [ -e "$FILE_PATH" ]; then
 
-        execute \
-            ". $LOCAL_BASH_CONFIG_FILE \
-                && brew bundle install -v --file=\"$FILE_PATH\"" \
-            "brew (bundle install $FILE_PATH)"
+        . "$LOCAL_BASH_CONFIG_FILE" \
+                && brew bundle install -v --file="$FILE_PATH"
 
     fi
 }
@@ -84,7 +79,6 @@ brew_install() {
 
     if [ -n "$TAP_VALUE" ]; then
         if ! brew_tap "$TAP_VALUE"; then
-            print_error "$FORMULA_READABLE_NAME ('brew tap $TAP_VALUE' failed)"
             return 1
         fi
     fi
@@ -93,13 +87,9 @@ brew_install() {
 
     # Install the specified formula.
 
-    if brew "$CMD" list | grep "$FORMULA" &> /dev/null; then
-        print_success "($FORMULA) is already installed"
-    else
-        execute \
-            ". $LOCAL_BASH_CONFIG_FILE \
-                && brew $CMD install $FORMULA" \
-            "$FORMULA"
+    if ! brew "$CMD" list | grep "$FORMULA" &> /dev/null; then
+		. "$LOCAL_BASH_CONFIG_FILE" \
+                && brew "$CMD" install "$FORMULA"
     fi
 
 }
@@ -120,8 +110,7 @@ brew_prefix() {
         printf "%s" "$path"
         return 0
     else
-        print_error "brew (get prefix)"
-        return 1
+		return 1
     fi
 
 }
@@ -155,10 +144,8 @@ brew_update() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    execute \
-        ". $LOCAL_BASH_CONFIG_FILE \
-            && brew update" \
-        "brew (update)"
+    . "$LOCAL_BASH_CONFIG_FILE" \
+            && brew update
 
 }
 
@@ -168,10 +155,8 @@ brew_upgrade() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    execute \
-        ". $LOCAL_BASH_CONFIG_FILE \
-            && brew upgrade" \
-        "brew (upgrade)"
+    . "$LOCAL_BASH_CONFIG_FILE" \
+            && brew upgrade
 
 }
 
@@ -186,9 +171,7 @@ brew_upgrade_formulae() {
     is_brew_installed || return 1
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    execute \
-        ". $LOCAL_BASH_CONFIG_FILE \
-            && brew  upgrade $2" \
-        "brew (upgrade $1)"
+    . "$LOCAL_BASH_CONFIG_FILE" \
+            && brew  upgrade "$2"
 
 }

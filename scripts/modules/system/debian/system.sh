@@ -12,7 +12,6 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamo
 fix_broken_symlinks_in() {
 
     TARGET="$1"
-    DESCRIPTION="$2"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -23,9 +22,7 @@ fix_broken_symlinks_in() {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if [ -d "$TARGET" ]; then
-        execute \
-            "symlinks -rd $TARGET" \
-            "$DESCRIPTION"
+        symlinks -rd "$TARGET"
     fi
 
 }

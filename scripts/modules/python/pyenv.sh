@@ -60,12 +60,8 @@ pyenv_install() {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if ! is_pyenv_plugin_installed "$PLUGIN_READABLE_NAME"; then
-        execute \
-            "cd $PYENV_PLUGINS_DIRECTORY \
-            && git clone $PLUGIN_GIT_URL" \
-            "pyenv ($PLUGIN_READABLE_NAME)"
-    else
-         print_success "($PLUGIN_READABLE_NAME) is already installed"
+        cd "$PYENV_PLUGINS_DIRECTORY" \
+            && git clone "$PLUGIN_GIT_URL"
     fi
 
 }

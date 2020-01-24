@@ -29,11 +29,7 @@ gem_install() {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if ! gem query -i -n "$gem" > /dev/null 2>&1; then
-        execute \
-            "sudo gem install $gem" \
-            "gem install ($gem)"
-    else
-        print_success "($gem) is already installed"
+        sudo gem install "$gem"
     fi
 
 }

@@ -11,7 +11,6 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamo
 is_pip_installed() {
 
     if ! cmd_exists "pip"; then
-        print_error "(pip) is not installed."
         return 1
     fi
 
@@ -36,11 +35,7 @@ pip_install() {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if ! is_pip_pkg_installed "$PACKAGE"; then
-        execute \
-            "python -m pip install --quiet $PACKAGE" \
-            "$PACKAGE"
-    else
-        print_success "($PACKAGE) is already installed."
+        python -m pip install --quiet "$PACKAGE"
     fi
 
 }
