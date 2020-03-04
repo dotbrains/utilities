@@ -23,7 +23,7 @@ is_pyenv_plugin_installed() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    if [ ! -d "$PYENV_PLUGINS_DIRECTORY/$PLUGIN_READABLE_NAME" ]; then
+    if [[ ! -d "$PYENV_PLUGINS_DIRECTORY/$PLUGIN_READABLE_NAME" ]]; then
         return 1
     fi
 
@@ -53,7 +53,7 @@ pyenv_install() {
 
     # Make sure the pyenv plugin's directory exists
 
-    if [ ! -d "$PYENV_PLUGINS_DIRECTORY" ]; then
+    if [[ ! -d "$PYENV_PLUGINS_DIRECTORY" ]]; then
         mkdir -p "$PYENV_PLUGINS_DIRECTORY"
     fi
 

@@ -28,7 +28,7 @@ cargo_install() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    if [ ! -f "$HOME/.cargo/bin/$package" ]; then
+    if [[ ! -f "$HOME/.cargo/bin/$package" ]]; then
         cargo install --quiet "$package"
     fi
 

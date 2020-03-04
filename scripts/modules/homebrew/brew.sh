@@ -50,7 +50,7 @@ brew_bundle_install() {
 
     # Install formulae.
 
-    if [ -e "$FILE_PATH" ]; then
+    if [[ -e "$FILE_PATH" ]]; then
 
         . "$LOCAL_BASH_CONFIG_FILE" \
                 && brew bundle install -v --file="$FILE_PATH"
@@ -77,7 +77,7 @@ brew_install() {
     # If `brew tap` needs to be executed,
     # check if it executed correctly.
 
-    if [ -n "$TAP_VALUE" ]; then
+    if [[ -n "$TAP_VALUE" ]]; then
         if ! brew_tap "$TAP_VALUE"; then
             return 1
         fi

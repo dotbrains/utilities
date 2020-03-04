@@ -23,9 +23,9 @@ read_os_name() {
 
     kernelName="$(read_kernel_name)"
 
-    if [ "$kernelName" == "Darwin" ]; then
+    if [[ "$kernelName" == "Darwin" ]]; then
         printf "macos"
-    elif [ "$kernelName" == "Linux" ] && [ -e "/etc/os-release" ] || [ -e "/usr/lib/os-release" ]; then
+    elif [[ "$kernelName" == "Linux" ]] && [[ -e "/etc/os-release" ]] || [[ -e "/usr/lib/os-release" ]]; then
         local conf=""
 
         if test -r /etc/os-release ; then
@@ -47,9 +47,9 @@ read_os_version() {
 
     kernelName="$(uname -s)"
 
-    if [ "$kernelName" == "Darwin" ]; then
+    if [[ "$kernelName" == "Darwin" ]]; then
         defaults read loginwindow SystemVersionStampAsString
-    elif [ "$kernelName" == "Linux" ] && [ -e "/etc/os-release" ] || [ -e "/usr/lib/os-release" ]; then
+    elif [[ "$kernelName" == "Linux" ]] && [[ -e "/etc/os-release" ]] || [[ -e "/usr/lib/os-release" ]]; then
         local conf=""
 
         if test -r /etc/os-release ; then
@@ -72,16 +72,16 @@ get_os() {
 
     kernelName="$(uname -s)"
 
-    if [ "$kernelName" == "Darwin" ]; then
+    if [[ "$kernelName" == "Darwin" ]]; then
         os="macos"
-    elif [ "$kernelName" == "Linux" ] && [ -e "/etc/os-release" ] || [ -e "/usr/lib/os-release" ]; then
-        if [ "$(read_os_name)" == "ubuntu" ]; then
+    elif [[ "$kernelName" == "Linux" ]] && [[ -e "/etc/os-release" ]] || [[ -e "/usr/lib/os-release" ]]; then
+        if [[ "$(read_os_name)" == "ubuntu" ]]; then
             os="ubuntu"
 
             if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null; then
                 os="windows"
             fi
-        elif [ "$(read_os_name)" == "kali" ]; then
+        elif [[ "$(read_os_name)" == "kali" ]]; then
             os="kali-linux"
         fi
     else
@@ -144,11 +144,11 @@ symlink() {
     sourceFile="$1"
     targetFile="$2"
 
-    if [ ! -e "$targetFile" ]; then
+    if [[ ! -e "$targetFile" ]]; then
 
         sudo ln -fs "$sourceFile" "$targetFile"
 
-    elif [ "$(readlink "$targetFile")" == "$sourceFile" ]; then
+    elif [[ "$(readlink "$targetFile")" == "$sourceFile" ]]; then
         print_success "$targetFile → $sourceFile"
     else
 		ask_for_confirmation "'$targetFile' already exists, do you want to overwrite it?"
@@ -174,7 +174,7 @@ cmd_exists() {
 
     # Check if `.bash.local` exists within the `$HOME` directory
 
-    if [ -f "$LOCAL_BASH_CONFIG_FILE" ]; then
+    if [[ -f "$LOCAL_BASH_CONFIG_FILE" ]]; then
         . "$LOCAL_BASH_CONFIG_FILE"
     fi
 
@@ -186,9 +186,9 @@ cmd_exists() {
 
 mkd() {
 
-    if [ -n "$1" ]; then
-        if [ -e "$1" ]; then
-            if [ ! -d "$1" ]; then
+    if [[ -n "$1" ]]; then
+        if [[ -e "$1" ]]; then
+            if [[ ! -d "$1" ]]; then
                 print_error "$1 - a file with the same name already exists!"
             else
                 print_success "$1"
@@ -226,14 +226,14 @@ append_to_bashrc() {
     local skip_new_line="${2:-0}"
     local bashrc=""
 
-    if [ -w "$HOME/.bash.local" ]; then
+    if [[ -w "$HOME/.bash.local" ]]; then
         bashrc="$HOME/.bash.local"
     else
         bashrc="$HOME/.bashrc"
     fi
 
     if ! grep -Fqs "$text" "$bashrc"; then
-        if [ "$skip_new_line" -eq 1 ]; then
+        if [[ "$skip_new_line" -eq 1 ]]; then
             printf "%s\n" "$text" >> "$bashrc"
         else
             printf "\n%s\n" "$text" >> "$bashrc"
@@ -246,7 +246,7 @@ append_to_bashrc() {
 function extract {
 
     echo Extracting "$1" ...
-    if [ -f "$1" ] ; then
+    if [[ -f "$1" ]]; then
         case "$1" in
             *.tar.bz2)   tar xjf "$1"  ;;
             *.tar.gz)    tar xzf "$1"  ;;
@@ -319,7 +319,7 @@ jq_replace() {
 	if cmd_exists "jq"; then
 		jq ".\"$field\" |= \"$value\"" "$x" > tmp.$$.json && mv tmp.$$.json "$x"
 	else
-		if [ "$(read_os_name)" = "linux" ]; then
+		if [[ "$(read_os_name)" = "linux" ]]; then
 			sudo apt install jq -qqy
 		else
 			if cmd_exists "brew"; then

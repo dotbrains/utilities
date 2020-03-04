@@ -33,7 +33,7 @@ add_gpg_key_with_dearmor() {
 add_to_source_list() {
 
 
-    if ! [ -e "/etc/apt/sources.list.d/$2" ]; then
+    if ! [[ -e "/etc/apt/sources.list.d/$2" ]]; then
         sudo sh -c "printf 'deb $1' >> '/etc/apt/sources.list.d/$2'" \
             && sudo apt update --fix-missing &> /dev/null
     fi
@@ -161,7 +161,7 @@ apt_install_from_file() {
 
     # Install package(s)
 
-    if [ -e "$FILE_PATH" ]; then
+    if [[ -e "$FILE_PATH" ]]; then
 
         # Update & upgrade system prior to installing packages
         apt_update
@@ -172,7 +172,7 @@ apt_install_from_file() {
         cat < "$FILE_PATH" | while read -r LINE; do
             if [[ $LINE =~ ${regex[comment]} ]]; then
                 continue
-            elif [[ $LINE =~ ${regex[ppa]} ]]; then
+            elif [[ ${LINE} =~ ${regex[ppa]} ]]; then
                 PPA=${BASH_REMATCH[1]}
 
 				add_ppa "$PPA"
@@ -180,12 +180,12 @@ apt_install_from_file() {
                 PACKAGE=${BASH_REMATCH[1]}
 
 				install_package "$PACKAGE" "$PACKAGE"
-            elif [[ $LINE =~ ${regex[snap]} ]]; then
+            elif [[ ${LINE} =~ ${regex[snap]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
 				ARGS=${BASH_REMATCH[2]}
 
 				install_snap_package "$PACKAGE" "$ARGS" "$PACKAGE"
-            elif [[ $LINE =~ ${regex[deb]} ]]; then
+            elif [[ ${LINE} =~ ${regex[deb]} ]]; then
                 PACKAGE_READABLE_NAME=${BASH_REMATCH[1]}
                 URL=${BASH_REMATCH[2]}
                 TARGET_PATH=${BASH_REMATCH[3]}
@@ -193,27 +193,27 @@ apt_install_from_file() {
                 DEB_FILE_PATH="$TARGET_PATH/$FILE_NAME"
 
                 install_gdebi "$URL" "$DEB_FILE_PATH" "$PACKAGE_READABLE_NAME" "$PACKAGE_READABLE_NAME"
-            elif [[ $LINE =~ ${regex[gpg_dearmor]} ]]; then
+            elif [[ ${LINE} =~ ${regex[gpg_dearmor]} ]]; then
                 FILE_NAME=${BASH_REMATCH[1]}
                 URL=${BASH_REMATCH[2]}
 
                 add_gpg_key_with_dearmor "$URL" "$FILE_NAME" && \
 					sudo apt update &> /dev/null
-            elif [[ $LINE =~ ${regex[gpg]} ]]; then
+            elif [[ ${LINE} =~ ${regex[gpg]} ]]; then
                 URL=${BASH_REMATCH[1]}
 
                 add_key "$URL" && \
 					sudo apt update &> /dev/null
-            elif [[ $LINE =~ ${regex[source]} ]]; then
+            elif [[ ${LINE} =~ ${regex[source]} ]]; then
                 FILE_NAME=${BASH_REMATCH[1]}
                 DATA=${BASH_REMATCH[2]}
 
                 add_to_source_list "$DATA" "$FILE_NAME"
-            elif [[ $LINE =~ ${regex[remove]} ]]; then
+            elif [[ ${LINE} =~ ${regex[remove]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
 
                 remove_package "$PACKAGE" "$PACKAGE"
-            elif [[ $LINE =~ ${regex[remove_system]} ]]; then
+            elif [[ ${LINE} =~ ${regex[remove_system]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
 
                 remove_system_package "$PACKAGE" "$PACKAGE"
@@ -241,7 +241,7 @@ install_gdebi() {
 
     # Install deb using gdebi
 
-    if [ ! -e "$FILE_PATH" ]; then
+    if [[ ! -e "$FILE_PATH" ]]; then
 
         if ! package_is_installed "$PACKAGE"; then
             wget "$URL" -qO "$FILE_PATH" && \
@@ -264,7 +264,7 @@ install_deb() {
 
     # Install deb
 
-    if [ ! -e "$FILE_PATH" ]; then
+    if [[ ! -e "$FILE_PATH" ]]; then
 
         if ! package_is_installed "$PACKAGE"; then
             wget "$URL" -qO "$FILE_PATH" && \

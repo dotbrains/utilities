@@ -13,7 +13,7 @@ clone_git_repo_in() {
     TARGET="$1"
     URL="$2"
 
-    if ! [ -d "$TARGET" ]; then
+    if ! [[ -d "$TARGET" ]]; then
         git clone "$URL" "$TARGET"
     fi
 

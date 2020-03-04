@@ -41,9 +41,9 @@ function install_dmg {
 
     # Install the program within the '.dmg'
 
-    if [ -e "$VOLUME"/*.app ]; then
+    if [[ -e "$VOLUME"/*.app ]]; then
       sudo cp -rf "$VOLUME"/*.app /Applications
-    elif [ -e "$VOLUME"/*.pkg ]; then
+    elif [[ -e "$VOLUME"/*.pkg ]]; then
       package="$(ls -1 | grep *.pkg | head -1)"
 
       sudo installer -pkg "$VOLUME"/"$package".pkg -target /
@@ -131,7 +131,7 @@ function add_folder_to_dock {
       shift
   done
 
-  if [ -d "$folder_path" ]; then
+  if [[ -d "$folder_path" ]]; then
       echo "$folder_path added to the Dock."
       defaults write com.apple.dock persistent-others -array-add "<dict>
               <key>tile-data</key> <dict>

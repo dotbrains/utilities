@@ -10,7 +10,7 @@ copy_public_ssh_key_to_clipboard () {
 
     print_warning "Please copy the following public SSH key ($1) to the clipboard"
     printf "\n"
-    [ -e "$1" ] && tail "$1"
+    [[ -e "$1" ]] && tail "$1"
     printf "\n"
 
 }
@@ -42,7 +42,7 @@ set_github_ssh_key() {
     # If there is already a file with that
     # name, remove it.
 
-    if [ -f "$sshKeyFileName" ]; then
+    if [[ -f "$sshKeyFileName" ]]; then
         rm -rf "$sshKeyFileName".pub
     fi
 
@@ -66,7 +66,7 @@ test_ssh_connection() {
     while true; do
 
         ssh -T git@github.com &> /dev/null
-        [ $? -eq 1 ] && break
+        [[ $? -eq 1 ]] && break
 
         sleep 5
 
@@ -84,7 +84,7 @@ main() {
 
     ssh -T git@github.com &> /dev/null
 
-    if [ $? -ne 1 ]; then
+    if [[ $? -ne 1 ]]; then
         set_github_ssh_key
     fi
 

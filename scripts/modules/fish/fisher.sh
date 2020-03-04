@@ -10,7 +10,7 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamo
 
 does_fishfile_exist() {
 
-    [ -f fishfile ] || [ -f "$HOME"/.config/fish/fishfile ]
+    [[ -f fishfile ]] || [[ -f "$HOME"/.config/fish/fishfile ]]
 
 }
 
@@ -54,7 +54,7 @@ fisher_install_from_file() {
 
     # Install package(s)
 
-    if [ -e "$FILE_PATH" ]; then
+    if [[ -e "$FILE_PATH" ]]; then
 
         cat < "$FILE_PATH" | while read -r PACKAGE; do
             if [[ "$PACKAGE" == *"#"* || -z "$PACKAGE" ]]; then

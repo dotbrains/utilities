@@ -48,7 +48,7 @@ pip3_install_from_file() {
 
     # Install package(s)
 
-    if [ -e "$FILE_PATH" ]; then
+    if [[ -e "$FILE_PATH" ]]; then
 
         cat < "$FILE_PATH" | while read -r PACKAGE; do
             if [[ "$PACKAGE" == *"#"* || -z "$PACKAGE" ]]; then

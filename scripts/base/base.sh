@@ -83,7 +83,7 @@ kill_all_subprocesses() {
 terminal() {
 
 	# Mac OS only
-	[ "$(uname -s)" != "Darwin" ] && {
+	[[ "$(uname -s)" != "Darwin" ]] && {
 		echo 'Mac OS Only'
 		return
 	}
@@ -93,7 +93,7 @@ terminal() {
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    if [ -n "$args" ]; then
+    if [[ -n "$args" ]]; then
         cmd="$args"
     fi
 
@@ -103,7 +103,7 @@ terminal() {
 tell application id "com.apple.Terminal"
 	set T to do script
 	set W to the id of window 1 where its tab 1 = T
-	do script "$cmd" in T
+	do script "${cmd}" in T
 	repeat
 		delay 0.05
 		if not busy of T then exit repeat
@@ -136,7 +136,7 @@ execute() {
 
 	uname -a | grep -q "Darwin" || \
 	uname -a | grep -q "Linux" && \
-	[ -z "$SSH_TTY" ] && \
+	[[ -z "$SSH_TTY" ]] && \
 		local -r EXIT_STATUS_FILE="$(mktemp /tmp/XXXXX)"
 
 	local exitCode=0
@@ -144,7 +144,7 @@ execute() {
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	if uname -a | grep -q "Darwin" && [ -z "$SSH_TTY" ]; then
+	if uname -a | grep -q "Darwin" && [[ -z "$SSH_TTY" ]]; then
 		terminal "$CMDS 2> $TMP_FILE ; echo \$? > $EXIT_STATUS_FILE"
 
 		# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -157,7 +157,7 @@ execute() {
 				xargs | \
 				cut -d ' ' -f 1\
 			)"
-	elif uname -a | grep -q "Linux" && [ -z "$SSH_TTY" ]; then
+	elif uname -a | grep -q "Linux" && [[ -z "$SSH_TTY" ]]; then
 		x-terminal-emulator -e "$CMDS 2> $TMP_FILE ; echo \$? > $EXIT_STATUS_FILE" &> /dev/null
 
 		# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -192,8 +192,8 @@ execute() {
 	if uname -a | grep -q "Darwin" || \
 		uname -a | grep -q "Linux" && \
 		! grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null || \
-		[ -z "$SSH_TTY" ]; then
-		until [ -s "$EXIT_STATUS_FILE" ];
+		[[ -z "$SSH_TTY" ]]; then
+		until [[ -s "$EXIT_STATUS_FILE" ]];
 		do
 			sleep 1
 		done
@@ -211,7 +211,7 @@ execute() {
 
 	print_result "$exitCode" "$MSG"
 
-	if [ "$exitCode" -ne 0 ]; then
+	if [[ "$exitCode" -ne 0 ]]; then
 		print_error_stream < "$TMP_FILE"
 	fi
 
@@ -224,7 +224,7 @@ execute() {
 	uname -a | grep -q "Darwin" || \
 	uname -a | grep -q "Linux" && \
 	! grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null || \
-	[ -z "$SSH_TTY" ] && \
+	[[ -z "$SSH_TTY" ]] && \
 		rm -rf "$EXIT_STATUS_FILE"
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -347,7 +347,7 @@ print_question() {
 
 print_result() {
 
-    if [ "$1" -eq 0 ]; then
+    if [[ "$1" -eq 0 ]]; then
         print_success "$2"
     else
         print_error "$2"

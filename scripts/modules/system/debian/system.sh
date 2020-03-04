@@ -21,7 +21,7 @@ fix_broken_symlinks_in() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    if [ -d "$TARGET" ]; then
+    if [[ -d "$TARGET" ]]; then
         symlinks -rd "$TARGET"
     fi
 

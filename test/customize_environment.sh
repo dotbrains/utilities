@@ -4,7 +4,7 @@
 
 # Linux
 
-if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+if [[ "$TRAVIS_OS_NAME" = "linux" ]]; then
 
     # The Travis CI Ubuntu Trusty images do not
     # have the some of the suites enabled by default.
@@ -24,7 +24,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 
 # OS X
 
-elif [ "$TRAVIS_OS_NAME" = "osx" ]; then
+elif [[ "$TRAVIS_OS_NAME" = "osx" ]]; then
 
     # Install `ShellCheck`
     # (required for testing).
