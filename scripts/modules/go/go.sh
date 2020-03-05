@@ -35,7 +35,7 @@ go_install() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    if [[ ! -d "$GOBIN/$PACKAGE_READABLE_NAME" ]] && [[ ]! -f "$GOBIN/$PACKAGE_READABLE_NAME" ]]; then
+    if [[ ! -d "$GOBIN/$PACKAGE_READABLE_NAME" ]] && [[ ! -f "$GOBIN/$PACKAGE_READABLE_NAME" ]]; then
         go get -u "$package"
     fi
 

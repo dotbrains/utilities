@@ -170,13 +170,13 @@ apt_install_from_file() {
         printf "\n"
 
         cat < "$FILE_PATH" | while read -r LINE; do
-            if [[ $LINE =~ ${regex[comment]} ]]; then
+            if [[ ${LINE} =~ ${regex[comment]} ]]; then
                 continue
             elif [[ ${LINE} =~ ${regex[ppa]} ]]; then
                 PPA=${BASH_REMATCH[1]}
 
 				add_ppa "$PPA"
-            elif [[ $LINE =~ ${regex[apt]} ]]; then
+            elif [[ ${LINE} =~ ${regex[apt]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
 
 				install_package "$PACKAGE" "$PACKAGE"
