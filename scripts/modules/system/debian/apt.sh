@@ -241,15 +241,13 @@ install_gdebi() {
 
     # Install deb using gdebi
 
-    if [[ ! -e "$FILE_PATH" ]]; then
+    sudo rm -rf "$FILE_PATH"
 
-        if ! package_is_installed "$PACKAGE"; then
-            wget "$URL" -qO "$FILE_PATH" && \
-                sudo gdebi -n -q "$FILE_PATH" && \
-                sudo rm -rf "$FILE_PATH" && sudo apt autoremove -qqy
-        fi
-
-    fi
+    if ! package_is_installed "$PACKAGE"; then
+		wget "$URL" -qO "$FILE_PATH" && \
+			sudo gdebi -n -q "$FILE_PATH" && \
+			sudo rm -rf "$FILE_PATH" && sudo apt autoremove -qqy
+	fi
 }
 
 # see: https://unix.stackexchange.com/a/159114/173825
@@ -264,15 +262,13 @@ install_deb() {
 
     # Install deb
 
-    if [[ ! -e "$FILE_PATH" ]]; then
+	sudo rm -rf "$FILE_PATH"
 
-        if ! package_is_installed "$PACKAGE"; then
-            wget "$URL" -qO "$FILE_PATH" && \
-                sudo dpkg -i "$FILE_PATH" && sudo apt install -f && \
-                sudo rm -rf "$FILE_PATH" && sudo apt autoremove -qqy
-        fi
-
-    fi
+    if ! package_is_installed "$PACKAGE"; then
+		wget "$URL" -qO "$FILE_PATH" && \
+			sudo dpkg -i "$FILE_PATH" && sudo apt install -f && \
+			sudo rm -rf "$FILE_PATH" && sudo apt autoremove -qqy
+	fi
 
 }
 
