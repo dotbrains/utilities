@@ -233,18 +233,14 @@ install_gdebi() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    if ! cmd_exists "gdebi"; then
-        install_package "gdebi" "gdebi"
-    fi
+    install_package "gdebi" "gdebi"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     # Install deb using gdebi
 
-    sudo rm -rf "$FILE_PATH"
-
     if ! package_is_installed "$PACKAGE"; then
-		wget "$URL" -qO "$FILE_PATH" && \
+		wget "$URL" -qO "$FILE_PATH" &>/dev/null && \
 			sudo gdebi -n -q "$FILE_PATH" && \
 			sudo rm -rf "$FILE_PATH" && sudo apt autoremove -qqy && \
 			sudo apt update
@@ -263,10 +259,8 @@ install_deb() {
 
     # Install deb
 
-	sudo rm -rf "$FILE_PATH"
-
     if ! package_is_installed "$PACKAGE"; then
-		wget "$URL" -qO "$FILE_PATH" && \
+		wget "$URL" -qO "$FILE_PATH" &>/dev/null && \
 			sudo dpkg -i "$FILE_PATH" && sudo apt install -f && \
 			sudo rm -rf "$FILE_PATH" && sudo apt autoremove -qqy && \
 			sudo apt update
