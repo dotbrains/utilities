@@ -246,7 +246,8 @@ install_gdebi() {
     if ! package_is_installed "$PACKAGE"; then
 		wget "$URL" -qO "$FILE_PATH" && \
 			sudo gdebi -n -q "$FILE_PATH" && \
-			sudo rm -rf "$FILE_PATH" && sudo apt autoremove -qqy
+			sudo rm -rf "$FILE_PATH" && sudo apt autoremove -qqy && \
+			sudo apt update
 	fi
 }
 
@@ -267,7 +268,8 @@ install_deb() {
     if ! package_is_installed "$PACKAGE"; then
 		wget "$URL" -qO "$FILE_PATH" && \
 			sudo dpkg -i "$FILE_PATH" && sudo apt install -f && \
-			sudo rm -rf "$FILE_PATH" && sudo apt autoremove -qqy
+			sudo rm -rf "$FILE_PATH" && sudo apt autoremove -qqy && \
+			sudo apt update
 	fi
 
 }
