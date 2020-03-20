@@ -150,8 +150,10 @@ install_snap_package() {
 install_umake_package() {
 
     declare -r PACKAGE_READABLE_NAME="$1"
-	declare -r ARGUMENTS="$2"
+	declare -r CATEGORY="$2"
     declare -r PACKAGE="$3"
+    declare -r DEST_DIR="$4"
+    declare -r LANG="$5"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -160,7 +162,7 @@ install_umake_package() {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if ! umake_is_installed "$PACKAGE"; then
-        sudo umake "$ARGUMENTS" "$PACKAGE"
+        sudo umake "$CATEGORY" "$PACKAGE" "$DEST_DIR" --lang "$LANG"
     fi
 
 }
@@ -174,7 +176,7 @@ apt_install_from_file() {
     regex["ppa"]='ppa "(.*)"'
     regex["apt"]='apt "(.*)"'
     regex["snap"]='snap "(.*)" \[args: "(.*)"\]'
-   	regex["umake"]='umake "(.*)" \[args: "(.*)"\]'
+   	regex["umake"]='umake "(.*)" \[args: "(.*)", "(.*)"\]'
     regex["deb"]='deb "(.*)" \[args: "(.*)", "(.*)", "(.*)"\]'
     regex["gpg_dearmor"]='gpg_dearmor "(.*)" \[args: "(.*)"\]'
     regex["gpg"]='gpg "(.*)" \[args: "(.*)"\]'
@@ -212,9 +214,11 @@ apt_install_from_file() {
 				install_snap_package "$PACKAGE" "$ARGS" "$PACKAGE"
 			elif [[ ${LINE} =~ ${regex[umake]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
-				ARGS=${BASH_REMATCH[2]}
+				CATEGORY=${BASH_REMATCH[2]}
+				LANG=${BASH_REMATCH[3]}
+				DEST_DIR="$HOME/.local/share/umake/$CATEGORY/$PACKAGE"
 
-				install_umake_package "$PACKAGE" "$ARGS" "$PACKAGE"
+				install_umake_package "$PACKAGE" "$CATEGORY" "$DEST_DIR" "$LANG"
             elif [[ ${LINE} =~ ${regex[deb]} ]]; then
                 PACKAGE_READABLE_NAME=${BASH_REMATCH[1]}
                 URL=${BASH_REMATCH[2]}
