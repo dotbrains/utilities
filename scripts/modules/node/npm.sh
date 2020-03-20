@@ -42,7 +42,7 @@ is_yarn_pkg_installed() {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     . "$LOCAL_BASH_CONFIG_FILE" \
-        && npx yarn global list --depth=0 "$1" > /dev/null 2>&1
+        && npx yarn global list --depth=0 | grep "$1" > /dev/null 2>&1
 
 }
 
