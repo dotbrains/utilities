@@ -129,7 +129,7 @@ install_snap_package() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	if ! package_is_installed "$PACKAGE"; then
+	if ! package_is_installed "snapd"; then
 		install_package "snapd" "snapd"
 
 		sudo systemctl start snapd && \
