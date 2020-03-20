@@ -61,6 +61,12 @@ snap_is_installed() {
 
 }
 
+umake_is_installed() {
+
+	umake --list-installed | grep "$1" &> /dev/null
+
+}
+
 remove_system_package() {
 
     declare -r PACKAGE_READABLE_NAME="$1"
@@ -123,20 +129,38 @@ install_snap_package() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    if ! package_is_installed "snapd"; then
-        install_package "snapd" "snapd"
+	if ! package_is_installed "$PACKAGE"; then
+		install_package "snapd" "snapd"
 
 		sudo systemctl start snapd && \
-            sudo systemctl enable snapd
+		sudo systemctl enable snapd
 
-        sudo systemctl start apparmor && \
-            sudo systemctl enable apparmor
-    fi
+		sudo systemctl start apparmor && \
+		sudo systemctl enable apparmor
+	fi
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if ! snap_is_installed "$PACKAGE"; then
         sudo snap install "$PACKAGE" "$ARGUMENTS"
+    fi
+
+}
+
+install_umake_package() {
+
+    declare -r PACKAGE_READABLE_NAME="$1"
+	declare -r ARGUMENTS="$2"
+    declare -r PACKAGE="$3"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+	install_snap_package "ubuntu-make" "--classic" "ubuntu-make"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    if ! umake_is_installed "$PACKAGE"; then
+        sudo umake "$ARGUMENTS" "$PACKAGE"
     fi
 
 }
@@ -150,6 +174,7 @@ apt_install_from_file() {
     regex["ppa"]='ppa "(.*)"'
     regex["apt"]='apt "(.*)"'
     regex["snap"]='snap "(.*)" \[args: "(.*)"\]'
+   	regex["umake"]='umake "(.*)" \[args: "(.*)"\]'
     regex["deb"]='deb "(.*)" \[args: "(.*)", "(.*)", "(.*)"\]'
     regex["gpg_dearmor"]='gpg_dearmor "(.*)" \[args: "(.*)"\]'
     regex["gpg"]='gpg "(.*)" \[args: "(.*)"\]'
@@ -185,6 +210,11 @@ apt_install_from_file() {
 				ARGS=${BASH_REMATCH[2]}
 
 				install_snap_package "$PACKAGE" "$ARGS" "$PACKAGE"
+			elif [[ ${LINE} =~ ${regex[umake]} ]]; then
+                PACKAGE=${BASH_REMATCH[1]}
+				ARGS=${BASH_REMATCH[2]}
+
+				install_umake_package "$PACKAGE" "$ARGS" "$PACKAGE"
             elif [[ ${LINE} =~ ${regex[deb]} ]]; then
                 PACKAGE_READABLE_NAME=${BASH_REMATCH[1]}
                 URL=${BASH_REMATCH[2]}
