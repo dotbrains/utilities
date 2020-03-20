@@ -63,7 +63,8 @@ snap_is_installed() {
 
 umake_is_installed() {
 
-	umake --list-installed | grep "$1" &> /dev/null
+	umake --list-installed | grep "$1" &> /dev/null && \
+		[[ -d "$HOME/.local/share/umake/$2/$1" ]]
 
 }
 
@@ -160,8 +161,8 @@ install_umake_package() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    if ! umake_is_installed "$PACKAGE"; then
-        sudo umake "$CATEGORY" "$PACKAGE" "$DEST_DIR" --lang "$LANG"
+    if ! umake_is_installed "$PACKAGE" "$CATEGORY"; then
+        umake "$CATEGORY" "$PACKAGE" "$DEST_DIR" --lang "$LANG"
     fi
 
 }
@@ -193,8 +194,6 @@ apt_install_from_file() {
         apt_update
         apt_upgrade
 
-        printf "\n"
-
         cat < "$FILE_PATH" | while read -r LINE; do
             if [[ ${LINE} =~ ${regex[comment]} ]]; then
                 continue
@@ -215,6 +214,7 @@ apt_install_from_file() {
                 PACKAGE=${BASH_REMATCH[1]}
 				CATEGORY=${BASH_REMATCH[2]}
 				LANG=${BASH_REMATCH[3]}
+
 				DEST_DIR="$HOME/.local/share/umake/$CATEGORY/$PACKAGE"
 
 				install_umake_package "$PACKAGE" "$CATEGORY" "$DEST_DIR" "$LANG"
@@ -223,6 +223,7 @@ apt_install_from_file() {
                 URL=${BASH_REMATCH[2]}
                 TARGET_PATH=${BASH_REMATCH[3]}
                 FILE_NAME=${BASH_REMATCH[4]}
+
                 DEB_FILE_PATH="$TARGET_PATH/$FILE_NAME"
 
                 install_gdebi "$URL" "$DEB_FILE_PATH" "$PACKAGE_READABLE_NAME" "$PACKAGE_READABLE_NAME"
