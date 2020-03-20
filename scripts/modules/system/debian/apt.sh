@@ -149,11 +149,10 @@ install_snap_package() {
 
 install_umake_package() {
 
-    declare -r PACKAGE_READABLE_NAME="$1"
+    declare -r PACKAGE="$1"
 	declare -r CATEGORY="$2"
-    declare -r PACKAGE="$3"
-    declare -r DEST_DIR="$4"
-    declare -r LANG="$5"
+    declare -r DEST_DIR="$3"
+    declare -r LANG="$4"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
