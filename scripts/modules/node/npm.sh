@@ -35,6 +35,18 @@ is_npm_pkg_installed() {
 
 }
 
+is_yarn_pkg_installed() {
+
+    local LOCAL_BASH_CONFIG_FILE="$HOME/.bash.local"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    . "$LOCAL_BASH_CONFIG_FILE" \
+        && npx yarn global list --depth=0 "$1" > /dev/null 2>&1
+
+}
+
+
 npm_install() {
 
     declare -r PACKAGE="$1"
@@ -80,7 +92,7 @@ npx_install() {
 
     # Install the specified package.
 
-    if ! is_npm_pkg_installed "$PACKAGE"; then
+    if ! is_yarn_pkg_installed "$PACKAGE"; then
         . "$LOCAL_BASH_CONFIG_FILE" \
                 && npx yarn global add "$PACKAGE" --prefix /usr/local
     fi
