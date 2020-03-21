@@ -103,6 +103,8 @@ upgrade_package() {
     declare -r PACKAGE_READABLE_NAME="$1"
     declare -r PACKAGE="$2"
 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
     if package_is_installed "$PACKAGE"; then
 		sudo apt install --only-upgrade -qqy "$PACKAGE"
     fi
@@ -114,6 +116,8 @@ install_package() {
     declare -r PACKAGE_READABLE_NAME="$1"
     declare -r PACKAGE="$2"
 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
     if ! package_is_installed "$PACKAGE"; then
         sudo apt install --allow-unauthenticated -qqy "$PACKAGE"
     #                            suppress output ─┘│
@@ -124,9 +128,8 @@ install_package() {
 
 install_snap_package() {
 
-    declare -r PACKAGE_READABLE_NAME="$1"
+    declare -r PACKAGE="$1"
 	declare -r ARGUMENTS="$2"
-    declare -r PACKAGE="$3"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -157,7 +160,7 @@ install_umake_package() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	install_snap_package "ubuntu-make" "--classic" "ubuntu-make"
+	install_snap_package "ubuntu-make" "--classic"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -207,9 +210,9 @@ apt_install_from_file() {
 				install_package "$PACKAGE" "$PACKAGE"
             elif [[ ${LINE} =~ ${regex[snap]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
-				ARGS=${BASH_REMATCH[2]}
+				ARGUMENTS=${BASH_REMATCH[2]}
 
-				install_snap_package "$PACKAGE" "$ARGS" "$PACKAGE"
+				install_snap_package "$PACKAGE" "$ARGUMENTS"
 			elif [[ ${LINE} =~ ${regex[umake]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
 				CATEGORY=${BASH_REMATCH[2]}
