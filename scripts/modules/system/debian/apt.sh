@@ -143,7 +143,7 @@ install_snap_package() {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if ! snap_is_installed "$PACKAGE"; then
-        sudo snap install "$PACKAGE" "$ARGUMENTS"
+        sudo snap install "$PACKAGE" ${ARGUMENTS}
     fi
 
 }
