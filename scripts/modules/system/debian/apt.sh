@@ -50,6 +50,22 @@ auto_remove() {
 
 }
 
+apt_update() {
+
+    # Resynchronize the package index files.
+
+    sudo apt update
+
+}
+
+apt_upgrade() {
+
+    # Install the newest versions of all packages installed.
+
+	sudo apt upgrade -y
+
+}
+
 package_is_installed() {
 
     dpkg -s "$1" &> /dev/null
@@ -151,8 +167,9 @@ install_umake_package() {
 
     declare -r PACKAGE="$1"
 	declare -r CATEGORY="$2"
-    declare -r DEST_DIR="$3"
-    declare -r LANG="$4"
+    declare -r LANG="$3"
+
+    declare -r DEST_DIR="$HOME/.local/share/umake/$CATEGORY/$PACKAGE"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -163,6 +180,55 @@ install_umake_package() {
     if ! umake_is_installed "$PACKAGE" "$CATEGORY"; then
         umake "$CATEGORY" "$PACKAGE" "$DEST_DIR" --lang "$LANG"
     fi
+
+}
+
+# see: https://unix.stackexchange.com/a/332979/173825
+install_gdebi() {
+
+    declare -r URL="$1"
+    declare -r FILE_NAME="$2"
+    declare -r PACKAGE="$3"
+
+    declare -r FILE_PATH="$HOME/Downloads/$FILE_NAME"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    install_package "gdebi"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Install deb using gdebi
+
+    if ! package_is_installed "$PACKAGE"; then
+		wget "$URL" -qO "$FILE_PATH" &> /dev/null && \
+			sudo gdebi -n -q "$FILE_PATH" && \
+			sudo rm -rf "$FILE_PATH" && \
+			sudo apt autoremove -qqy && \
+			sudo apt update
+	fi
+}
+
+# see: https://unix.stackexchange.com/a/159114/173825
+install_deb() {
+
+    declare -r URL="$1"
+    declare -r FILE_NAME="$2"
+    declare -r PACKAGE="$3"
+
+    declare -r FILE_PATH="$HOME/Downloads/$FILE_NAME"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Install deb
+
+    if ! package_is_installed "$PACKAGE"; then
+		wget "$URL" -qO "$FILE_PATH" &> /dev/null && \
+			sudo dpkg -i "$FILE_PATH" && sudo apt install -f && \
+			sudo rm -rf "$FILE_PATH" && \
+			sudo apt autoremove -qqy && \
+			sudo apt update
+	fi
 
 }
 
@@ -214,18 +280,13 @@ apt_install_from_file() {
 				CATEGORY=${BASH_REMATCH[2]}
 				LANG=${BASH_REMATCH[3]}
 
-				DEST_DIR="$HOME/.local/share/umake/$CATEGORY/$PACKAGE"
-
-				install_umake_package "$PACKAGE" "$CATEGORY" "$DEST_DIR" "$LANG"
+				install_umake_package "$PACKAGE" "$CATEGORY" "$LANG"
             elif [[ ${LINE} =~ ${regex[deb]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
                 URL=${BASH_REMATCH[2]}
-                TARGET_PATH=${BASH_REMATCH[3]}
-                FILE_NAME=${BASH_REMATCH[4]}
+                FILE_NAME=${BASH_REMATCH[3]}
 
-                DEB_FILE_PATH="$TARGET_PATH/$FILE_NAME"
-
-                install_gdebi "$URL" "$DEB_FILE_PATH" "$PACKAGE"
+                install_gdebi "$URL" "$FILE_NAME" "$PACKAGE"
             elif [[ ${LINE} =~ ${regex[gpg_dearmor]} ]]; then
                 FILE_NAME=${BASH_REMATCH[1]}
                 URL=${BASH_REMATCH[2]}
@@ -253,64 +314,5 @@ apt_install_from_file() {
             fi
         done
     fi
-
-}
-
-# see: https://unix.stackexchange.com/a/332979/173825
-install_gdebi() {
-
-    declare -r URL="$1"
-    declare -r FILE_PATH="$2"
-    declare -r PACKAGE="$3"
-
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    install_package "gdebi"
-
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    # Install deb using gdebi
-
-    if ! package_is_installed "$PACKAGE"; then
-		wget "$URL" -qO "$FILE_PATH" &>/dev/null && \
-			sudo gdebi -n -q "$FILE_PATH" && \
-			sudo rm -rf "$FILE_PATH" && sudo apt autoremove -qqy && \
-			sudo apt update
-	fi
-}
-
-# see: https://unix.stackexchange.com/a/159114/173825
-install_deb() {
-
-    declare -r URL="$1"
-    declare -r FILE_PATH="$2"
-    declare -r PACKAGE="$3"
-
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    # Install deb
-
-    if ! package_is_installed "$PACKAGE"; then
-		wget "$URL" -qO "$FILE_PATH" &>/dev/null && \
-			sudo dpkg -i "$FILE_PATH" && sudo apt install -f && \
-			sudo rm -rf "$FILE_PATH" && sudo apt autoremove -qqy && \
-			sudo apt update
-	fi
-
-}
-
-apt_update() {
-
-    # Resynchronize the package index files.
-
-    sudo apt update
-
-}
-
-apt_upgrade() {
-
-    # Install the newest versions of all packages installed.
-
-	sudo apt upgrade -y
 
 }
