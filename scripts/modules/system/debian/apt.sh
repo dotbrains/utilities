@@ -113,8 +113,7 @@ upgrade_package() {
 
 install_package() {
 
-    declare -r PACKAGE_READABLE_NAME="$1"
-    declare -r PACKAGE="$2"
+    declare -r PACKAGE="$1"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -134,7 +133,7 @@ install_snap_package() {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	if ! package_is_installed "snapd"; then
-		install_package "snapd" "snapd"
+		install_package "snapd"
 
 		sudo systemctl start snapd && \
 		sudo systemctl enable snapd
@@ -207,7 +206,7 @@ apt_install_from_file() {
             elif [[ ${LINE} =~ ${regex[apt]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
 
-				install_package "$PACKAGE" "$PACKAGE"
+				install_package "$PACKAGE"
             elif [[ ${LINE} =~ ${regex[snap]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
 				ARGUMENTS=${BASH_REMATCH[2]}
@@ -222,14 +221,14 @@ apt_install_from_file() {
 
 				install_umake_package "$PACKAGE" "$CATEGORY" "$DEST_DIR" "$LANG"
             elif [[ ${LINE} =~ ${regex[deb]} ]]; then
-                PACKAGE_READABLE_NAME=${BASH_REMATCH[1]}
+                PACKAGE=${BASH_REMATCH[1]}
                 URL=${BASH_REMATCH[2]}
                 TARGET_PATH=${BASH_REMATCH[3]}
                 FILE_NAME=${BASH_REMATCH[4]}
 
                 DEB_FILE_PATH="$TARGET_PATH/$FILE_NAME"
 
-                install_gdebi "$URL" "$DEB_FILE_PATH" "$PACKAGE_READABLE_NAME" "$PACKAGE_READABLE_NAME"
+                install_gdebi "$URL" "$DEB_FILE_PATH" "$PACKAGE"
             elif [[ ${LINE} =~ ${regex[gpg_dearmor]} ]]; then
                 FILE_NAME=${BASH_REMATCH[1]}
                 URL=${BASH_REMATCH[2]}
@@ -266,7 +265,6 @@ install_gdebi() {
     declare -r URL="$1"
     declare -r FILE_PATH="$2"
     declare -r PACKAGE="$3"
-    declare -r PACKAGE_READABLE_NAME="$4"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -290,7 +288,6 @@ install_deb() {
     declare -r URL="$1"
     declare -r FILE_PATH="$2"
     declare -r PACKAGE="$3"
-    declare -r PACKAGE_READABLE_NAME="$4"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
