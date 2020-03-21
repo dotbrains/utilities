@@ -70,8 +70,7 @@ umake_is_installed() {
 
 remove_system_package() {
 
-    declare -r PACKAGE_READABLE_NAME="$1"
-    local PACKAGE="$2"
+    declare -r PACKAGE="$1"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -84,8 +83,7 @@ remove_system_package() {
 
 remove_package() {
 
-    declare -r PACKAGE_READABLE_NAME="$1"
-    local PACKAGE="$2"
+    declare -r PACKAGE="$1"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -248,11 +246,11 @@ apt_install_from_file() {
             elif [[ ${LINE} =~ ${regex[remove]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
 
-                remove_package "$PACKAGE" "$PACKAGE"
+                remove_package "$PACKAGE"
             elif [[ ${LINE} =~ ${regex[remove_system]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
 
-                remove_system_package "$PACKAGE" "$PACKAGE"
+                remove_system_package "$PACKAGE"
             fi
         done
     fi
@@ -268,7 +266,7 @@ install_gdebi() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    install_package "gdebi" "gdebi"
+    install_package "gdebi"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
