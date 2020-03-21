@@ -63,8 +63,7 @@ snap_is_installed() {
 
 umake_is_installed() {
 
-	umake --list-installed | grep "$1" &> /dev/null && \
-		[[ -d "$HOME/.local/share/umake/$2/$1" ]]
+	[[ -d "$HOME/.local/share/umake/$2/$1" ]]
 
 }
 
