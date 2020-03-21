@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# shellcheck disable=SC2086
 # shellcheck source=/dev/null
 
 source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamou/utilities/master/scripts/base/base.sh")"
@@ -97,8 +98,7 @@ remove_package() {
 
 upgrade_package() {
 
-    declare -r PACKAGE_READABLE_NAME="$1"
-    declare -r PACKAGE="$2"
+    declare -r PACKAGE="$1"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
