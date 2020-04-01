@@ -296,6 +296,10 @@ COL_GREEN=${ESC_SEQ}"32;01m"
 COL_YELLOW=${ESC_SEQ}"33;01m"
 COL_BLUE=${ESC_SEQ}"\e[96m"
 
+# Weights
+bold=$(tput bold)
+normal=$(tput sgr0)
+
 ok() {
 
   echo -e "$COL_GREEN[ok]$COL_RESET $1"
