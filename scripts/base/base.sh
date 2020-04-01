@@ -288,6 +288,62 @@ show_spinner() {
 
 }
 
+# Colors
+ESC_SEQ="\x1b["
+COL_RESET=${ESC_SEQ}"39;49;00m"
+COL_RED=${ESC_SEQ}"31;01m"
+COL_GREEN=${ESC_SEQ}"32;01m"
+COL_YELLOW=${ESC_SEQ}"33;01m"
+COL_BLUE=${ESC_SEQ}"\e[96m"
+
+ok() {
+
+  echo -e "$COL_GREEN[ok]$COL_RESET $1"
+
+}
+
+bot() {
+
+  echo -e "$COL_BLUE(っ◕‿◕)っ$COL_RESET - $1"
+
+}
+
+running() {
+
+  echo -en "$COL_YELLOW ⇒ $COL_RESET $1: "
+
+}
+
+action() {
+
+  echo -e "$COL_YELLOW[action]:$COL_RESET ⇒ $1"
+
+}
+
+warn() {
+
+  echo -e "$COL_YELLOW[warning]$COL_RESET $1"
+
+}
+
+success() {
+
+  echo -e "$COL_GREEN[success]$COL_RESET $1"
+
+}
+
+error() {
+
+  echo -e "$COL_RED[error]$COL_RESET $1"
+
+}
+
+cancelled() {
+
+  echo -e "$COL_RED[cancelled]$COL_RESET $1"
+
+}
+
 print_error() {
 
     print_in_red "   [✖] $1 $2\n"
