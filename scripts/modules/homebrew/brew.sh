@@ -33,8 +33,6 @@ brew_bundle_install() {
 
     declare -r FILE_PATH="$1"
 
-    local LOCAL_BASH_CONFIG_FILE="$HOME/.bash.local"
-
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     # Check if `brew` is installed.
