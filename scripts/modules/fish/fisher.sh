@@ -8,21 +8,21 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamo
 
 # fisher functions
 
-does_fishfile_exist() {
+does_fish_plugins_exist() {
 
-    [[ -f fishfile ]] || [[ -f "$HOME"/.config/fish/fishfile ]]
+    [[ -f fish_plugins ]] || [[ -f "$HOME"/.config/fish/fish_plugins ]]
 
 }
 
 is_fisher_installed() {
 
-    fish_cmd_exists "fisher" && does_fishfile_exist
+    fish_cmd_exists "fisher" && does_fish_plugins_exist
 
 }
 
 is_fisher_pkg_installed() {
 
-    does_fishfile_exist && fish -c "fisher ls | grep $1" &> /dev/null
+    does_fish_plugins_exist && fish -c "fisher list | grep $1" &> /dev/null
 
 }
 
@@ -41,7 +41,7 @@ fisher_install() {
     # Install the specified package.
 
     if ! is_fisher_pkg_installed "$PACKAGE"; then
-        fish -c "fisher add $PACKAGE"
+        fish -c "fisher install $PACKAGE"
     fi
 
 }
@@ -77,6 +77,6 @@ fisher_update() {
 
     # Update package(s)
 
-    fish -c "fisher ;and fisher self-update"
+    fish -c "fisher update"
 
 }
