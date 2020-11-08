@@ -242,7 +242,7 @@ apt_install_from_file() {
     regex["apt"]='apt "(.*)"'
     regex["snap"]='snap "(.*)" \[args: "(.*)"\]'
    	regex["umake"]='umake "(.*)" \[args: "(.*)", "(.*)"\]'
-    regex["deb"]='deb "(.*)" \[args: "(.*)", "(.*)", "(.*)"\]'
+    regex["deb"]='deb "(.*)" \[args: "(.*)", "(.*)"\]'
     regex["gpg_dearmor"]='gpg_dearmor "(.*)" \[args: "(.*)"\]'
     regex["gpg"]='gpg "(.*)" \[args: "(.*)"\]'
     regex["source"]='source "(.*)" \[args: "(.*)"\]'
@@ -260,54 +260,54 @@ apt_install_from_file() {
         apt_upgrade
 
         cat < "$FILE_PATH" | while read -r LINE; do
-            if [[ ${LINE} =~ ${regex[comment]} ]]; then
+            if [[ ${LINE} =~ ${regex["comment"]} ]]; then
                 continue
-            elif [[ ${LINE} =~ ${regex[ppa]} ]]; then
+            elif [[ ${LINE} =~ ${regex["ppa"]} ]]; then
                 PPA=${BASH_REMATCH[1]}
 
 				add_ppa "$PPA"
-            elif [[ ${LINE} =~ ${regex[apt]} ]]; then
+            elif [[ ${LINE} =~ ${regex["apt"]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
 
 				install_package "$PACKAGE"
-            elif [[ ${LINE} =~ ${regex[snap]} ]]; then
+            elif [[ ${LINE} =~ ${regex["snap"]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
 				ARGUMENTS=${BASH_REMATCH[2]}
 
 				install_snap_package "$PACKAGE" "$ARGUMENTS"
-			elif [[ ${LINE} =~ ${regex[umake]} ]]; then
+			elif [[ ${LINE} =~ ${regex["umake"]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
 				CATEGORY=${BASH_REMATCH[2]}
 				LANG=${BASH_REMATCH[3]}
 
 				install_umake_package "$PACKAGE" "$CATEGORY" "$LANG"
-            elif [[ ${LINE} =~ ${regex[deb]} ]]; then
+            elif [[ ${LINE} =~ ${regex["deb"]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
                 URL=${BASH_REMATCH[2]}
                 FILE_NAME=${BASH_REMATCH[3]}
 
                 install_gdebi "$URL" "$FILE_NAME" "$PACKAGE"
-            elif [[ ${LINE} =~ ${regex[gpg_dearmor]} ]]; then
+            elif [[ ${LINE} =~ ${regex["gpg_dearmor"]} ]]; then
                 FILE_NAME=${BASH_REMATCH[1]}
                 URL=${BASH_REMATCH[2]}
 
                 add_gpg_key_with_dearmor "$URL" "$FILE_NAME" && \
 					sudo apt update &> /dev/null
-            elif [[ ${LINE} =~ ${regex[gpg]} ]]; then
+            elif [[ ${LINE} =~ ${regex["gpg"]} ]]; then
                 URL=${BASH_REMATCH[1]}
 
                 add_key "$URL" && \
 					sudo apt update &> /dev/null
-            elif [[ ${LINE} =~ ${regex[source]} ]]; then
+            elif [[ ${LINE} =~ ${regex["source"]} ]]; then
                 FILE_NAME=${BASH_REMATCH[1]}
                 DATA=${BASH_REMATCH[2]}
 
                 add_to_source_list "$DATA" "$FILE_NAME"
-            elif [[ ${LINE} =~ ${regex[remove]} ]]; then
+            elif [[ ${LINE} =~ ${regex["remove"]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
 
                 remove_package "$PACKAGE"
-            elif [[ ${LINE} =~ ${regex[remove_system]} ]]; then
+            elif [[ ${LINE} =~ ${regex["remove_system"]} ]]; then
                 PACKAGE=${BASH_REMATCH[1]}
 
                 remove_system_package "$PACKAGE"
