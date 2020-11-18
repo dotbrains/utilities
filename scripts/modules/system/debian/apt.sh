@@ -20,7 +20,7 @@ add_key() {
 add_ppa() {
 
     sudo add-apt-repository -y ppa:"$1" &> /dev/null \
-        && sudo apt update --fix-missing &> /dev/null
+        && sudo apt-get update --fix-missing &> /dev/null
 
 }
 
@@ -36,7 +36,7 @@ add_to_source_list() {
 
     if ! [[ -e "/etc/apt/sources.list.d/$2" ]]; then
         sudo sh -c "printf 'deb $1' >> '/etc/apt/sources.list.d/$2'" \
-            && sudo apt update --fix-missing &> /dev/null
+            && sudo apt-get update --fix-missing &> /dev/null
     fi
 
 }
@@ -54,7 +54,7 @@ apt_update() {
 
     # Resynchronize the package index files.
 
-    sudo apt update
+    sudo apt-get update
 
 }
 
@@ -62,7 +62,7 @@ apt_upgrade() {
 
     # Install the newest versions of all packages installed.
 
-	sudo apt upgrade -y
+	sudo apt-get upgrade -y
 
 }
 
@@ -90,10 +90,10 @@ remove_system_package() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    sudo apt remove "$PACKAGE" -qqy \
-            && sudo apt purge "$PACKAGE" -qqy \
-            && sudo apt autoremove -qqy \
-            && sudo apt clean
+    sudo apt-get remove "$PACKAGE" -qqy \
+            && sudo apt-get purge "$PACKAGE" -qqy \
+            && sudo apt-get autoremove -qqy \
+            && sudo apt-get clean
 
 }
 
@@ -104,10 +104,10 @@ remove_package() {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if package_is_installed "$PACKAGE"; then
-        sudo apt remove "$PACKAGE" -qqy \
-                && sudo apt purge "$PACKAGE" -qqy \
-                && sudo apt autoremove -qqy \
-                && sudo apt clean
+        sudo apt-get remove "$PACKAGE" -qqy \
+                && sudo apt-get purge "$PACKAGE" -qqy \
+                && sudo apt-get autoremove -qqy \
+                && sudo apt-get clean
     fi
 
 }
@@ -119,7 +119,7 @@ upgrade_package() {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if package_is_installed "$PACKAGE"; then
-		sudo apt install --only-upgrade -qqy "$PACKAGE"
+		sudo apt-get install --only-upgrade -qqy "$PACKAGE"
     fi
 
 }
@@ -131,7 +131,7 @@ install_package() {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if ! package_is_installed "$PACKAGE"; then
-        sudo apt install --allow-unauthenticated -qqy "$PACKAGE"
+        sudo apt-get install --allow-unauthenticated -qqy "$PACKAGE"
     #                            suppress output ─┘│
     #  assume "yes" as the answer to all prompts ──┘
     fi
@@ -204,8 +204,8 @@ install_gdebi() {
 		wget "$URL" -qO "$FILE_PATH" &> /dev/null && \
 			sudo gdebi -n -q "$FILE_PATH" && \
 			sudo rm -rf "$FILE_PATH" && \
-			sudo apt autoremove -qqy && \
-			sudo apt update
+			sudo apt-get autoremove -qqy && \
+			sudo apt-get update
 	fi
 }
 
@@ -224,10 +224,10 @@ install_deb() {
 
     if ! package_is_installed "$PACKAGE"; then
 		wget "$URL" -qO "$FILE_PATH" &> /dev/null && \
-			sudo dpkg -i "$FILE_PATH" && sudo apt install -f && \
+			sudo dpkg -i "$FILE_PATH" && sudo apt-get install -f && \
 			sudo rm -rf "$FILE_PATH" && \
-			sudo apt autoremove -qqy && \
-			sudo apt update
+			sudo apt-get autoremove -qqy && \
+			sudo apt-get update
 	fi
 
 }
@@ -292,12 +292,12 @@ apt_install_from_file() {
                 URL=${BASH_REMATCH[2]}
 
                 add_gpg_key_with_dearmor "$URL" "$FILE_NAME" && \
-					sudo apt update &> /dev/null
+					sudo apt-get update &> /dev/null
             elif [[ ${LINE} =~ ${regex["gpg"]} ]]; then
                 URL=${BASH_REMATCH[1]}
 
                 add_key "$URL" && \
-					sudo apt update &> /dev/null
+					sudo apt-get update &> /dev/null
             elif [[ ${LINE} =~ ${regex["source"]} ]]; then
                 FILE_NAME=${BASH_REMATCH[1]}
                 DATA=${BASH_REMATCH[2]}
