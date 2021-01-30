@@ -8,7 +8,7 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamo
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # see: https://apple.stackexchange.com/a/311511/291269
-function install_dmg {
+function install_dmg_from_URL {
 
     set -x
 
@@ -60,6 +60,48 @@ function install_dmg {
     # Remove the temporary directory
 
     rm -rf "$TMP_DIRECTORY"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    set +x
+
+}
+
+# see: https://apple.stackexchange.com/a/311511/291269
+function install_dmg {
+
+    set -x
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Initialize a variable for the URL to the '.dmg'
+
+    local -r TARGET="$1"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Mount the '.dmg' then grab its PATH
+
+    DISK="$(sudo hdiutil attach "$TARGET" | grep Volumes)"
+    VOLUME="$(echo "$DISK" | cut -f 3)"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Install the program within the '.dmg'
+
+    if [[ -e "$VOLUME"/*.app ]]; then
+      sudo cp -rf "$VOLUME"/*.app /Applications
+    elif [[ -e "$VOLUME"/*.pkg ]]; then
+      package="$(ls -1 | grep *.pkg | head -1)"
+
+      sudo installer -pkg "$VOLUME"/"$package".pkg -target /
+    fi
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Eject the '.dmg'
+
+    sudo hdiutil detach "$(echo "$DISK" | cut -f 1)"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
