@@ -7,6 +7,46 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamo
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+function install_pkg_from_URL {
+
+    set -x
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Initialize a variable for the URL to the '.pkg'
+
+    local -r URL="$1"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Create temporary directory to store '.pkg'
+
+    TMP_DIRECTORY="$(mktemp -d)"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    #  Obtain the '.pkg' via cURL
+
+    curl -s "$URL" > "$TMP_DIRECTORY/installer.pkg"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Install the program from the '.pkg' file
+
+    sudo installer -pkg "$TMP_DIRECTORY/installer.pkg" -target /
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Remove the temporary directory
+
+    rm -rf "$TMP_DIRECTORY"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    set +x
+
+}
+
 # see: https://apple.stackexchange.com/a/311511/291269
 function install_dmg_from_URL {
 
