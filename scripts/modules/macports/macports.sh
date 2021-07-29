@@ -74,7 +74,7 @@ port_install_from_file() {
 
 }
 
-port_update() {
+macports_update() {
 
     # Check if 'MacPorts' is installed.
 
