@@ -48,6 +48,12 @@ fisher_install() {
 
 fisher_install_from_file() {
 
+    # Check if `fisher` is installed.
+
+    is_fisher_installed || return 1
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+    
     declare -r FILE_PATH="$1"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -30,6 +30,9 @@ main() {
 	# System functions (Only required for 'darwin'-based systems)
 	if uname -a | grep -q "Darwin"; then
 		source_file_from_utilities "modules/system/darwin/system.sh"
+
+		# MacPorts
+		source_file_from_utilities "modules/macports/macports.sh"
 	fi
 
 	# Homebrew
