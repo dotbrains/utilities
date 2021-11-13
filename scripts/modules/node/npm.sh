@@ -46,6 +46,35 @@ is_yarn_pkg_installed() {
 
 }
 
+sudo_npm_install() {
+
+    declare -r PACKAGE="$1"
+
+    local LOCAL_BASH_CONFIG_FILE="$HOME/.bash.local"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Check if `npm` is installed.
+
+    is_npm_installed || return 1
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Check if `npx` is installed.
+
+    is_npm_installed || return 1
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Install the specified package.
+
+    if ! is_npm_pkg_installed "$PACKAGE"; then
+        . "$LOCAL_BASH_CONFIG_FILE" \
+                && sudo npm install --global "$PACKAGE"
+    fi
+
+}
+
 
 npm_install() {
 
