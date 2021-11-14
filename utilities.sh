@@ -38,6 +38,9 @@ main() {
 	# Homebrew
 	source_file_from_utilities "modules/homebrew/brew.sh"
 
+	# Gofish
+	source_file_from_utilities "modules/gofish/gofish.sh"
+
 	# Git
 	source_file_from_utilities "modules/git/git.sh"
 
