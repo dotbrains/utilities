@@ -48,6 +48,7 @@ brew_bundle_install() {
         brew bundle install -v --file="$FILE_PATH"
 
     fi
+
 }
 
 brew_install() {
