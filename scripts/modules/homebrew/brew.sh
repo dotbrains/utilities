@@ -31,25 +31,69 @@ brew_cleanup() {
 
 brew_bundle_install() {
 
-    declare -r FILE_PATH="$1"
+    local file_path=""
+    local use_python3=false
 
-	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Parse command-line options.
+    local options
+	options=$(getopt -o f:p --long file:,python3 -n 'brew_bundle_install' -- "$@") || {
+		echo "Failed parsing options." >&2
+		return 1
+	}
+
+    # Note the quotes around `$options`: they are essential!
+    eval set -- "$options"
+
+    while true; do
+        case "$1" in
+        -f|--file)
+            file_path="$2"
+            shift 2
+            ;;
+        -p|--python3)
+            use_python3=true
+            shift
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            echo "Invalid option: $1"
+            return 1
+            ;;
+        esac
+    done
 
     # Check if `brew` is installed.
-
     is_brew_installed || return 1
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
     # Install formulae.
+    if [[ -e "$file_path" ]]; then
+        if $use_python3; then
+            # Make sure python3 is installed
+            if ! command -v python3 &> /dev/null; then
+                brew install python3
+            fi
 
-    if [[ -e "$FILE_PATH" ]]; then
+            if python3 brew.py -f "$file_path"; then
+                return 0
+            else
+                return 1
+            fi
+        fi
 
-        brew bundle install -v --file="$FILE_PATH"
-
+        if brew bundle install -v --file="$file_path"; then
+            return 0
+        else
+            return 1
+        fi
+    else
+        print_error "File does not exist: $file_path"
+        return 1
     fi
-
 }
+
 
 brew_install() {
 
