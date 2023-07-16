@@ -317,3 +317,33 @@ apt_install_from_file() {
     fi
 
 }
+
+scan_pkg_for_virus() {
+
+	declare -r FILE_PATH="$1"
+
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+	# Check if clamscan is installed
+
+	if ! package_is_installed "clamav"; then
+		install_package "clamav"
+	fi
+
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+	# Update virus database if it's older than 7 days
+
+	if [[ ! -e "/var/lib/clamav/daily.cvd" ]] || \
+		[[ "$(find "/var/lib/clamav/daily.cvd" -mtime +7)" ]]; then
+		sudo freshclam
+	fi
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+	# Scan provided package for viruses
+
+	if [[ -e "$FILE_PATH" ]]; then
+		clamscan --bell -i -r "$FILE_PATH"
+	fi
+
+}
