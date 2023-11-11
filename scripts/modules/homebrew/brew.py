@@ -27,6 +27,16 @@ def install_brew():
         print("Error during Homebrew installation.")
         sys.exit(1)
 
+def get_package_from_line(line):
+    """
+    The `get_package_from_line` function extracts the package name from a line in a Brewfile.
+    :param line: A line from the Brewfile, which is a file used by Homebrew to manage packages and
+    applications on macOS and Linux
+    :return: The function `get_package_from_line` returns the package name from a line in a Brewfile.
+    """
+
+    return line.split("\"")[1]
+
 def install_package(line):
     """
     The `install_package` function installs packages from a Brewfile, with support for cask packages on
@@ -44,33 +54,37 @@ def install_package(line):
         return
 
     try:
+        command = ["brew", "install"]
+
         if line.startswith("cask_args"):
             if os_type == "Darwin":  # Only for macOS
                 arg = line.split(" ")[1]
                 cask_args.append(arg.split(":")[1].strip().strip('"'))
         elif line.startswith("cask"):
             if os_type == "Darwin":  # Only for macOS
-                package = line.split("\"")[1]
-                options = line[line.find("[") + 1 : line.find("]")].split() if "[" in line and "]" in line else []
-                subprocess.run(
-                    [
-                        "brew",
-                        "install",
-                        "--cask",
-                        f"--appdir={cask_args[0]}",
-                        *options,
-                        package,
-                    ],
-                    check=True,
-                )
+                package = get_package_from_line(line)
+                options = line[line.find("{") + 1 : line.find("}")].split() if "{" in line and "}" in line else []
+
+                command.append("--cask")
+
+                if cask_args:
+                    appdir_option = f"--appdir={cask_args[0]}"
+                    command.append(appdir_option)
+
+                command.extend(options)  # Add options only if they exist
+                command.append(package)
+
+                subprocess.run(command, check=True)
             else:
                 print(f"Cask {line} skipped as it is not supported on Linux.")
         elif line.startswith("brew"):
-            package = line.split("\"")[1]
-            subprocess.run(["brew", "install", package], check=True)
+            package = get_package_from_line(line)
+            command.append(package)
+            subprocess.run(command, check=True)
         elif line.startswith("tap"):
-            tap = line.split("\"")[1]
+            tap = get_package_from_line(line)
             subprocess.run(["brew", "tap", tap], check=True)
+
     except subprocess.CalledProcessError:
         print(f"Failed to install: {line}")
         sys.exit(1)
@@ -88,9 +102,13 @@ def main():
         print("Homebrew not found, installing...")
         install_brew()
 
-    with open(args.file, "r") as f:
-        for line in f:
-            install_package(line.strip())
+    try:
+        with open(args.file, "r") as f:
+            for line in f:
+                install_package(line.strip())
+    except FileNotFoundError:
+        print(f"File not found: {args.file}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

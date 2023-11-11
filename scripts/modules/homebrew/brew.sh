@@ -28,72 +28,124 @@ brew_cleanup() {
 
 }
 
+use_python3=false  # Set a default value for use_python3
 
-brew_bundle_install() {
+show_help() {
 
-    local file_path=""
-    local use_python3=false
+    echo "Usage: $0 [-f file_path] [-p]"
+    echo "  -f, --file    Path to the Brewfile"
+    echo "  -p, --python3 Use python3 instead of default brew command"
+    echo "  -h, --help    Display this help message"
+}
 
-    # Parse command-line options.
-    local options
-	options=$(getopt -o f:p --long file:,python3 -n 'brew_bundle_install' -- "$@") || {
-		echo "Failed parsing options." >&2
-		return 1
-	}
+reset_args() {
 
-    # Note the quotes around `$options`: they are essential!
-    eval set -- "$options"
+	file_path=""
+	use_python3=false
 
-    while true; do
+    unset file_path
+    unset use_python3
+
+}
+
+parse_args() {
+
+    while [[ "$#" -gt 0 ]]; do
         case "$1" in
-        -f|--file)
-            file_path="$2"
-            shift 2
-            ;;
-        -p|--python3)
-            use_python3=true
-            shift
-            ;;
-        --)
-            shift
-            break
-            ;;
-        *)
-            echo "Invalid option: $1"
-            return 1
-            ;;
+            -h|--help)
+                show_help
+                exit 0
+                ;;
+            -f|--file)
+                if [[ -n "$2" ]]; then
+                    file_path="$2"
+
+                    shift 2
+                else
+                    echo "Error: Argument for $1 is missing" >&2
+                    show_help
+                    exit 1
+                fi
+                ;;
+            -p|--python3)
+                use_python3=true
+                shift
+                ;;
+            *)
+                echo "Unknown option: $1" >&2
+                show_help
+                exit 1
+                ;;
         esac
     done
 
+    # Validate required arguments
+    if [[ -z "$file_path" ]]; then
+        echo "Error: file path is required." >&2
+        show_help
+        exit 1
+    fi
+
+}
+
+brew_bundle_install() {
+
+	# Get current directory path relative to this script
+	local script_dir=""
+	script_dir="$(dirname "${BASH_SOURCE[0]}")"
+
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Parse arguments
+    parse_args "$@"
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
     # Check if `brew` is installed.
-    is_brew_installed || return 1
+    if ! command -v brew &>/dev/null; then
+        echo "'brew' is not installed."
+		reset_args
+        return 1
+    fi
 
     # Install formulae.
     if [[ -e "$file_path" ]]; then
         if $use_python3; then
             # Make sure python3 is installed
-            if ! command -v python3 &> /dev/null; then
+            if ! command -v python3 &>/dev/null; then
                 brew install python3
             fi
 
-            if python3 brew.py -f "$file_path"; then
+            echo "Running python3 brew.py with $file_path"
+			local python_script_path="$script_dir/brew.py"
+            if python3 "$python_script_path" -f "$file_path"; then
+                echo "Python3 script executed successfully."
+				reset_args
                 return 0
             else
+                echo "Python3 script execution failed."
+				reset_args
+                return 1
+            fi
+        else
+            echo "Running 'brew bundle install' with $file_path"
+            if brew bundle install -v --file="$file_path"; then
+                echo "Brewfile installation succeeded."
+				reset_args
+                return 0
+            else
+                echo "Brewfile installation failed."
+				reset_args
                 return 1
             fi
         fi
-
-        if brew bundle install -v --file="$file_path"; then
-            return 0
-        else
-            return 1
-        fi
     else
-        print_error "File does not exist: $file_path"
+        echo "The Brewfile does not exist at the specified path: '$file_path'"
+		reset_args
         return 1
     fi
-}
 
+}
 
 brew_install() {
 
