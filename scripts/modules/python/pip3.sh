@@ -35,7 +35,7 @@ pip3_install() {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if ! is_pip3_pkg_installed "$PACKAGE"; then
-        sudo pip3 install --quiet "$PACKAGE"
+        pip3 install --quiet "$PACKAGE"
     fi
 
 }
