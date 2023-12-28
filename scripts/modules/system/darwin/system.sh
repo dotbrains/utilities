@@ -7,151 +7,78 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamo
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-function install_pkg_from_URL {
+function install_from_URL {
 
   set -x
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  # Initialize a variable for the URL to the '.pkg'
-
+  # Initialize a variable for the URL
   local -r URL="$1"
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  # Create temporary directory to store '.pkg'
-
+  # Create temporary directory
   TMP_DIRECTORY="$(mktemp -d)"
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  #  Obtain the '.pkg' via cURL
-
-  curl -s "$URL" >"$TMP_DIRECTORY/installer.pkg"
+  # Determine file name and extension
+  FILE_NAME=$(basename "$URL")
+  EXTENSION="${FILE_NAME##*.}"
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  # Install the program from the '.pkg' file
-
-  sudo installer -pkg "$TMP_DIRECTORY/installer.pkg" -target /
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  # Remove the temporary directory
-
-  rm -rf "$TMP_DIRECTORY"
+  # Download the file
+  curl -sL "$URL" -o "$TMP_DIRECTORY/$FILE_NAME"
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  set +x
+  # Handle different file types
+  case $EXTENSION in
+  "zip")
+    # Extract the ZIP file
+    unzip -q "$TMP_DIRECTORY/$FILE_NAME" -d "$TMP_DIRECTORY"
 
-}
+    # Find the '.app' or '.dmg' file
+    if [[ -e "$TMP_DIRECTORY"/*.app ]]; then
 
-function install_app_from_URL {
+      APP_FILE="$TMP_DIRECTORY"/*.app
+      sudo cp -rf "$APP_FILE" /Applications
 
-  set -x
+    elif [[ -e "$TMP_DIRECTORY"/*.dmg ]]; then
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      FILE_NAME="$TMP_DIRECTORY"/*.dmg
+      install_dmg "$FILE_NAME"
 
-  # Initialize a variable for the URL to the '.zip' containing the '.app'
-  local -r URL="$1"
+    else
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      echo "No .app or .dmg file found in the ZIP archive."
+      rm -rf "$TMP_DIRECTORY"
+      set +x
+      return 1
 
-  # Create temporary directory to store '.zip' and extract its contents
-  TMP_DIRECTORY="$(mktemp -d)"
+    fi
+    ;;
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  "dmg")
+    # Install the program from the '.dmg' file
+    install_dmg "$TMP_DIRECTORY/$FILE_NAME"
+    ;;
 
-  # Download the ZIP file
-  ZIP_FILE_PATH="$TMP_DIRECTORY/installer.zip"
-  curl -sL "$URL" -o "$ZIP_FILE_PATH"
+  "pkg")
+    # Install the program from the '.pkg' file
+    sudo installer -pkg "$TMP_DIRECTORY/$FILE_NAME" -target /
+    ;;
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  # Extract the ZIP file
-  unzip -q "$ZIP_FILE_PATH" -d "$TMP_DIRECTORY"
-
-  # Find the .app file
-  APP_FILE=$(find "$TMP_DIRECTORY" -name "*.app")
-
-  # Check if a .app file was found
-  if [ -z "$APP_FILE" ]; then
-    echo "No .app file found in the ZIP archive."
+  *)
+    echo "Unsupported file type: $EXTENSION"
     rm -rf "$TMP_DIRECTORY"
     set +x
     return 1
-  fi
-
-  # Install the .app file
-  sudo cp -rf "$APP_FILE" /Applications
+    ;;
+  esac
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   # Remove the temporary directory
   rm -rf "$TMP_DIRECTORY"
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  set +x
-
-}
-
-# see: https://apple.stackexchange.com/a/311511/291269
-function install_dmg_from_URL {
-
-  set -x
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  # Initialize a variable for the URL to the '.dmg'
-
-  local -r URL="$1"
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  # Create temporary directory to store '.dmg'
-
-  TMP_DIRECTORY="$(mktemp -d)"
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  #  Obtain the '.dmg' via cURL
-
-  curl -s "$URL" >"$TMP_DIRECTORY/pkg.dmg"
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  # Mount the '.dmg' then grab its PATH
-
-  DISK="$(sudo hdiutil attach "$TMP_DIRECTORY"/pkg.dmg | grep Volumes)"
-  VOLUME="$(echo "$DISK" | cut -f 3)"
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  # Install the program within the '.dmg'
-
-  if [[ -e "$VOLUME"/*.app ]]; then
-    sudo cp -rf "$VOLUME"/*.app /Applications
-  elif [[ -e "$VOLUME"/*.pkg ]]; then
-    package="$(ls -1 | grep *.pkg | head -1)"
-
-    sudo installer -pkg "$VOLUME"/"$package".pkg -target /
-  fi
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  # Eject the '.dmg'
-
-  sudo hdiutil detach "$(echo "$DISK" | cut -f 1)"
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  # Remove the temporary directory
-
-  rm -rf "$TMP_DIRECTORY"
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   set +x
 
