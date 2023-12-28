@@ -9,143 +9,193 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamo
 
 function install_pkg_from_URL {
 
-    set -x
+  set -x
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Initialize a variable for the URL to the '.pkg'
+  # Initialize a variable for the URL to the '.pkg'
 
-    local -r URL="$1"
+  local -r URL="$1"
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Create temporary directory to store '.pkg'
+  # Create temporary directory to store '.pkg'
 
-    TMP_DIRECTORY="$(mktemp -d)"
+  TMP_DIRECTORY="$(mktemp -d)"
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    #  Obtain the '.pkg' via cURL
+  #  Obtain the '.pkg' via cURL
 
-    curl -s "$URL" > "$TMP_DIRECTORY/installer.pkg"
+  curl -s "$URL" >"$TMP_DIRECTORY/installer.pkg"
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Install the program from the '.pkg' file
+  # Install the program from the '.pkg' file
 
-    sudo installer -pkg "$TMP_DIRECTORY/installer.pkg" -target /
+  sudo installer -pkg "$TMP_DIRECTORY/installer.pkg" -target /
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Remove the temporary directory
+  # Remove the temporary directory
 
+  rm -rf "$TMP_DIRECTORY"
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  set +x
+
+}
+
+function install_app_from_URL {
+
+  set -x
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  # Initialize a variable for the URL to the '.zip' containing the '.app'
+  local -r URL="$1"
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  # Create temporary directory to store '.zip' and extract its contents
+  TMP_DIRECTORY="$(mktemp -d)"
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  # Download the ZIP file
+  ZIP_FILE_PATH="$TMP_DIRECTORY/installer.zip"
+  curl -sL "$URL" -o "$ZIP_FILE_PATH"
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  # Extract the ZIP file
+  unzip -q "$ZIP_FILE_PATH" -d "$TMP_DIRECTORY"
+
+  # Find the .app file
+  APP_FILE=$(find "$TMP_DIRECTORY" -name "*.app")
+
+  # Check if a .app file was found
+  if [ -z "$APP_FILE" ]; then
+    echo "No .app file found in the ZIP archive."
     rm -rf "$TMP_DIRECTORY"
-
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
     set +x
+    return 1
+  fi
+
+  # Install the .app file
+  sudo cp -rf "$APP_FILE" /Applications
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  # Remove the temporary directory
+  rm -rf "$TMP_DIRECTORY"
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  set +x
 
 }
 
 # see: https://apple.stackexchange.com/a/311511/291269
 function install_dmg_from_URL {
 
-    set -x
+  set -x
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Initialize a variable for the URL to the '.dmg'
+  # Initialize a variable for the URL to the '.dmg'
 
-    local -r URL="$1"
+  local -r URL="$1"
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Create temporary directory to store '.dmg'
+  # Create temporary directory to store '.dmg'
 
-    TMP_DIRECTORY="$(mktemp -d)"
+  TMP_DIRECTORY="$(mktemp -d)"
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    #  Obtain the '.dmg' via cURL
+  #  Obtain the '.dmg' via cURL
 
-    curl -s "$URL" > "$TMP_DIRECTORY/pkg.dmg"
+  curl -s "$URL" >"$TMP_DIRECTORY/pkg.dmg"
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Mount the '.dmg' then grab its PATH
+  # Mount the '.dmg' then grab its PATH
 
-    DISK="$(sudo hdiutil attach "$TMP_DIRECTORY"/pkg.dmg | grep Volumes)"
-    VOLUME="$(echo "$DISK" | cut -f 3)"
+  DISK="$(sudo hdiutil attach "$TMP_DIRECTORY"/pkg.dmg | grep Volumes)"
+  VOLUME="$(echo "$DISK" | cut -f 3)"
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Install the program within the '.dmg'
+  # Install the program within the '.dmg'
 
-    if [[ -e "$VOLUME"/*.app ]]; then
-      sudo cp -rf "$VOLUME"/*.app /Applications
-    elif [[ -e "$VOLUME"/*.pkg ]]; then
-      package="$(ls -1 | grep *.pkg | head -1)"
+  if [[ -e "$VOLUME"/*.app ]]; then
+    sudo cp -rf "$VOLUME"/*.app /Applications
+  elif [[ -e "$VOLUME"/*.pkg ]]; then
+    package="$(ls -1 | grep *.pkg | head -1)"
 
-      sudo installer -pkg "$VOLUME"/"$package".pkg -target /
-    fi
+    sudo installer -pkg "$VOLUME"/"$package".pkg -target /
+  fi
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Eject the '.dmg'
+  # Eject the '.dmg'
 
-    sudo hdiutil detach "$(echo "$DISK" | cut -f 1)"
+  sudo hdiutil detach "$(echo "$DISK" | cut -f 1)"
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Remove the temporary directory
+  # Remove the temporary directory
 
-    rm -rf "$TMP_DIRECTORY"
+  rm -rf "$TMP_DIRECTORY"
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    set +x
+  set +x
 
 }
 
 # see: https://apple.stackexchange.com/a/311511/291269
 function install_dmg {
 
-    set -x
+  set -x
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Initialize a variable for the URL to the '.dmg'
+  # Initialize a variable for the URL to the '.dmg'
 
-    local -r TARGET="$1"
+  local -r TARGET="$1"
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Mount the '.dmg' then grab its PATH
+  # Mount the '.dmg' then grab its PATH
 
-    DISK="$(sudo hdiutil attach "$TARGET" | grep Volumes)"
-    VOLUME="$(echo "$DISK" | cut -f 3)"
+  DISK="$(sudo hdiutil attach "$TARGET" | grep Volumes)"
+  VOLUME="$(echo "$DISK" | cut -f 3)"
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Install the program within the '.dmg'
+  # Install the program within the '.dmg'
 
-    if [[ -e "$VOLUME"/*.app ]]; then
-      sudo cp -rf "$VOLUME"/*.app /Applications
-    elif [[ -e "$VOLUME"/*.pkg ]]; then
-      package="$(ls -1 | grep *.pkg | head -1)"
+  if [[ -e "$VOLUME"/*.app ]]; then
+    sudo cp -rf "$VOLUME"/*.app /Applications
+  elif [[ -e "$VOLUME"/*.pkg ]]; then
+    package="$(ls -1 | grep *.pkg | head -1)"
 
-      sudo installer -pkg "$VOLUME"/"$package".pkg -target /
-    fi
+    sudo installer -pkg "$VOLUME"/"$package".pkg -target /
+  fi
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Eject the '.dmg'
+  # Eject the '.dmg'
 
-    sudo hdiutil detach "$(echo "$DISK" | cut -f 1)"
+  sudo hdiutil detach "$(echo "$DISK" | cut -f 1)"
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    set +x
+  set +x
 
 }
 
@@ -160,10 +210,10 @@ function add_app_to_dock {
   launchservices_path="/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister"
   app_path=$(${launchservices_path} -dump | grep -o "/.*${app_name}.app" | grep -v -E "Backups|Caches|TimeMachine|Temporary|/Volumes/${app_name}" | uniq | sort | head -n1)
   if open -Ra "${app_path}"; then
-      echo "$app_path added to the Dock."
-      defaults write com.apple.dock persistent-apps -array-add "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>${app_path}</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>"
+    echo "$app_path added to the Dock."
+    defaults write com.apple.dock persistent-apps -array-add "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>${app_path}</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>"
   else
-      echo "ERROR: $1 not found."
+    echo "ERROR: $1 not found."
   fi
 }
 
@@ -191,31 +241,30 @@ function add_folder_to_dock {
   sortby="1"
   displayas="0"
   viewcontentas="0"
-  while [[ "$#" -gt 0 ]]
-  do
-      case $1 in
-          -s|--sortby)
-          if [[ $2 =~ ^[1-5]$ ]]; then
-              sortby="${2}"
-          fi
-          ;;
-          -d|--displayas)
-          if [[ $2 =~ ^[0-1]$ ]]; then
-              displayas="${2}"
-          fi
-          ;;
-          -v|--viewcontentas)
-          if [[ $2 =~ ^[0-3]$ ]]; then
-              viewcontentas="${2}"
-          fi
-          ;;
-      esac
-      shift
+  while [[ "$#" -gt 0 ]]; do
+    case $1 in
+    -s | --sortby)
+      if [[ $2 =~ ^[1-5]$ ]]; then
+        sortby="${2}"
+      fi
+      ;;
+    -d | --displayas)
+      if [[ $2 =~ ^[0-1]$ ]]; then
+        displayas="${2}"
+      fi
+      ;;
+    -v | --viewcontentas)
+      if [[ $2 =~ ^[0-3]$ ]]; then
+        viewcontentas="${2}"
+      fi
+      ;;
+    esac
+    shift
   done
 
   if [[ -d "$folder_path" ]]; then
-      echo "$folder_path added to the Dock."
-      defaults write com.apple.dock persistent-others -array-add "<dict>
+    echo "$folder_path added to the Dock."
+    defaults write com.apple.dock persistent-others -array-add "<dict>
               <key>tile-data</key> <dict>
                   <key>arrangement</key> <integer>${sortby}</integer>
                   <key>displayas</key> <integer>${displayas}</integer>
@@ -229,7 +278,7 @@ function add_folder_to_dock {
               <key>tile-type</key> <string>directory-tile</string>
           </dict>"
   else
-      echo "ERROR: $folder_path not found."
+    echo "ERROR: $folder_path not found."
   fi
 }
 
@@ -248,5 +297,6 @@ function clear_dock {
 function reset_dock {
   # reset macOS Dock to default settings
 
-  defaults write com.apple.dock; killall Dock
+  defaults write com.apple.dock
+  killall Dock
 }
