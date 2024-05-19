@@ -4,7 +4,7 @@
 
 source_file_from_utilities() {
 
-	source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/nicholasadamou/utilities/master/scripts/$1")"
+	source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/master/scripts/$1")"
 
 }
 
