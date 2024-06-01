@@ -4,6 +4,10 @@
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 main() {
 
     # 'At first you're like "shellcheck is awesome" but then you're
