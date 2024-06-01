@@ -27,9 +27,9 @@ if [[ "$os_name" = "linux" ]]; then
 
 elif [[ "$os_name" = "darwin" ]]; then
 
-    bash homebrew/install.sh
+    brew update
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     brew install shellcheck
 
