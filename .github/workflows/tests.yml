@@ -1,0 +1,27 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Ensure necessary packages are available
+        run: ./setup_env.sh
+
+      - name: Set execute permissions
+        run: chmod +x ./test/customize_environment.sh ./test/main.sh
+
+      - name: Customize environment
+        run: ./test/customize_environment.sh
+
+      - name: Run tests
+        run: ./test/main.sh
