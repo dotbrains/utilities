@@ -14,9 +14,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Ensure necessary packages are available
-        run: ./setup_env.sh
-
       - name: Set execute permissions
         run: chmod +x ./test/customize_environment.sh ./test/main.sh
 
