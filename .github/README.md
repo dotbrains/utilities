@@ -1,4 +1,4 @@
-# Utilities
+# Utilities [![Tests](https://github.com/dotbrains/utilities/actions/workflows/tests.yml/badge.svg)](https://github.com/dotbrains/utilities/actions/workflows/tests.yml)
 
 This is a set of useful bash utilities that I have curated over the years.
 
