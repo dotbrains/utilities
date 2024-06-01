@@ -1,13 +1,17 @@
 #!/bin/bash
 
+# This script is used to install the necessary dependencies for
+# the testing of the scripts.
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+os_name=$(uname -s | tr '[:upper:]' '[:lower:]')
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # Linux
 
-if [[ "$(uname -s)" = "linux" ]]; then
-
-    # The Travis CI Ubuntu Trusty images do not
-    # have the some of the suites enabled by default.
+if [[ "$os_name" = "linux" ]]; then
 
     sudo add-apt-repository multiverse
     sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ trusty-backports restricted main universe"
@@ -15,27 +19,18 @@ if [[ "$(uname -s)" = "linux" ]]; then
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Install `ShellCheck`
-    # (required for testing).
-
     sudo apt install -qqy shellcheck
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# OS X
+# MacOS
 
-elif [[ "$(uname -s)" = "osx" ]]; then
+elif [[ "$os_name" = "darwin" ]]; then
 
-    # Install `ShellCheck`
-    # (required for testing).
+    bash homebrew/install.sh
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     brew install shellcheck
 
 fi
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-# To better simulate a clean OS install, remove certain things
-# included by default by Travis CI.
-
-rm -rf "$NVM_DIR"
