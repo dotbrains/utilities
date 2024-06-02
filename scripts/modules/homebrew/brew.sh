@@ -8,7 +8,35 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/uti
 
 # brew functions
 
+initialize_brew() {
+
+    # Manually initialize Homebrew if it is not already initialized
+
+    # Check if the OS is macOS
+    if [ "$(uname)" = "Darwin" ]; then
+        # Check for Homebrew in the common macOS installation paths
+        if [ -f /opt/homebrew/bin/brew ]; then
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        elif [ -f /usr/local/bin/brew ]; then
+            eval "$(/usr/local/bin/brew shellenv)"
+        fi
+    fi
+
+    # Check if the OS is Linux
+    if [ "$(uname)" = "Linux" ]; then
+        # Check for Homebrew in the default Linux installation path
+        if [ -d /home/linuxbrew/.linuxbrew ]; then
+            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        fi
+    fi
+
+}
+
 is_brew_installed() {
+
+    # Attempt to initialize brew in the current shell context
+    # If brew truly is not installed, preceding existence check will fail
+    initialize_brew
 
     if ! cmd_exists "brew"; then
         return 1
@@ -28,7 +56,7 @@ brew_cleanup() {
 
 }
 
-use_python3=false  # Set a default value for use_python3
+use_python3=false # Set a default value for use_python3
 
 show_help() {
 
@@ -40,8 +68,8 @@ show_help() {
 
 reset_args() {
 
-	file_path=""
-	use_python3=false
+    file_path=""
+    use_python3=false
 
     unset file_path
     unset use_python3
@@ -52,36 +80,36 @@ parse_args() {
 
     while [[ "$#" -gt 0 ]]; do
         case "$1" in
-            -h|--help)
-                show_help
-                exit 0
-                ;;
-            -f|--file)
-                if [[ -n "$2" ]]; then
-                    file_path="$2"
+        -h | --help)
+            show_help
+            exit 0
+            ;;
+        -f | --file)
+            if [[ -n "$2" ]]; then
+                file_path="$2"
 
-                    shift 2
-                else
-                    echo "Error: Argument for $1 is missing" >&2
-                    show_help
-                    exit 1
-                fi
-                ;;
-            -p|--python3)
-                use_python3=true
-                shift
-                ;;
-            *)
-                echo "Unknown option: $1" >&2
+                shift 2
+            else
+                error "Error: Argument for $1 is missing" >&2
                 show_help
                 exit 1
-                ;;
+            fi
+            ;;
+        -p | --python3)
+            use_python3=true
+            shift
+            ;;
+        *)
+            error "Unknown option: $1" >&2
+            show_help
+            exit 1
+            ;;
         esac
     done
 
     # Validate required arguments
     if [[ -z "$file_path" ]]; then
-        echo "Error: file path is required." >&2
+        error "Error: file path is required." >&2
         show_help
         exit 1
     fi
@@ -90,23 +118,25 @@ parse_args() {
 
 brew_bundle_install() {
 
-	# Get current directory path relative to this script
-	local script_dir=""
-	script_dir="$(dirname "${BASH_SOURCE[0]}")"
+    # Get current directory path relative to this script
+    local script_dir=""
+    script_dir="$(dirname "${BASH_SOURCE[0]}")"
 
-	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     # Parse arguments
     parse_args "$@"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Check if `brew` is installed.
-    if ! command -v brew &>/dev/null; then
-        echo "'brew' is not installed."
-		reset_args
+    # Check if 'brew' is installed
+    if ! is_brew_installed; then
+        warning "'brew' is not installed."
+        reset_args
         return 1
     fi
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     # Install formulae.
     if [[ -e "$file_path" ]]; then
@@ -117,31 +147,31 @@ brew_bundle_install() {
             fi
 
             echo "Running python3 brew.py with $file_path"
-			local python_script_path="$script_dir/brew.py"
+            local python_script_path="$script_dir/brew.py"
             if python3 "$python_script_path" -f "$file_path"; then
-                echo "Python3 script executed successfully."
-				reset_args
+                success "Python3 script executed successfully."
+                reset_args
                 return 0
             else
-                echo "Python3 script execution failed."
-				reset_args
+                error "Python3 script execution failed."
+                reset_args
                 return 1
             fi
         else
             echo "Running 'brew bundle install' with $file_path"
             if brew bundle install -v --file="$file_path"; then
-                echo "Brewfile installation succeeded."
-				reset_args
+                success "Brewfile installation succeeded."
+                reset_args
                 return 0
             else
-                echo "Brewfile installation failed."
-				reset_args
+                error "Brewfile installation failed."
+                reset_args
                 return 1
             fi
         fi
     else
-        echo "The Brewfile does not exist at the specified path: '$file_path'"
-		reset_args
+        error "The Brewfile does not exist at the specified path: '$file_path'"
+        reset_args
         return 1
     fi
 
@@ -174,8 +204,8 @@ brew_install() {
 
     # Install the specified formula.
 
-    if ! brew "$CMD" list | grep "$FORMULA" &> /dev/null; then
-		brew "$CMD" install "$FORMULA"
+    if ! brew "$CMD" list | grep "$FORMULA" &>/dev/null; then
+        brew "$CMD" install "$FORMULA"
     fi
 
 }
@@ -184,7 +214,7 @@ brew_prefix() {
 
     local path=""
 
-	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     # Check if `brew` is installed.
 
@@ -192,11 +222,11 @@ brew_prefix() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    if path="$(brew --prefix 2> /dev/null)"; then
+    if path="$(brew --prefix 2>/dev/null)"; then
         printf "%s" "$path"
         return 0
     else
-		return 1
+        return 1
     fi
 
 }
@@ -209,7 +239,7 @@ brew_tap() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    brew tap "$1" &> /dev/null
+    brew tap "$1" &>/dev/null
 
 }
 
@@ -239,6 +269,6 @@ brew_upgrade_formulae() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	brew  upgrade "$2"
+    brew upgrade "$2"
 
 }
