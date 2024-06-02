@@ -227,9 +227,3 @@ function reset_dock {
   defaults write com.apple.dock
   killall Dock
 }
-
-function is_macos {
-  # returns true if the OS is macOS
-
-  [[ $(uname) == "Darwin" ]]
-}

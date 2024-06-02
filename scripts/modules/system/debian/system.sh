@@ -26,15 +26,3 @@ fix_broken_symlinks_in() {
     fi
 
 }
-
-is_debian() {
-
-    if [[ "$(uname -s)" == "Linux" ]]; then
-        if [[ -e "/etc/debian_version" ]]; then
-            return 0
-        fi
-    fi
-
-    return 1
-
-}

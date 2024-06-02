@@ -30,6 +30,26 @@ add_to_path_if_not_exists() {
 
 }
 
+is_debian() {
+
+    if [[ "$(uname -s)" == "Linux" ]]; then
+        if [[ -e "/etc/debian_version" ]]; then
+            return 0
+        fi
+    fi
+
+    return 1
+
+}
+
+is_macos() {
+
+    # returns true if the OS is macOS
+
+    [[ $(uname) == "Darwin" ]]
+
+}
+
 read_kernel_name() {
 
     uname -s
