@@ -8,6 +8,30 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/uti
 
 # brew functions
 
+get_brew_default_path() {
+
+    local path=""
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # MacOS Homebrew default path
+    if [[ -d "/opt/homebrew" ]]; then
+        path="/opt/homebrew"
+    elif [[ -d "/usr/local" ]]; then
+        path="/usr/local"
+    fi
+
+    # Linux Homebrew default path
+    if [[ -d "/home/linuxbrew/.linuxbrew" ]]; then
+        path="/home/linuxbrew/.linuxbrew"
+    fi
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    printf "%s" "$path"
+
+}
+
 initialize_brew() {
 
     # Manually initialize Homebrew if it is not already initialized
@@ -46,8 +70,14 @@ is_brew_installed() {
     # If brew truly is not installed, preceding existence check will fail
     initialize_brew
 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
     if ! cmd_exists "brew"; then
-        return 1
+        local brew_path="$(get_brew_default_path)"
+
+        if [[ -n "$brew_path" ]]; then
+            return 1
+        fi
     fi
 
 }
