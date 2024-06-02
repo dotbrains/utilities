@@ -14,22 +14,28 @@ initialize_brew() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    # Check if the OS is macOS
-    if [ "$(uname)" = "Darwin" ]; then
-        # Check for Homebrew in the common macOS installation paths
+    # Determine the OS
+    OS=$(uname)
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # MacOS Homebrew initialization
+    if [ "$OS" = "Darwin" ]; then
         if [ -f /opt/homebrew/bin/brew ]; then
             eval "$(/opt/homebrew/bin/brew shellenv)"
+            add_to_path_if_not_exists "/opt/homebrew/bin"
         elif [ -f /usr/local/bin/brew ]; then
             eval "$(/usr/local/bin/brew shellenv)"
+            add_to_path_if_not_exists "/usr/local/bin"
         fi
     fi
 
-    # Check if the OS is Linux
-    if [ "$(uname)" = "Linux" ]; then
-        # Check for Homebrew in the default Linux installation path
-        if [ -d /home/linuxbrew/.linuxbrew ]; then
-            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-        fi
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Linux Homebrew initialization
+    if [ "$OS" = "Linux" ] && [ -d /home/linuxbrew/.linuxbrew ]; then
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        add_to_path_if_not_exists "/home/linuxbrew/.linuxbrew/bin"
     fi
 
 }

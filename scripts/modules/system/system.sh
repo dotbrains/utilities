@@ -9,9 +9,30 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/uti
 
 # System functions
 
+add_to_path_if_not_exists() {
+
+    local new_path=$1
+    local shell_path
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Add to PATH for bash and zsh
+    if [[ "$SHELL" == */bash ]] || [[ "$SHELL" == */zsh ]]; then
+        [[ ":$PATH:" != *":$new_path:"* ]] && export PATH="$new_path:$PATH"
+    fi
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Add to PATH for fish
+    if [[ "$SHELL" == */fish ]]; then
+        fish -c "contains $new_path \$fish_user_paths; or set -U fish_user_paths $new_path \$fish_user_paths"
+    fi
+
+}
+
 read_kernel_name() {
 
-	uname -s
+    uname -s
 
 }
 
@@ -28,7 +49,7 @@ read_os_name() {
     elif [[ "$kernelName" == "Linux" ]] && [[ -e "/etc/os-release" ]] || [[ -e "/usr/lib/os-release" ]]; then
         local conf=""
 
-        if test -r /etc/os-release ; then
+        if test -r /etc/os-release; then
             conf="/etc/os-release"
         else
             conf="/usr/lib/os-release"
@@ -52,7 +73,7 @@ read_os_version() {
     elif [[ "$kernelName" == "Linux" ]] && [[ -e "/etc/os-release" ]] || [[ -e "/usr/lib/os-release" ]]; then
         local conf=""
 
-        if test -r /etc/os-release ; then
+        if test -r /etc/os-release; then
             conf="/etc/os-release"
         else
             conf="/usr/lib/os-release"
@@ -78,7 +99,7 @@ get_os() {
         if [[ "$(read_os_name)" == "ubuntu" ]]; then
             os="ubuntu"
 
-            if grep -qE "(Microsoft|WSL)" /proc/version &> /dev/null; then
+            if grep -qE "(Microsoft|WSL)" /proc/version &>/dev/null; then
                 os="windows"
             fi
         elif [[ "$(read_os_name)" == "kali" ]]; then
@@ -105,21 +126,20 @@ is_supported_version() {
     local i=""
 
     # Fill empty positions in v1 with zeros.
-    for (( i=${#v1[@]}; i<${#v2[@]}; i++ )); do
+    for ((i = ${#v1[@]}; i < ${#v2[@]}; i++)); do
         v1[i]=0
     done
 
-
-    for (( i=0; i<${#v1[@]}; i++ )); do
+    for ((i = 0; i < ${#v1[@]}; i++)); do
 
         # Fill empty positions in v2 with zeros.
         if [[ -z ${v2[i]} ]]; then
             v2[i]=0
         fi
 
-        if (( 10#${v1[i]} < 10#${v2[i]} )); then
+        if ((10#${v1[i]} < 10#${v2[i]})); then
             return 1
-        elif (( 10#${v1[i]} > 10#${v2[i]} )); then
+        elif ((10#${v1[i]} > 10#${v2[i]})); then
             return 0
         fi
 
@@ -129,8 +149,8 @@ is_supported_version() {
 
 set_trap() {
 
-    trap -p "$1" | grep "$2" &> /dev/null \
-        || trap '$2' "$1"
+    trap -p "$1" | grep "$2" &>/dev/null ||
+        trap '$2' "$1"
 
 }
 
@@ -151,18 +171,18 @@ symlink() {
     elif [[ "$(readlink "$targetFile")" == "$sourceFile" ]]; then
         print_success "$targetFile → $sourceFile"
     else
-		ask_for_confirmation "'$targetFile' already exists, do you want to overwrite it?"
+        ask_for_confirmation "'$targetFile' already exists, do you want to overwrite it?"
 
-            if answer_is_yes; then
+        if answer_is_yes; then
 
-                sudo rm -rf "$targetFile"
+            sudo rm -rf "$targetFile"
 
-                sudo ln -fs "$sourceFile" "$targetFile"
+            sudo ln -fs "$sourceFile" "$targetFile"
 
-            else
-                print_error "$targetFile → $sourceFile"
-            fi
-	fi
+        else
+            print_error "$targetFile → $sourceFile"
+        fi
+    fi
 
 }
 
@@ -180,7 +200,7 @@ cmd_exists() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    command -v "$1" &> /dev/null
+    command -v "$1" &>/dev/null
 
 }
 
@@ -234,9 +254,9 @@ append_to_bashrc() {
 
     if ! grep -Fqs "$text" "$bashrc"; then
         if [[ "$skip_new_line" -eq 1 ]]; then
-            printf "%s\n" "$text" >> "$bashrc"
+            printf "%s\n" "$text" >>"$bashrc"
         else
-            printf "\n%s\n" "$text" >> "$bashrc"
+            printf "\n%s\n" "$text" >>"$bashrc"
         fi
     fi
 
@@ -248,18 +268,18 @@ function extract {
     echo Extracting "$1" ...
     if [[ -f "$1" ]]; then
         case "$1" in
-            *.tar.bz2)   tar xjf "$1"  ;;
-            *.tar.gz)    tar xzf "$1"  ;;
-            *.bz2)       bunzip2 "$1"  ;;
-            *.rar)       rar x "$1"    ;;
-            *.gz)        gunzip "$1"   ;;
-            *.tar)       tar xf "$1"  ;;
-            *.tbz2)      tar xjf "$1"  ;;
-            *.tgz)       tar xzf "$1"  ;;
-            *.zip)       unzip "$1"   ;;
-            *.Z)         uncompress "$1"  ;;
-            *.7z)        7z x "$1"  ;;
-            *)        echo "'$1' cannot be extracted via extract()" ;;
+        *.tar.bz2) tar xjf "$1" ;;
+        *.tar.gz) tar xzf "$1" ;;
+        *.bz2) bunzip2 "$1" ;;
+        *.rar) rar x "$1" ;;
+        *.gz) gunzip "$1" ;;
+        *.tar) tar xf "$1" ;;
+        *.tbz2) tar xjf "$1" ;;
+        *.tgz) tar xzf "$1" ;;
+        *.zip) unzip "$1" ;;
+        *.Z) uncompress "$1" ;;
+        *.7z) 7z x "$1" ;;
+        *) echo "'$1' cannot be extracted via extract()" ;;
         esac
     else
         echo "'$1' is not a valid file"
@@ -268,14 +288,14 @@ function extract {
 }
 
 #see: https://stackoverflow.com/a/8106460/5290011
-add_cron_job () {
+add_cron_job() {
 
     local FREQUENCY="$1"
     local CMD="$2"
     local JOB="$FREQUENCY $CMD"
 
-    ! [[ "$(crontab -l | grep "$JOB")" =~ $JOB ]] \
-        && cat <(grep -f -i -v "$CMD" <(crontab -l)) <(echo "$JOB") | crontab -
+    ! [[ "$(crontab -l | grep "$JOB")" =~ $JOB ]] &&
+        cat <(grep -f -i -v "$CMD" <(crontab -l)) <(echo "$JOB") | crontab -
 
 }
 
@@ -306,28 +326,28 @@ replace_str() {
     PATTERN="$3"
     REPLACEMENT="$4"
 
-	sed -i "$FILE" -e "/$KEY/s/$PATTERN/$REPLACEMENT/g"
+    sed -i "$FILE" -e "/$KEY/s/$PATTERN/$REPLACEMENT/g"
 
 }
 
 jq_replace() {
 
-	x="$1"
-	field="$2"
-	value="$3"
+    x="$1"
+    field="$2"
+    value="$3"
 
-	if cmd_exists "jq"; then
-		jq ".\"$field\" |= \"$value\"" "$x" > tmp.$$.json && mv tmp.$$.json "$x"
-	else
-		if [[ "$(read_os_name)" = "linux" ]]; then
-			sudo apt install jq -qqy
-		else
-			if cmd_exists "brew"; then
-				brew install jq
+    if cmd_exists "jq"; then
+        jq ".\"$field\" |= \"$value\"" "$x" >tmp.$$.json && mv tmp.$$.json "$x"
+    else
+        if [[ "$(read_os_name)" = "linux" ]]; then
+            sudo apt install jq -qqy
+        else
+            if cmd_exists "brew"; then
+                brew install jq
 
-				jq ".\"$field\" |= \"$value\"" "$x" > tmp.$$.json && mv tmp.$$.json "$x"
-			fi
-		fi
-	fi
+                jq ".\"$field\" |= \"$value\"" "$x" >tmp.$$.json && mv tmp.$$.json "$x"
+            fi
+        fi
+    fi
 
 }
