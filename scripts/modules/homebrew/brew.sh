@@ -12,6 +12,8 @@ initialize_brew() {
 
     # Manually initialize Homebrew if it is not already initialized
 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
     # Check if the OS is macOS
     if [ "$(uname)" = "Darwin" ]; then
         # Check for Homebrew in the common macOS installation paths
