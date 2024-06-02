@@ -133,7 +133,7 @@ brew_bundle_install() {
 
     # Check if 'brew' is installed
     if ! is_brew_installed; then
-        warning "'brew' is not installed."
+        warn "'brew' is not installed."
         reset_args
         return 1
     fi
