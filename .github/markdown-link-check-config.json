@@ -5,10 +5,34 @@
     },
     {
       "pattern": "^https://raw.githubusercontent.com/dotbrains/utilities/(master|v\\d+\\.\\d+\\.\\d+)/"
+    },
+    {
+      "pattern": "^https://github.com/dotbrains/utilities/releases/tag/"
+    },
+    {
+      "pattern": "^https://www.gnu.org/software/bash/"
+    },
+    {
+      "pattern": "^https://get.oh-my.fish"
+    },
+    {
+      "pattern": "^https://stackoverflow.com/"
     }
   ],
-  "replacementPatterns": [],
-  "httpHeaders": [],
+  "replacementPatterns": [
+    {
+      "pattern": "^scripts/",
+      "replacement": "https://github.com/dotbrains/utilities/blob/master/scripts/"
+    }
+  ],
+  "httpHeaders": [
+    {
+      "urls": ["https://stackoverflow.com"],
+      "headers": {
+        "User-Agent": "Mozilla/5.0 (compatible; LinkChecker/1.0)"
+      }
+    }
+  ],
   "timeout": "20s",
   "retryOn429": true,
   "retryCount": 3,
