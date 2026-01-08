@@ -28,7 +28,7 @@ is_port_installed() {
 
 port_install() {
 
-    declare -r PORT = "$1"
+    declare -r PORT="$1"
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

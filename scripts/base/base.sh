@@ -171,8 +171,8 @@ execute() {
 			)"
 	else
 		eval "$CMDS" \
-			&> /dev/null \
-			2> "$TMP_FILE" &
+			2> "$TMP_FILE" \
+			> /dev/null &
 
 		cmdsPID=$!
 	fi
@@ -302,7 +302,7 @@ export normal=$(tput sgr0)
 
 ok() {
 
-  echo -e "$COL_GREEN[ok]$COL_RESET $1"
+  echo -e "${COL_GREEN}[ok]${COL_RESET} $1"
 
 }
 
@@ -320,31 +320,31 @@ running() {
 
 action() {
 
-  echo -e "$COL_YELLOW[action]:$COL_RESET ⇒ $1"
+  echo -e "${COL_YELLOW}[action]:${COL_RESET} ⇒ $1"
 
 }
 
 warn() {
 
-  echo -e "$COL_YELLOW[warning]$COL_RESET $1"
+  echo -e "${COL_YELLOW}[warning]${COL_RESET} $1"
 
 }
 
 success() {
 
-  echo -e "$COL_GREEN[success]$COL_RESET $1"
+  echo -e "${COL_GREEN}[success]${COL_RESET} $1"
 
 }
 
 error() {
 
-  echo -e "$COL_RED[error]$COL_RESET $1"
+  echo -e "${COL_RED}[error]${COL_RESET} $1"
 
 }
 
 cancelled() {
 
-  echo -e "$COL_RED[cancelled]$COL_RESET $1"
+  echo -e "${COL_RED}[cancelled]${COL_RESET} $1"
 
 }
 

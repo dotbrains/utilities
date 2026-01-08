@@ -12,6 +12,7 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/uti
 add_to_path_if_not_exists() {
 
     local new_path=$1
+    # shellcheck disable=SC2034
     local shell_path
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

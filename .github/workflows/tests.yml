@@ -3,25 +3,43 @@ name: Tests
 on: [push, pull_request]
 
 jobs:
-  build:
+  test:
+    name: Test on ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
+      fail-fast: false
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set TERM variable
         run: echo "TERM=xterm-256color" >> $GITHUB_ENV
 
       - name: Set execute permissions
-        run: chmod +x ./test/customize_environment.sh ./test/main.sh
-
-      - name: Customize environment
-        run: ./test/customize_environment.sh
+        run: chmod +x ./test/main.sh
 
       - name: Run tests
         run: ./test/main.sh
+
+      - name: Display bash version
+        run: bash --version
+
+      - name: Test utilities.sh sourcing
+        run: |
+          # Test that utilities.sh can be sourced
+          bash -c 'source utilities.sh && echo "✓ utilities.sh sourced successfully"'
+
+      - name: Test debug mode
+        run: |
+          bash -c 'export UTILITIES_DEBUG=true; source utilities.sh' 2>&1 | grep -q "\[utilities\]" && echo "✓ Debug mode working"
+
+      - name: Test version constant
+        run: |
+          bash -c 'source utilities.sh && [[ -n "$UTILITIES_VERSION" ]] && echo "✓ Version: $UTILITIES_VERSION"'
+
+      - name: Run integration tests
+        run: ./test/integration_test.sh

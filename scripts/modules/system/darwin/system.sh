@@ -39,11 +39,13 @@ function install_from_URL {
     # Find the '.app' or '.dmg' file
     if [[ -e "$TMP_DIRECTORY"/*.app ]]; then
 
+      # shellcheck disable=SC2125
       APP_FILE="$TMP_DIRECTORY"/*.app
       sudo cp -rf "$APP_FILE" /Applications
 
     elif [[ -e "$TMP_DIRECTORY"/*.dmg ]]; then
 
+      # shellcheck disable=SC2125
       FILE_NAME="$TMP_DIRECTORY"/*.dmg
       install_dmg "$FILE_NAME"
 

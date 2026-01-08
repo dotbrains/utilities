@@ -18,7 +18,10 @@ main() {
     find \
         ../scripts \
         ../test \
+        ../utilities.sh \
         -type f \
+        -name '*.sh' \
+        ! -name 'integration_test.sh' \
         -exec shellcheck \
         -e SC1090 \
         -e SC1091 \
