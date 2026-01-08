@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2026-01-08
 
 ### Added
+
 - Comprehensive documentation for all modules
 - Root README.md with quick start guide and module overview
 - Per-module README files with function documentation
@@ -21,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Semantic versioning support
 
 ### Changed
+
 - Enhanced utilities.sh with version constant (UTILITIES_VERSION)
 - Improved error handling in source_file_from_utilities() with timeouts
 - Better network failure handling with 10s connect timeout, 30s max timeout
@@ -29,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced test workflow with bash version display and additional validation
 
 ### Documentation
+
 - Base module: 29 functions documented
 - System module: 20 functions documented
 - Git module: 2 functions documented
@@ -44,12 +47,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MacPorts module: macports functions documented
 
 ### Testing
+
 - Created integration_test.sh for testing core features
 - Added tests for version constant, debug mode, selective loading, and caching
 - Enhanced CI workflow with additional validation tests
 - Shellcheck validation on all shell scripts
 
 ### CI/CD
+
 - Added automated release workflow (release.yml)
 - Added linting workflow (lint.yml) with markdown linting and link checking
 - Added markdownlint configuration
@@ -57,6 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added status badges to README (Tests, Lint, Release, License, Shell, Platform)
 
 ### Features
+
 - Empty file validation to prevent sourcing of corrupt downloads
 - Cache directory creation with error handling
 - Failed download cleanup
@@ -66,6 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
+
 - Enhanced testing infrastructure with unit and integration tests
 - CI/CD improvements with automated releases
 - Markdown linting and link validation

@@ -14,17 +14,21 @@ Ruby gem package management utilities.
 ## Functions
 
 ### `is_ruby_installed()`
+
 Check if Ruby/gem is installed.
 
 **Returns:** 0 if installed, 1 otherwise
 
 ### `gem_install(gem)`
+
 Install a Ruby gem if not already installed.
 
 **Parameters:**
+
 - `$1` - Gem name
 
 **Usage:**
+
 ```bash
 if is_ruby_installed; then
     gem_install "bundler"

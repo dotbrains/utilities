@@ -14,12 +14,15 @@ Rust cargo package management utilities.
 ## Functions
 
 ### `is_cargo_installed()`
+
 Check if Cargo is installed.
 
 ### `cargo_install(crate)`
+
 Install a Rust crate via cargo.
 
 **Usage:**
+
 ```bash
 if is_cargo_installed; then
     cargo_install "ripgrep"

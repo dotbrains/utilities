@@ -16,9 +16,11 @@ Core utility functions providing interactive prompts, colored output, execution 
 ### Interactive Prompts
 
 #### `answer_is_yes()`
+
 Check if the user's response is affirmative (Y/y).
 
 **Usage:**
+
 ```bash
 ask_for_confirmation "Continue?"
 if answer_is_yes; then
@@ -31,12 +33,15 @@ fi
 ---
 
 #### `ask(question)`
+
 Prompt user for input and store response in `$REPLY`.
 
 **Parameters:**
+
 - `$1` - Question to display
 
 **Usage:**
+
 ```bash
 ask "What is your name?"
 name=$(get_answer)
@@ -45,12 +50,15 @@ name=$(get_answer)
 ---
 
 #### `ask_for_confirmation(question)`
+
 Prompt user for yes/no confirmation.
 
 **Parameters:**
+
 - `$1` - Question to display
 
 **Usage:**
+
 ```bash
 ask_for_confirmation "Delete all files?"
 if answer_is_yes; then
@@ -61,9 +69,11 @@ fi
 ---
 
 #### `ask_for_sudo()`
+
 Request sudo privileges and keep them alive for the duration of the script.
 
 **Usage:**
+
 ```bash
 ask_for_sudo
 sudo apt update
@@ -73,6 +83,7 @@ sudo apt update
 ---
 
 #### `get_answer()`
+
 Retrieve the user's last input from `$REPLY`.
 
 **Returns:** The value of `$REPLY`
@@ -80,12 +91,15 @@ Retrieve the user's last input from `$REPLY`.
 ---
 
 #### `skip_questions(args...)`
+
 Check if script should skip interactive prompts (e.g., `-y` or `--yes` flag).
 
 **Parameters:**
+
 - `$@` - Command line arguments
 
 **Usage:**
+
 ```bash
 if ! skip_questions "$@"; then
     ask_for_confirmation "Install package?"
@@ -99,13 +113,16 @@ fi
 ### Execution & Process Management
 
 #### `execute(command [message])`
+
 Execute a command with a spinner and formatted output. Opens in a new terminal window on macOS/Linux desktop environments.
 
 **Parameters:**
+
 - `$1` - Command to execute
 - `$2` - Optional display message (defaults to command)
 
 **Usage:**
+
 ```bash
 execute "brew install wget" "Installing wget"
 ```
@@ -115,12 +132,15 @@ execute "brew install wget" "Installing wget"
 ---
 
 #### `terminal(command)`
+
 Open a new macOS Terminal window and execute a command (macOS only).
 
 **Parameters:**
+
 - `$1` - Command to execute
 
 **Usage:**
+
 ```bash
 terminal "cd $HOME && ls -la"
 ```
@@ -130,14 +150,17 @@ terminal "cd $HOME && ls -la"
 ---
 
 #### `show_spinner(pid command message)`
+
 Display an animated spinner while a process is running.
 
 **Parameters:**
+
 - `$1` - Process ID to monitor
 - `$2` - Command being executed
 - `$3` - Display message
 
 **Usage:**
+
 ```bash
 long_running_command &
 show_spinner $! "long_running_command" "Processing..."
@@ -146,9 +169,11 @@ show_spinner $! "long_running_command" "Processing..."
 ---
 
 #### `kill_all_subprocesses()`
+
 Kill all background jobs spawned by the current shell.
 
 **Usage:**
+
 ```bash
 set_trap EXIT kill_all_subprocesses
 ```
@@ -160,18 +185,22 @@ set_trap EXIT kill_all_subprocesses
 #### Color Output
 
 #### `print_in_color(text color)`
+
 Print text in the specified color.
 
 **Parameters:**
+
 - `$1` - Text to print
 - `$2` - Color code (1=red, 2=green, 3=yellow, 5=purple)
 
 ---
 
 #### `print_in_green(text)`
+
 Print text in green.
 
 **Usage:**
+
 ```bash
 print_in_green "Success!\n"
 ```
@@ -179,9 +208,11 @@ print_in_green "Success!\n"
 ---
 
 #### `print_in_red(text)`
+
 Print text in red.
 
 **Usage:**
+
 ```bash
 print_in_red "Error!\n"
 ```
@@ -189,9 +220,11 @@ print_in_red "Error!\n"
 ---
 
 #### `print_in_yellow(text)`
+
 Print text in yellow.
 
 **Usage:**
+
 ```bash
 print_in_yellow "Warning!\n"
 ```
@@ -199,6 +232,7 @@ print_in_yellow "Warning!\n"
 ---
 
 #### `print_in_purple(text)`
+
 Print text in purple.
 
 ---
@@ -206,9 +240,11 @@ Print text in purple.
 #### Formatted Output
 
 #### `ok(message)`
+
 Print a success message with `[ok]` prefix.
 
 **Usage:**
+
 ```bash
 ok "Installation complete"
 ```
@@ -216,9 +252,11 @@ ok "Installation complete"
 ---
 
 #### `bot(message)`
+
 Print a message with bot emoji prefix.
 
 **Usage:**
+
 ```bash
 bot "Starting setup process"
 ```
@@ -226,9 +264,11 @@ bot "Starting setup process"
 ---
 
 #### `running(message)`
+
 Print a "running" message (no newline).
 
 **Usage:**
+
 ```bash
 running "Installing packages"
 echo "done"
@@ -237,9 +277,11 @@ echo "done"
 ---
 
 #### `action(message)`
+
 Print an action message with `[action]` prefix.
 
 **Usage:**
+
 ```bash
 action "Downloading files"
 ```
@@ -247,9 +289,11 @@ action "Downloading files"
 ---
 
 #### `warn(message)`
+
 Print a warning message with `[warning]` prefix.
 
 **Usage:**
+
 ```bash
 warn "Configuration file not found"
 ```
@@ -257,9 +301,11 @@ warn "Configuration file not found"
 ---
 
 #### `success(message)`
+
 Print a success message with `[success]` prefix.
 
 **Usage:**
+
 ```bash
 success "All tests passed"
 ```
@@ -267,9 +313,11 @@ success "All tests passed"
 ---
 
 #### `error(message)`
+
 Print an error message with `[error]` prefix.
 
 **Usage:**
+
 ```bash
 error "Failed to connect to server"
 ```
@@ -277,9 +325,11 @@ error "Failed to connect to server"
 ---
 
 #### `cancelled(message)`
+
 Print a cancellation message with `[cancelled]` prefix.
 
 **Usage:**
+
 ```bash
 cancelled "Operation aborted by user"
 ```
@@ -287,18 +337,22 @@ cancelled "Operation aborted by user"
 ---
 
 #### `print_error(message [details])`
+
 Print a formatted error with ✖ symbol.
 
 **Parameters:**
+
 - `$1` - Error message
 - `$2` - Optional details
 
 ---
 
 #### `print_error_stream()`
+
 Read error lines from stdin and print them formatted.
 
 **Usage:**
+
 ```bash
 command 2>&1 | print_error_stream
 ```
@@ -306,9 +360,11 @@ command 2>&1 | print_error_stream
 ---
 
 #### `print_question(message)`
+
 Print a question with `[?]` prefix.
 
 **Usage:**
+
 ```bash
 print_question "Enter your choice: "
 ```
@@ -316,13 +372,16 @@ print_question "Enter your choice: "
 ---
 
 #### `print_result(exit_code message)`
+
 Print success or error based on exit code.
 
 **Parameters:**
+
 - `$1` - Exit code (0 = success)
 - `$2` - Message
 
 **Usage:**
+
 ```bash
 command
 print_result $? "Operation completed"
@@ -331,9 +390,11 @@ print_result $? "Operation completed"
 ---
 
 #### `print_success(message)`
+
 Print a formatted success message with ✔ symbol.
 
 **Usage:**
+
 ```bash
 print_success "File created successfully"
 ```
@@ -341,9 +402,11 @@ print_success "File created successfully"
 ---
 
 #### `print_warning(message)`
+
 Print a formatted warning with ! symbol.
 
 **Usage:**
+
 ```bash
 print_warning "Using default configuration"
 ```
@@ -363,6 +426,7 @@ normal      # Normal text
 ```
 
 **Usage:**
+
 ```bash
 echo -e "${COL_GREEN}Success${COL_RESET}"
 echo -e "${bold}Important${normal}"

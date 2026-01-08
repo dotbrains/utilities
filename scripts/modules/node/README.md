@@ -15,27 +15,35 @@ Node.js and npm package management utilities.
 ## Functions
 
 ### `is_npm_installed()`
+
 Check if npm is installed.
 
 ### `is_npx_installed()`
+
 Check if npx is installed.
 
 ### `is_npm_pkg_installed(package)`
+
 Check if an npm global package is installed.
 
 ### `is_yarn_pkg_installed(package)`
+
 Check if a yarn global package is installed.
 
 ### `npm_install(package)`
+
 Install an npm package globally.
 
 ### `sudo_npm_install(package)`
+
 Install an npm package globally with sudo.
 
 ### `npx_install(package)`
+
 Install a package via yarn using npx.
 
 ### `npm_install_from_file(file_path)`
+
 Install npm packages from a file.
 
 ## Examples

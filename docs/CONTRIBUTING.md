@@ -41,12 +41,14 @@ Be respectful, constructive, and professional in all interactions.
 ### Shell Script Guidelines
 
 #### Style
+
 - Use bash 3.2 compatible syntax (macOS default)
 - Indent with tabs (as used in existing code)
 - Use descriptive variable names
 - Add comments for complex logic
 
 #### Best Practices
+
 ```bash
 # Good: Use local variables in functions
 function_name() {
@@ -72,11 +74,13 @@ fi
 ```
 
 #### Function Naming
+
 - Use descriptive names: `install_package()` not `inst()`
 - Follow existing patterns: `is_tool_installed()`, `tool_install()`
 - Use snake_case for function names
 
 #### Error Handling
+
 - Always check return codes for critical operations
 - Provide meaningful error messages
 - Use the base module's output functions (error, warn, etc.)
@@ -84,6 +88,7 @@ fi
 ### Documentation
 
 #### Function Documentation
+
 Every new function must be documented in its module's README:
 
 ```markdown
@@ -97,14 +102,16 @@ Brief description of what the function does.
 **Returns:** Description of return value/code
 
 **Usage:**
-```bash
+\`\`\`bash
 # Example usage
 function_name "value1"
-```
+\`\`\`
 ```
 
 #### Update Central Documentation
+
 When adding functions:
+
 1. Add to module's README.md
 2. Add to FUNCTIONS.md index
 3. Update CHANGELOG.md
@@ -112,6 +119,7 @@ When adding functions:
 ### Testing
 
 #### shellcheck
+
 All scripts must pass shellcheck:
 
 ```bash
@@ -119,14 +127,18 @@ All scripts must pass shellcheck:
 ```
 
 #### Manual Testing
+
 Test your changes on:
+
 - macOS (if applicable)
 - Ubuntu/Debian (if applicable)
 - bash 3.2 (macOS default)
 - bash 4.0+ (modern Linux)
 
 #### Test Cases
+
 Consider:
+
 - Does it work when the tool is not installed?
 - Does it work when the tool is already installed?
 - Does it handle errors gracefully?
@@ -137,6 +149,7 @@ Consider:
 ### Version Numbering
 
 We follow [Semantic Versioning](https://semver.org/):
+
 - MAJOR: Incompatible API changes
 - MINOR: New functionality (backwards compatible)
 - PATCH: Bug fixes (backwards compatible)
@@ -158,6 +171,7 @@ We follow [Semantic Versioning](https://semver.org/):
    - Test version pinning with new tag
 
 4. **Create Release**
+
    ```bash
    git tag -a v1.x.x -m "Release v1.x.x"
    git push origin v1.x.x
@@ -172,7 +186,7 @@ We follow [Semantic Versioning](https://semver.org/):
 
 When adding a new module:
 
-```
+```text
 scripts/modules/tool-name/
 ├── README.md          # Module documentation
 ├── tool.sh            # Main module script

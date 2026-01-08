@@ -86,22 +86,26 @@ ok "Setup complete!"
 ## Key Features
 
 ### 🎨 Rich Output Functions
+
 - Color-coded messages (success, error, warning, action)
 - Interactive prompts with confirmation
 - Progress spinners for long-running commands
 
 ### 🔧 System Utilities
+
 - Cross-platform OS detection
 - PATH management
 - File operations (symlinks, extraction, directory creation)
 - Shell configuration helpers
 
 ### 📦 Package Manager Integration
+
 - Unified interface for multiple package managers
 - Conditional loading based on platform
 - Brewfile support with optional Python-based installer
 
 ### 🔐 Security Considerations
+
 - Scripts are sourced directly from GitHub
 - **Recommendation:** Review code before using in production
 - **Best Practice:** Pin to specific version tags
@@ -163,11 +167,13 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/uti
 The repository includes comprehensive testing:
 
 **Shellcheck validation:**
+
 ```bash
 ./test/main.sh
 ```
 
 **Integration tests:**
+
 ```bash
 ./test/integration_test.sh
 ```

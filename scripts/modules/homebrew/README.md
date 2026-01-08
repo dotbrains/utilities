@@ -16,11 +16,13 @@ Homebrew package manager utilities for macOS and Linux.
 ## Functions
 
 ### `get_brew_default_path()`
+
 Get the default Homebrew installation path for the current platform.
 
 **Returns:** Homebrew path string
 
 **Usage:**
+
 ```bash
 BREW_PATH=$(get_brew_default_path)
 echo "Homebrew installed at: $BREW_PATH"
@@ -29,9 +31,11 @@ echo "Homebrew installed at: $BREW_PATH"
 ---
 
 ### `initialize_brew()`
+
 Manually initialize Homebrew if not already in PATH. Sets up environment and adds to PATH.
 
 **Usage:**
+
 ```bash
 initialize_brew
 brew --version
@@ -40,11 +44,13 @@ brew --version
 ---
 
 ### `is_brew_installed()`
+
 Check if Homebrew is installed on the system.
 
 **Returns:** 0 if installed, 1 otherwise
 
 **Usage:**
+
 ```bash
 if is_brew_installed; then
     echo "Homebrew is available"
@@ -54,9 +60,11 @@ fi
 ---
 
 ### `brew_cleanup()`
+
 Remove older versions of installed formulas.
 
 **Usage:**
+
 ```bash
 brew_cleanup
 ```
@@ -64,14 +72,17 @@ brew_cleanup
 ---
 
 ### `brew_bundle_install(options...)`
+
 Install packages from a Brewfile.
 
 **Options:**
+
 - `-f, --file <path>` - Path to Brewfile (required)
 - `-p, --python3` - Use Python script instead of `brew bundle`
 - `-h, --help` - Display help
 
 **Usage:**
+
 ```bash
 brew_bundle_install -f "Brewfile"
 brew_bundle_install -f "$HOME/.config/Brewfile" -p

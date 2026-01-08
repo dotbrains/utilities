@@ -93,6 +93,7 @@ source utilities.sh
 ### Sudo Usage
 
 Functions that require sudo privileges:
+
 - `ask_for_sudo()` - Request admin access
 - `symlink()` - May require sudo for system paths
 - `gem_install()` - Installs gems with sudo
@@ -103,6 +104,7 @@ Functions that require sudo privileges:
 ### Network Operations
 
 Functions that make network requests:
+
 - All module loading (via curl from GitHub)
 - `brew_bundle_install()` - Downloads packages
 - Package installation functions
@@ -112,6 +114,7 @@ Functions that make network requests:
 ### File System Modifications
 
 Functions that modify files/directories:
+
 - `symlink()` - Creates symbolic links
 - `mkd()` - Creates directories
 - `extract()` - Extracts archives
@@ -139,6 +142,7 @@ Functions that modify files/directories:
 ## Security Updates
 
 Security updates will be:
+
 - Released as patch versions (e.g., v1.0.1)
 - Documented in CHANGELOG.md with `[SECURITY]` prefix
 - Announced in GitHub Releases
@@ -154,6 +158,7 @@ Security updates will be:
 ## Code Signing (Future)
 
 Future releases may include:
+
 - GPG signatures for release tags
 - Signed commits
 - Checksums for verification

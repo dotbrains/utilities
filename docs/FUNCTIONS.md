@@ -177,6 +177,7 @@ Complete alphabetical index of all available functions across all modules.
 ## Common Patterns
 
 ### Check if tool is installed
+
 ```bash
 if is_<tool>_installed; then
     # Tool-specific operations
@@ -184,12 +185,14 @@ fi
 ```
 
 ### Install packages
+
 ```bash
 <tool>_install "package-name"
 <tool>_install_from_file "path/to/file"
 ```
 
 ### OS detection
+
 ```bash
 if is_macos; then
     # macOS-specific code

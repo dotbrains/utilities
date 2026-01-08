@@ -17,18 +17,23 @@ Python package management utilities for pip, pip3, and pyenv.
 ### pip.sh
 
 #### `is_pip_installed()`
+
 Check if pip is installed.
 
 #### `is_pip_pkg_installed(package)`
+
 Check if a pip package is installed.
 
 #### `pip_install(package)`
+
 Install a pip package if not already installed.
 
 #### `pip_install_from_file(file_path)`
+
 Install packages from a requirements file.
 
 **Usage:**
+
 ```bash
 pip_install "requests"
 pip_install_from_file "requirements.txt"
@@ -37,6 +42,7 @@ pip_install_from_file "requirements.txt"
 ### pip3.sh
 
 Same functions as pip.sh but for pip3:
+
 - `is_pip3_installed()`
 - `is_pip3_pkg_installed(package)`
 - `pip3_install(package)`
@@ -45,12 +51,15 @@ Same functions as pip.sh but for pip3:
 ### pyenv.sh
 
 #### `is_pyenv_installed()`
+
 Check if pyenv is installed.
 
 #### `pyenv_install(version)`
+
 Install a Python version via pyenv.
 
 **Usage:**
+
 ```bash
 if is_pyenv_installed; then
     pyenv_install "3.11.0"
