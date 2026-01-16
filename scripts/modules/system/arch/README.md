@@ -91,7 +91,7 @@ Install multiple packages from a file.
 
 **File format:**
 
-```
+```text
 # Comments are supported
 pacman "git"
 pacman "base-devel"
@@ -108,6 +108,7 @@ pacman_install_from_file "packages.txt"
 ```
 
 **Supported directives:**
+
 - `pacman "package"` - Install from official repositories
 - `aur "package"` - Install from AUR (using yay by default)
 - `aur "package" [helper: "helper_name"]` - Install from AUR using specific helper
@@ -116,7 +117,7 @@ pacman_install_from_file "packages.txt"
 
 ## System Utilities
 
-#### `fix_broken_symlinks_in(directory)`
+### `fix_broken_symlinks_in(directory)`
 
 Find and fix broken symbolic links in a directory.
 

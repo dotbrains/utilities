@@ -168,6 +168,7 @@ install_deb "https://example.com/app.deb" "app.deb" "app-name"
 ```
 
 **Process:**
+
 1. Downloads to `~/Downloads/`
 2. Installs with `dpkg -i`
 3. Fixes dependencies with `apt-get install -f`
@@ -189,7 +190,7 @@ Install multiple packages from a file with various directives.
 
 **File format:**
 
-```
+```text
 # Comments are supported
 apt "git"
 apt "build-essential"
@@ -211,6 +212,7 @@ apt_install_from_file "packages.txt"
 ```
 
 **Supported directives:**
+
 - `apt "package"` - Install from APT
 - `ppa "ppa-name"` - Add PPA repository
 - `snap "package" [args: "arguments"]` - Install Snap package
@@ -234,13 +236,14 @@ scan_pkg_for_virus "~/Downloads/suspicious.deb"
 ```
 
 **Features:**
+
 - Auto-installs ClamAV if not present
 - Updates virus database if older than 7 days
 - Scans recursively with alerts
 
 ## System Utilities
 
-#### `fix_broken_symlinks_in(directory)`
+### `fix_broken_symlinks_in(directory)`
 
 Find and fix broken symbolic links in a directory.
 

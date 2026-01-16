@@ -11,6 +11,7 @@ System utilities specifically for macOS (Darwin).
 Download and install macOS applications from a URL. Supports multiple file formats.
 
 **Supported formats:**
+
 - `.dmg` - Disk images
 - `.pkg` - Package installers
 - `.zip` - Compressed archives containing `.app` or `.dmg` files
@@ -22,6 +23,7 @@ install_from_URL "https://example.com/archive.zip"
 ```
 
 **Process:**
+
 1. Downloads the file to a temporary directory
 2. Extracts/mounts the file based on type
 3. Copies `.app` to `/Applications` or runs `.pkg` installer
@@ -36,6 +38,7 @@ install_dmg "/path/to/app.dmg"
 ```
 
 **Process:**
+
 1. Mounts the DMG file
 2. Copies `.app` to `/Applications` or runs `.pkg` installer
 3. Ejects the DMG
@@ -76,6 +79,7 @@ add_folder_to_dock "/Applications" --displayas 1 --sortby 1 --viewcontentas 3
 | `--viewcontentas` | `-v` | `0-3` | View style |
 
 **Sort options (`-s`):**
+
 - `1` - Name (default)
 - `2` - Date Added
 - `3` - Date Modified
@@ -83,10 +87,12 @@ add_folder_to_dock "/Applications" --displayas 1 --sortby 1 --viewcontentas 3
 - `5` - Kind
 
 **Display options (`-d`):**
+
 - `0` - Stack (default)
 - `1` - Folder
 
 **View options (`-v`):**
+
 - `0` - Automatic (default)
 - `1` - Fan
 - `2` - Grid
@@ -225,4 +231,4 @@ fi
 ## Credits
 
 - Dock management functions contributed by [@rpavlick](https://github.com/rpavlick/add_to_dock)
-- DMG installation based on [Stack Exchange answer](https://apple.stackexchange.com/a/311511/291269)
+- DMG installation approach inspired by community solutions
