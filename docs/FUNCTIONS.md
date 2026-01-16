@@ -48,6 +48,7 @@ Complete alphabetical index of all available functions across all modules.
 | `extract(file)` | Extract compressed file | [system](../scripts/modules/system/README.md) |
 | `get_os()` | Get normalized OS name | [system](../scripts/modules/system/README.md) |
 | `get_os_version()` | Get OS version | [system](../scripts/modules/system/README.md) |
+| `is_arch_linux()` | Check if Arch Linux | [system](../scripts/modules/system/README.md) |
 | `is_debian()` | Check if Debian/Ubuntu | [system](../scripts/modules/system/README.md) |
 | `is_macos()` | Check if macOS | [system](../scripts/modules/system/README.md) |
 | `is_supported_version(current required)` | Compare versions | [system](../scripts/modules/system/README.md) |
@@ -159,6 +160,20 @@ Complete alphabetical index of all available functions across all modules.
 | `is_gofish_installed()` | Check if Gofish installed | [gofish](../scripts/modules/gofish/README.md) |
 | `is_gofish_pkg_installed(package)` | Check if Gofish package installed | [gofish](../scripts/modules/gofish/README.md) |
 
+## Pacman Module
+
+| Function | Description | Module |
+|----------|-------------|---------|
+| `aur_helper_is_installed(helper)` | Check if AUR helper installed | [pacman](../scripts/modules/system/arch/README.md) |
+| `auto_remove()` | Remove orphaned packages | [pacman](../scripts/modules/system/arch/README.md) |
+| `install_aur_package(package [helper])` | Install AUR package | [pacman](../scripts/modules/system/arch/README.md) |
+| `install_package(package)` | Install pacman package | [pacman](../scripts/modules/system/arch/README.md) |
+| `package_is_installed(package)` | Check if package installed | [pacman](../scripts/modules/system/arch/README.md) |
+| `pacman_install_from_file(file_path)` | Install from package file | [pacman](../scripts/modules/system/arch/README.md) |
+| `pacman_update()` | Synchronize package databases | [pacman](../scripts/modules/system/arch/README.md) |
+| `pacman_upgrade()` | Upgrade all packages | [pacman](../scripts/modules/system/arch/README.md) |
+| `remove_package(package)` | Remove package | [pacman](../scripts/modules/system/arch/README.md) |
+
 ## MacPorts Module
 
 | Function | Description | Module |
@@ -198,5 +213,7 @@ if is_macos; then
     # macOS-specific code
 elif is_debian; then
     # Debian/Ubuntu-specific code
+elif is_arch_linux; then
+    # Arch Linux-specific code
 fi
 ```

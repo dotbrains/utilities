@@ -48,12 +48,12 @@ bot "Starting setup..."
 
 if is_macos; then
     action "Detected macOS"
-    
+
     if ! cmd_exists "brew"; then
         error "Homebrew not found"
         exit 1
     fi
-    
+
     brew_bundle_install -f "Brewfile"
     success "Homebrew packages installed"
 fi
@@ -72,6 +72,7 @@ ok "Setup complete!"
 | **macports** | MacPorts package manager functions | macOS |
 | **gofish** | Gofish package manager functions | All |
 | **apt** | APT package manager functions | Debian/Ubuntu |
+| **pacman** | Pacman package manager functions | Arch Linux |
 | **git** | Git repository utilities | All |
 | **fish** | Fish shell utilities and plugin managers | All |
 | **npm** | Node.js and npm utilities | All |
@@ -159,7 +160,7 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/uti
 
 - ✅ macOS (Darwin) - All versions
 - ✅ Ubuntu/Debian Linux
-- ✅ Kali Linux
+- ✅ Arch Linux
 - ⚠️ Other Linux distributions - Base functionality supported, some modules may require adaptation
 
 ## Testing

@@ -41,6 +41,12 @@ Check if running on Debian-based Linux.
 
 ---
 
+#### `is_arch_linux()`
+
+Check if running on Arch-based Linux.
+
+**Returns:** 0 if Arch Linux, 1 otherwise
+
 #### `read_kernel_name()`
 
 Get the kernel name (Darwin, Linux, etc.).
@@ -51,7 +57,7 @@ Get the kernel name (Darwin, Linux, etc.).
 
 #### `read_os_name()`
 
-Get the OS identifier (macos, ubuntu, kali, etc.).
+Get the OS identifier (macos, ubuntu, arch, etc.).
 
 **Returns:** OS name string
 
@@ -67,7 +73,7 @@ Get the OS version number.
 
 #### `get_os()`
 
-Get normalized OS name (macos, ubuntu, kali-linux, windows).
+Get normalized OS name (macos, ubuntu, arch, windows).
 
 **Returns:** OS identifier
 

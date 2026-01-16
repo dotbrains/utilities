@@ -51,6 +51,14 @@ is_macos() {
 
 }
 
+is_arch_linux() {
+
+    # returns true if the OS is Arch Linux
+
+    [[ $(uname) == "Linux" ]] && [[ -e "/etc/os-release" ]] && grep -qEi 'arch' /etc/*release
+
+}
+
 read_kernel_name() {
 
     uname -s
@@ -123,8 +131,8 @@ get_os() {
             if grep -qE "(Microsoft|WSL)" /proc/version &>/dev/null; then
                 os="windows"
             fi
-        elif [[ "$(read_os_name)" == "kali" ]]; then
-            os="kali-linux"
+        elif [[ "$(read_os_name)" == "arch" ]]; then
+            os="arch"
         fi
     else
         os="$kernelName"
@@ -136,7 +144,7 @@ get_os() {
 
 get_os_version() {
 
-    printf "%s" read_os_version
+	printf "%s" "$(read_os_version)"
 
 }
 
@@ -322,53 +330,70 @@ add_cron_job() {
 
 uncomment_str() {
 
-    FILE="$1"
-    KEY="$2"
+	FILE="$1"
+	KEY="$2"
 
-    sed -i "$FILE" -e "/$KEY/s/#//g"
+	if is_macos; then
+		sed -i '' -e "/$KEY/s/#//g" "$FILE"
+	else
+		sed -i "/$KEY/s/#//g" "$FILE"
+	fi
 
 }
 
 # see: https://unix.stackexchange.com/a/416596/173825
 add_value_and_uncomment() {
 
-    FILE="$1"
-    KEY="$2"
-    VALUE="$3"
+	FILE="$1"
+	KEY="$2"
+	VALUE="$3"
 
-    sed -i "$FILE" -e "/^$KEY/{s/.//; s|.$|$VALUE\"|}"
+	if is_macos; then
+		sed -i '' -e "/^$KEY/{s/.//; s|.$|$VALUE\"|;}" "$FILE"
+	else
+		sed -i "/^$KEY/{s/.//; s|.$|$VALUE\"|;}" "$FILE"
+	fi
 
 }
 
 replace_str() {
 
-    FILE="$1"
-    KEY="$2"
-    PATTERN="$3"
-    REPLACEMENT="$4"
+	FILE="$1"
+	KEY="$2"
+	PATTERN="$3"
+	REPLACEMENT="$4"
 
-    sed -i "$FILE" -e "/$KEY/s/$PATTERN/$REPLACEMENT/g"
+	if is_macos; then
+		sed -i '' -e "/$KEY/s/$PATTERN/$REPLACEMENT/g" "$FILE"
+	else
+		sed -i "/$KEY/s/$PATTERN/$REPLACEMENT/g" "$FILE"
+	fi
 
 }
 
 jq_replace() {
 
-    x="$1"
-    field="$2"
-    value="$3"
+	x="$1"
+	field="$2"
+	value="$3"
 
-    if cmd_exists "jq"; then
-        jq ".\"$field\" |= \"$value\"" "$x" >tmp.$$.json && mv tmp.$$.json "$x"
-    else
-        if [[ "$(read_os_name)" = "linux" ]]; then
-            sudo apt install jq -qqy
-        else
-            if cmd_exists "brew"; then
-                brew install jq
+	if cmd_exists "jq"; then
+		jq ".\"$field\" |= \"$value\"" "$x" >tmp.$$.json && mv tmp.$$.json "$x"
+	else
+		if is_debian; then
+			sudo apt install jq -qqy
+		elif is_arch_linux; then
+			sudo pacman -S --noconfirm jq
+		else
+			if cmd_exists "brew"; then
+				brew install jq
+			fi
+		fi
 
-                jq ".\"$field\" |= \"$value\"" "$x" >tmp.$$.json && mv tmp.$$.json "$x"
-            fi
-        fi
-    fi
+		# Run jq after installation
+		if cmd_exists "jq"; then
+			jq ".\"$field\" |= \"$value\"" "$x" >tmp.$$.json && mv tmp.$$.json "$x"
+		fi
+	fi
 
 }

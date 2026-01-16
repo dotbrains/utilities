@@ -133,9 +133,14 @@ main() {
 	source_file_from_utilities "modules/system/network.sh"
 
 	# APT & other system functions (Only required for 'linux'-based systems)
-	if uname -a | grep -q "Linux" && grep -qEi 'debian|buntu|kali' /etc/*release; then
-		source_file_from_utilities "modules/system/debian/system.sh"
-		source_file_from_utilities "modules/system/debian/apt.sh"
+	if uname -a | grep -q "Linux"; then
+		if grep -qEi 'debian|buntu|kali' /etc/*release; then
+			source_file_from_utilities "modules/system/debian/system.sh"
+			source_file_from_utilities "modules/system/debian/apt.sh"
+		elif grep -qEi 'arch' /etc/*release; then
+			source_file_from_utilities "modules/system/arch/system.sh"
+			source_file_from_utilities "modules/system/arch/pacman.sh"
+		fi
 	fi
 
 	# System functions (Only required for 'darwin'-based systems)
