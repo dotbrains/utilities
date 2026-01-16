@@ -170,13 +170,13 @@ The repository includes comprehensive testing:
 **Shellcheck validation:**
 
 ```bash
-./test/main.sh
+./tests/main.sh
 ```
 
 **Integration tests:**
 
 ```bash
-./test/integration_test.sh
+./tests/integration_test.sh
 ```
 
 Tests run automatically on push via GitHub Actions for both Ubuntu and macOS.

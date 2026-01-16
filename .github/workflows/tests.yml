@@ -28,10 +28,10 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y shellcheck
 
       - name: Set execute permissions
-        run: chmod +x ./test/main.sh
+        run: chmod +x ./tests/main.sh
 
       - name: Run tests
-        run: ./test/main.sh
+        run: ./tests/main.sh
 
       - name: Display bash version
         run: bash --version
@@ -50,4 +50,4 @@ jobs:
           bash -c 'source utilities.sh && [[ -n "$UTILITIES_VERSION" ]] && echo "✓ Version: $UTILITIES_VERSION"'
 
       - name: Run integration tests
-        run: ./test/integration_test.sh
+        run: ./tests/integration_test.sh

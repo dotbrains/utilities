@@ -123,7 +123,7 @@ When adding functions:
 All scripts must pass shellcheck:
 
 ```bash
-./test/main.sh
+./tests/main.sh
 ```
 
 #### Manual Testing
@@ -166,7 +166,7 @@ We follow [Semantic Versioning](https://semver.org/):
    - Include all changes since last release
 
 3. **Test**
-   - Run shellcheck tests: `./test/main.sh`
+   - Run shellcheck tests: `./tests/main.sh`
    - Manual testing on macOS and Linux
    - Test version pinning with new tag
 
