@@ -83,6 +83,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed markdown linting errors and dead link
 
+## [1.1.1] - 2026-01-16
+
+### Changed
+
+- Renamed `test/` directory to `tests/` for better naming convention
+- Updated all references to test scripts in documentation and CI workflows
+
 ## [Unreleased]
 
 ### Planned
@@ -92,5 +99,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[1.1.1]: https://github.com/dotbrains/utilities/releases/tag/v1.1.1
 [1.1.0]: https://github.com/dotbrains/utilities/releases/tag/v1.1.0
 [1.0.0]: https://github.com/dotbrains/utilities/releases/tag/v1.0.0

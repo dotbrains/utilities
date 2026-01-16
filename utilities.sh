@@ -3,7 +3,7 @@
 # shellcheck source=/dev/null
 
 # Version
-export UTILITIES_VERSION="1.0.0"
+export UTILITIES_VERSION="1.1.1"
 
 # Configuration
 UTILITIES_DEBUG="${UTILITIES_DEBUG:-false}"

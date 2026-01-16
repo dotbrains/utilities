@@ -17,7 +17,7 @@ main() {
 
     find \
         ../scripts \
-        ../test \
+        ../tests \
         ../utilities.sh \
         -type f \
         -name '*.sh' \
