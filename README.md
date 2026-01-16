@@ -5,7 +5,7 @@
 [![Release](https://img.shields.io/github/v/release/dotbrains/utilities)](https://github.com/dotbrains/utilities/releases/latest)
 [![License](https://img.shields.io/github/license/dotbrains/utilities)](LICENSE)
 [![Shell](https://img.shields.io/badge/shell-bash%203.2%2B-blue)](https://www.gnu.org/software/bash/)
-[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-lightgrey)](#platform-support)
+[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-black)](#platform-support)
 
 A curated collection of bash utility functions and modules for streamlined shell scripting across macOS and Linux systems.
 
