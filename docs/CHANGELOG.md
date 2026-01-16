@@ -69,15 +69,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Debug error messages for troubleshooting
 - Graceful handling of network failures
 
+## [1.1.0] - 2026-01-16
+
+### Added
+
+- Enhanced support for Arch Linux
+
+### Changed
+
+- Updated platform badge color in README.md to black for macOS and Linux
+
+### Fixed
+
+- Fixed markdown linting errors and dead link
+
 ## [Unreleased]
 
 ### Planned
 
 - Enhanced testing infrastructure with unit and integration tests
 - CI/CD improvements with automated releases
-- Markdown linting and link validation
-- Version badges and status indicators
 
 ---
 
+[1.1.0]: https://github.com/dotbrains/utilities/releases/tag/v1.1.0
 [1.0.0]: https://github.com/dotbrains/utilities/releases/tag/v1.0.0
