@@ -29,6 +29,19 @@ source_file_from_utilities() {
 
 	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+	# Check for local file first (relative to this utilities.sh script)
+	local utilities_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+	local local_file="$utilities_dir/scripts/$file"
+	if [[ -f "$local_file" && -s "$local_file" ]]; then
+		if [[ "$UTILITIES_DEBUG" == "true" ]]; then
+			echo "[utilities] Using local: $local_file" >&2
+		fi
+		source "$local_file"
+		return $?
+	fi
+
+	# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 	# Use caching if enabled
 	if [[ -n "$UTILITIES_CACHE_DIR" ]]; then
 		cache_file="$UTILITIES_CACHE_DIR/$file"

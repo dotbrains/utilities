@@ -58,8 +58,11 @@ def install_package(line):
 
         if line.startswith("cask_args"):
             if os_type == "Darwin":  # Only for macOS
-                arg = line.split(" ")[1]
-                cask_args.append(arg.split(":")[1].strip().strip('"'))
+                # Parse: cask_args appdir: "/Applications"
+                parts = line.split(":", 1)
+                if len(parts) > 1:
+                    value = parts[1].strip().strip('"')
+                    cask_args.append(value)
         elif line.startswith("cask"):
             if os_type == "Darwin":  # Only for macOS
                 package = get_package_from_line(line)
