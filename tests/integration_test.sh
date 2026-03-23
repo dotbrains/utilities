@@ -98,37 +98,44 @@ test_selective_loading() {
 
 test_caching() {
     local cache_dir="/tmp/utilities-test-cache-$$"
+    local temp_dir="/tmp/utilities-test-run-$$"
     
     # Set up cleanup trap
-    trap 'rm -rf "$cache_dir"' EXIT INT TERM
+    trap 'rm -rf "$cache_dir" "$temp_dir"' EXIT INT TERM
     
-    # Clean up any existing cache
-    rm -rf "$cache_dir"
+    # Clean up any existing dirs
+    rm -rf "$cache_dir" "$temp_dir"
     
-    # First run - should create cache
-    bash -c "cd '$REPO_ROOT' && export UTILITIES_CACHE_DIR='$cache_dir' && export UTILITIES_DEBUG=true && source utilities.sh" > /dev/null 2>&1
+    # Copy only utilities.sh to an isolated temp dir (no scripts/ dir).
+    # This forces the remote download + caching code path, since
+    # source_file_from_utilities won't find local files alongside it.
+    mkdir -p "$temp_dir"
+    cp "$REPO_ROOT/utilities.sh" "$temp_dir/"
+    
+    # First run - should download from GitHub and populate cache
+    bash -c "cd '$temp_dir' && export UTILITIES_CACHE_DIR='$cache_dir' && export UTILITIES_DEBUG=true && source utilities.sh" > /dev/null 2>&1
     
     # Check cache directory was created
     if [[ ! -d "$cache_dir" ]]; then
         echo "  Error: cache directory not created"
-        rm -rf "$cache_dir"
+        rm -rf "$cache_dir" "$temp_dir"
         return 1
     fi
     
     # Check some files were cached
     if [[ ! -f "$cache_dir/base/base.sh" ]]; then
         echo "  Error: base.sh not cached"
-        rm -rf "$cache_dir"
+        rm -rf "$cache_dir" "$temp_dir"
         return 1
     fi
     
     # Second run - should use cache
     local output
-    output=$(bash -c "cd '$REPO_ROOT' && export UTILITIES_CACHE_DIR='$cache_dir' && export UTILITIES_DEBUG=true && source utilities.sh 2>&1")
+    output=$(bash -c "cd '$temp_dir' && export UTILITIES_CACHE_DIR='$cache_dir' && export UTILITIES_DEBUG=true && source utilities.sh 2>&1")
     
     if ! echo "$output" | grep -q "Using cached"; then
         echo "  Error: cache not being used"
-        rm -rf "$cache_dir"
+        rm -rf "$cache_dir" "$temp_dir"
         return 1
     fi
     
@@ -137,7 +144,7 @@ test_caching() {
     
     # Cleanup and remove trap
     trap - EXIT INT TERM
-    rm -rf "$cache_dir"
+    rm -rf "$cache_dir" "$temp_dir"
     return 0
 }
 
