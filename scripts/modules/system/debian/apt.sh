@@ -318,6 +318,77 @@ apt_install_from_file() {
 
 }
 
+apt_remove_from_file() {
+
+    declare -r FILE_PATH="$1"
+
+    declare -A regex
+    regex["comment"]='^#(.*)'
+    regex["ppa"]='ppa "(.*)"'
+    regex["apt"]='apt "(.*)"'
+    regex["snap"]='snap "(.*)" \[args: "(.*)"\]'
+    regex["umake"]='umake "(.*)" \[args: "(.*)", "(.*)"\]'
+    regex["deb"]='deb "(.*)" \[args: "(.*)", "(.*)"\]'
+    regex["gpg_dearmor"]='gpg_dearmor "(.*)" \[args: "(.*)"\]'
+    regex["gpg"]='gpg "(.*)" \[args: "(.*)"\]'
+    regex["source"]='source "(.*)" \[args: "(.*)"\]'
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Inverse of apt_install_from_file: removes everything declared in the
+    # given file. The forward-only directives `remove` and `remove_system`
+    # are deliberately ignored (running them on uninstall would re-execute
+    # forward state changes).
+
+    if [[ ! -e "$FILE_PATH" ]]; then
+        return 0
+    fi
+
+    cat < "$FILE_PATH" | while read -r LINE; do
+        if [[ ${LINE} =~ ${regex["comment"]} ]]; then
+            continue
+        elif [[ ${LINE} =~ ${regex["ppa"]} ]]; then
+            PPA=${BASH_REMATCH[1]}
+
+            sudo add-apt-repository --remove -y ppa:"$PPA" &> /dev/null
+        elif [[ ${LINE} =~ ${regex["apt"]} ]]; then
+            PACKAGE=${BASH_REMATCH[1]}
+
+            remove_package "$PACKAGE"
+        elif [[ ${LINE} =~ ${regex["snap"]} ]]; then
+            PACKAGE=${BASH_REMATCH[1]}
+
+            if snap_is_installed "$PACKAGE"; then
+                sudo snap remove "$PACKAGE" &> /dev/null
+            fi
+        elif [[ ${LINE} =~ ${regex["umake"]} ]]; then
+            # umake state isn't tracked symmetrically — skip with a notice.
+            print_warning "umake-managed package skipped on uninstall (manual cleanup required)"
+        elif [[ ${LINE} =~ ${regex["deb"]} ]]; then
+            PACKAGE=${BASH_REMATCH[1]}
+
+            remove_package "$PACKAGE"
+        elif [[ ${LINE} =~ ${regex["gpg_dearmor"]} ]]; then
+            FILE_NAME=${BASH_REMATCH[1]}
+
+            sudo rm -f "/etc/apt/trusted.gpg.d/$FILE_NAME"
+        elif [[ ${LINE} =~ ${regex["gpg"]} ]]; then
+            # apt-key removal requires the key id, which we don't store —
+            # leave the key in place. Removing keys without the id risks
+            # breaking other repos that share the same keyring.
+            print_warning "apt-key entry left in place (key id not tracked in packages file)"
+        elif [[ ${LINE} =~ ${regex["source"]} ]]; then
+            FILE_NAME=${BASH_REMATCH[1]}
+
+            sudo rm -f "/etc/apt/sources.list.d/$FILE_NAME"
+        fi
+    done
+
+    sudo apt-get autoremove -qqy &> /dev/null
+    sudo apt-get update &> /dev/null
+
+}
+
 scan_pkg_for_virus() {
 
 	declare -r FILE_PATH="$1"
