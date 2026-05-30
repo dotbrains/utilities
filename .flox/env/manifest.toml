@@ -1,0 +1,20 @@
+version = 1
+
+# Reproducible toolchain for developing the utilities library.
+#
+# Activate with `flox activate` from the utilities/ directory to get the
+# exact bash, shellcheck, and nodejs (for npx markdownlint-cli2) versions
+# used in CI on both macOS and Linux.
+
+[install]
+bash.pkg-path = "bash"
+shellcheck.pkg-path = "shellcheck"
+nodejs.pkg-path = "nodejs_20"
+
+[options]
+systems = [
+  "aarch64-darwin",
+  "x86_64-darwin",
+  "aarch64-linux",
+  "x86_64-linux",
+]

@@ -51,3 +51,24 @@ jobs:
 
       - name: Run integration tests
         run: ./tests/integration_test.sh
+
+  flox-smoke-test:
+    name: Flox manifest smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Flox
+        uses: flox/install-flox-action@main
+
+      - name: Verify pinned toolchain activates
+        run: |
+          flox activate -- bash -c '
+            set -euo pipefail
+            echo "Toolchain versions inside flox activate:"
+            bash --version | head -1
+            shellcheck --version | head -3
+            node --version
+            echo "Running shellcheck suite with the pinned toolchain:"
+            ./tests/main.sh
+          '

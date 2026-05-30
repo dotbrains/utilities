@@ -181,6 +181,22 @@ The repository includes comprehensive testing:
 
 Tests run automatically on push via GitHub Actions for both Ubuntu and macOS.
 
+### Reproducible dev environment (Flox)
+
+A [Flox](https://flox.dev) manifest at `.flox/env/manifest.toml` pins the toolchain CI uses — `bash`, `shellcheck`, and `nodejs` (for `npx markdownlint-cli2`). Activating it gives contributors the same versions on macOS or Linux, avoiding the "works in CI but not locally" gap:
+
+```bash
+# From the utilities/ directory:
+flox activate
+
+# Inside the activated shell you can run the same checks CI runs:
+./tests/main.sh
+./tests/integration_test.sh
+npx markdownlint-cli2 "**/*.md"
+```
+
+Pinning bash here is especially valuable: the library targets bash 3.2 (macOS default) and a pinned bash version makes regression tests against that floor reproducible.
+
 ## Contributing
 
 Contributions are welcome! Please see [CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
