@@ -3,7 +3,7 @@
 [![Tests](https://github.com/dotbrains/utilities/actions/workflows/tests.yml/badge.svg)](https://github.com/dotbrains/utilities/actions/workflows/tests.yml)
 [![Lint](https://github.com/dotbrains/utilities/actions/workflows/lint.yml/badge.svg)](https://github.com/dotbrains/utilities/actions/workflows/lint.yml)
 [![Release](https://img.shields.io/github/v/release/dotbrains/utilities)](https://github.com/dotbrains/utilities/releases/latest)
-[![License: PolyForm Shield 1.0.0](https://img.shields.io/badge/License-PolyForm%20Shield%201.0.0-blue.svg)](https://polyformproject.org/licenses/shield/1.0.0/)
+[![License: PolyForm Shield 1.0.0](https://img.shields.io/badge/License-PolyForm%20Shield%201.0.0-blue.svg)](https://polyformproject.org/licenses/shield/1.0.0)
 [![Shell](https://img.shields.io/badge/shell-bash%203.2%2B-blue)](https://www.gnu.org/software/bash/)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-black)](#platform-support)
 
@@ -203,7 +203,7 @@ Contributions are welcome! Please see [CONTRIBUTING.md](docs/CONTRIBUTING.md) fo
 
 ## License
 
-Licensed under [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0.0/).
+Licensed under [PolyForm Shield 1.0.0](https://polyformproject.org/licenses/shield/1.0.0).
 See [LICENSE](LICENSE) for details.
 
 ## Acknowledgments
