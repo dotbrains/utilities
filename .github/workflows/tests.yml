@@ -59,7 +59,7 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Install Flox
-        uses: flox/install-flox-action@main
+        uses: flox/install-flox-action@v2.5.3
 
       - name: Verify pinned toolchain activates
         run: |
