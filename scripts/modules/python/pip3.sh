@@ -8,7 +8,7 @@ smu::import base
 
 # pip3 functions
 
-is_pip3_installed() {
+pip3::is_pip3_installed() {
 
     if ! cmd_exists "pip3"; then
         return 1
@@ -16,13 +16,13 @@ is_pip3_installed() {
 
 }
 
-is_pip3_pkg_installed() {
+pip3::is_pip3_pkg_installed() {
 
     pip3 list | grep "$1" > /dev/null 2>&1
 
 }
 
-pip3_install() {
+pip3::pip3_install() {
 
     declare -r PACKAGE="$1"
 
@@ -40,7 +40,7 @@ pip3_install() {
 
 }
 
-pip3_install_from_file() {
+pip3::pip3_install_from_file() {
 
     declare -r FILE_PATH="$1"
 
@@ -61,3 +61,13 @@ pip3_install_from_file() {
     fi
 
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+is_pip3_installed() { pip3::is_pip3_installed "$@"; }
+is_pip3_pkg_installed() { pip3::is_pip3_pkg_installed "$@"; }
+pip3_install() { pip3::pip3_install "$@"; }
+pip3_install_from_file() { pip3::pip3_install_from_file "$@"; }

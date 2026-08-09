@@ -8,13 +8,13 @@ smu::import base
 
 # MacPorts functions
 
-is_macports_installed() {
+macports::is_macports_installed() {
 
     cmd_exists "port"
 
 }
 
-is_port_installed() {
+macports::is_port_installed() {
 
     # Check if 'MacPorts' is installed.
 
@@ -26,7 +26,7 @@ is_port_installed() {
 
 }
 
-port_install() {
+macports::port_install() {
 
     declare -r PORT="$1"
 
@@ -46,7 +46,7 @@ port_install() {
 
 }
 
-port_install_from_file() {
+macports::port_install_from_file() {
 
     # Check if 'MacPorts' is installed.
 
@@ -74,7 +74,7 @@ port_install_from_file() {
 
 }
 
-macports_update() {
+macports::macports_update() {
 
     # Check if 'MacPorts' is installed.
 
@@ -87,3 +87,14 @@ macports_update() {
     sudo port selfupdate
 
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+is_macports_installed() { macports::is_macports_installed "$@"; }
+is_port_installed() { macports::is_port_installed "$@"; }
+port_install() { macports::port_install "$@"; }
+port_install_from_file() { macports::port_install_from_file "$@"; }
+macports_update() { macports::macports_update "$@"; }

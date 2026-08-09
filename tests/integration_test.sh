@@ -248,6 +248,33 @@ test_import_unknown_module() {
     return 1
 }
 
+test_namespaced_functions() {
+    # Every function is available under its module namespace, and the
+    # pre-1.3.0 unnamespaced name keeps working as a shim.
+    local output
+    output=$(bash -c "
+        cd '$REPO_ROOT' && source import.sh && smu::import base system homebrew || exit 1
+        type base::execute >/dev/null 2>&1 || { echo 'missing base::execute'; exit 1; }
+        type system::cmd_exists >/dev/null 2>&1 || { echo 'missing system::cmd_exists'; exit 1; }
+        type brew::brew_install >/dev/null 2>&1 || { echo 'missing brew::brew_install'; exit 1; }
+        type execute >/dev/null 2>&1 || { echo 'missing legacy execute'; exit 1; }
+        type cmd_exists >/dev/null 2>&1 || { echo 'missing legacy cmd_exists'; exit 1; }
+        # A legacy shim must actually delegate to the namespaced function
+        [[ \"\$(type -t cmd_exists)\" == 'function' ]] || { echo 'cmd_exists is not a function'; exit 1; }
+        cmd_exists bash || { echo 'legacy cmd_exists broken'; exit 1; }
+        system::cmd_exists bash || { echo 'namespaced cmd_exists broken'; exit 1; }
+        echo 'Namespaces work'
+    ")
+
+    if [[ "$output" == "Namespaces work" ]]; then
+        echo "  Namespaced and legacy function names both resolve"
+        return 0
+    fi
+
+    echo "  $output"
+    return 1
+}
+
 test_error_handling() {
     # Test with invalid URL (simulated by using wrong branch)
     local output
@@ -292,6 +319,7 @@ main() {
     run_test "Selective smu::import" test_selective_import
     run_test "Idempotent smu::import" test_import_idempotent
     run_test "Unknown module import fails" test_import_unknown_module
+    run_test "Namespaced functions with legacy shims" test_namespaced_functions
     run_test "Error handling" test_error_handling || true  # Don't fail on this one
     
     # Summary

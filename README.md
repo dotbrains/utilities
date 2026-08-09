@@ -13,7 +13,7 @@ A curated collection of bash utility functions and modules for streamlined shell
 
 This repository provides 20+ reusable bash functions organized into modules covering package managers, version control, programming languages, and system utilities. The library is import-based: source `import.sh` once, then import only the modules a script actually needs — similar to selective imports in other languages.
 
-**Version:** 1.2.0
+**Version:** 1.3.0
 
 ## Quick Start
 
@@ -37,13 +37,22 @@ Module resolution is local-first: a local checkout next to `import.sh`
 is used when present, then the cache (`UTILITIES_CACHE_DIR`), and only
 then a remote fetch pinned to the release matching `UTILITIES_VERSION`.
 
+### Namespaced Functions
+
+Since 1.3.0 every function is defined under its module namespace —
+`base::execute`, `system::cmd_exists`, `brew::brew_install`,
+`apt::install_package` — which removes collisions between modules
+(e.g. the apt and pacman `install_package`). The unnamespaced
+pre-1.3.0 names remain available as compatibility shims, so existing
+scripts keep working; new code should prefer the namespaced names.
+
 ### Remote Bootstrap
 
 Without a local checkout, bootstrap the importer remotely (pin to a tag
 for production use):
 
 ```bash
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.2.0/import.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.3.0/import.sh")"
 
 smu::import base
 ```
@@ -57,7 +66,7 @@ Sourcing `utilities.sh` still works and loads the whole library
 for existing consumers:
 
 ```bash
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.2.0/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.3.0/utilities.sh")"
 ```
 
 New scripts should prefer `import.sh` with explicit imports.
@@ -174,7 +183,7 @@ which module groups are loaded:
 
 ```bash
 export UTILITIES_MODULES="homebrew,git"
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.2.0/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.3.0/utilities.sh")"
 ```
 
 ### Pinning the Remote Ref
@@ -184,7 +193,7 @@ Remote fetches are pinned to the release tag matching
 unavailable). Override with `UTILITIES_REF`:
 
 ```bash
-export UTILITIES_REF="v1.2.0"
+export UTILITIES_REF="v1.3.0"
 ```
 
 ### Local Caching

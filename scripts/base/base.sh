@@ -7,7 +7,7 @@
 
 # Base functions
 
-answer_is_yes() {
+base::answer_is_yes() {
 
     [[ "$REPLY" =~ ^[Yy]$ ]] \
         && return 0 \
@@ -15,14 +15,14 @@ answer_is_yes() {
 
 }
 
-ask() {
+base::ask() {
 
     print_question "$1"
     read -r
 
 }
 
-ask_for_confirmation() {
+base::ask_for_confirmation() {
 
     print_question "$1 (y/n) "
     read -r -n 1
@@ -30,7 +30,7 @@ ask_for_confirmation() {
 
 }
 
-ask_for_sudo() {
+base::ask_for_sudo() {
 
     # Ask for the administrator password upfront.
 
@@ -49,13 +49,13 @@ ask_for_sudo() {
 
 }
 
-get_answer() {
+base::get_answer() {
 
     printf "%s" "$REPLY"
 
 }
 
-kill_all_subprocesses() {
+base::kill_all_subprocesses() {
 
     local i=""
 
@@ -80,7 +80,7 @@ kill_all_subprocesses() {
 #     Inspired by tab.bash by @bobthecow
 #     link: https://gist.github.com/bobthecow/757788
 
-terminal() {
+base::terminal() {
 
 	# Mac OS only
 	[[ "$(uname -s)" != "Darwin" ]] && {
@@ -127,7 +127,7 @@ EOF
 # see: https://stackoverflow.com/q/54358021/5290011
 # see: https://unix.stackexchange.com/questions/137782/launching-a-terminal-emulator-without-knowing-which-ones-are-installed
 
-execute() {
+base::execute() {
 
 	local -r CMDS="$1"
 	local -r MSG="${2:-$1}"
@@ -233,7 +233,7 @@ execute() {
 
 }
 
-show_spinner() {
+base::show_spinner() {
 
     local -r FRAMES='/-\|'
 
@@ -300,61 +300,61 @@ COL_BLUE=${ESC_SEQ}"\e[96m"
 export bold=$(tput bold)
 export normal=$(tput sgr0)
 
-ok() {
+base::ok() {
 
   echo -e "${COL_GREEN}[ok]${COL_RESET} $1"
 
 }
 
-bot() {
+base::bot() {
 
   echo -e "$COL_BLUE(っ◕‿◕)っ$COL_RESET - $1"
 
 }
 
-running() {
+base::running() {
 
   echo -en "$COL_YELLOW ⇒ $COL_RESET $1: "
 
 }
 
-action() {
+base::action() {
 
   echo -e "${COL_YELLOW}[action]:${COL_RESET} ⇒ $1"
 
 }
 
-warn() {
+base::warn() {
 
   echo -e "${COL_YELLOW}[warning]${COL_RESET} $1"
 
 }
 
-success() {
+base::success() {
 
   echo -e "${COL_GREEN}[success]${COL_RESET} $1"
 
 }
 
-error() {
+base::error() {
 
   echo -e "${COL_RED}[error]${COL_RESET} $1"
 
 }
 
-cancelled() {
+base::cancelled() {
 
   echo -e "${COL_RED}[cancelled]${COL_RESET} $1"
 
 }
 
-print_error() {
+base::print_error() {
 
     print_in_red "   [✖] $1 $2\n"
 
 }
 
-print_error_stream() {
+base::print_error_stream() {
 
     while read -r line; do
         if [[ -z "$line" ]]; then
@@ -366,7 +366,7 @@ print_error_stream() {
 
 }
 
-print_in_color() {
+base::print_in_color() {
 
     printf "%b" \
         "$(tput setaf "$2" 2> /dev/null)" \
@@ -375,37 +375,37 @@ print_in_color() {
 
 }
 
-print_in_green() {
+base::print_in_green() {
 
     print_in_color "$1" 2
 
 }
 
-print_in_purple() {
+base::print_in_purple() {
 
     print_in_color "$1" 5
 
 }
 
-print_in_red() {
+base::print_in_red() {
 
     print_in_color "$1" 1
 
 }
 
-print_in_yellow() {
+base::print_in_yellow() {
 
     print_in_color "$1" 3
 
 }
 
-print_question() {
+base::print_question() {
 
     print_in_yellow "   [?] $1"
 
 }
 
-print_result() {
+base::print_result() {
 
     if [[ "$1" -eq 0 ]]; then
         print_success "$2"
@@ -417,19 +417,19 @@ print_result() {
 
 }
 
-print_success() {
+base::print_success() {
 
     print_in_green "   [✔] $1\n"
 
 }
 
-print_warning() {
+base::print_warning() {
 
     print_in_yellow "   [!] $1\n"
 
 }
 
-skip_questions() {
+base::skip_questions() {
 
 	while :; do
         case $1 in
@@ -442,3 +442,38 @@ skip_questions() {
     return 1
 
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+answer_is_yes() { base::answer_is_yes "$@"; }
+ask() { base::ask "$@"; }
+ask_for_confirmation() { base::ask_for_confirmation "$@"; }
+ask_for_sudo() { base::ask_for_sudo "$@"; }
+get_answer() { base::get_answer "$@"; }
+kill_all_subprocesses() { base::kill_all_subprocesses "$@"; }
+terminal() { base::terminal "$@"; }
+execute() { base::execute "$@"; }
+show_spinner() { base::show_spinner "$@"; }
+ok() { base::ok "$@"; }
+bot() { base::bot "$@"; }
+running() { base::running "$@"; }
+action() { base::action "$@"; }
+warn() { base::warn "$@"; }
+success() { base::success "$@"; }
+error() { base::error "$@"; }
+cancelled() { base::cancelled "$@"; }
+print_error() { base::print_error "$@"; }
+print_error_stream() { base::print_error_stream "$@"; }
+print_in_color() { base::print_in_color "$@"; }
+print_in_green() { base::print_in_green "$@"; }
+print_in_purple() { base::print_in_purple "$@"; }
+print_in_red() { base::print_in_red "$@"; }
+print_in_yellow() { base::print_in_yellow "$@"; }
+print_question() { base::print_question "$@"; }
+print_result() { base::print_result "$@"; }
+print_success() { base::print_success "$@"; }
+print_warning() { base::print_warning "$@"; }
+skip_questions() { base::skip_questions "$@"; }

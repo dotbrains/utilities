@@ -8,7 +8,7 @@ smu::import base
 
 # gofish functions
 
-is_gofish_installed() {
+gofish::is_gofish_installed() {
 
     if ! cmd_exists "gofish"; then
         return 1
@@ -16,7 +16,7 @@ is_gofish_installed() {
 
 }
 
-gofish_cleanup() {
+gofish::gofish_cleanup() {
 
     # By default gofish does not uninstall older versions
     # of fishfood so, in order to remove them, `gofish cleanup`
@@ -28,7 +28,7 @@ gofish_cleanup() {
 
 }
 
-gofish_update() {
+gofish::gofish_update() {
 
     # Check if `gofish` is installed.
 
@@ -40,7 +40,7 @@ gofish_update() {
 
 }
 
-gofish_upgrade() {
+gofish::gofish_upgrade() {
 
     # Check if `gofish` is installed.
 
@@ -53,7 +53,7 @@ gofish_upgrade() {
 }
 
 
-gofish_install() {
+gofish::gofish_install() {
 
     declare -r FOOD="$1"
 
@@ -73,7 +73,7 @@ gofish_install() {
 
 }
 
-gofish_install_from_file() {
+gofish::gofish_install_from_file() {
 
     declare -r FILE_PATH="$1"
 
@@ -105,3 +105,15 @@ gofish_install_from_file() {
     fi
 
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+is_gofish_installed() { gofish::is_gofish_installed "$@"; }
+gofish_cleanup() { gofish::gofish_cleanup "$@"; }
+gofish_update() { gofish::gofish_update "$@"; }
+gofish_upgrade() { gofish::gofish_upgrade "$@"; }
+gofish_install() { gofish::gofish_install "$@"; }
+gofish_install_from_file() { gofish::gofish_install_from_file "$@"; }

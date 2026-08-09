@@ -8,7 +8,7 @@ smu::import base
 
 # Network functions
 
-download() {
+network::download() {
 
     local URL="$1"
     local OUTPUT="$2"
@@ -36,7 +36,7 @@ download() {
 
 }
 
-is_connected_to_internet() {
+network::is_connected_to_internet() {
 
     # The IP for the server you wish to ping (8.8.8.8 is a public Google DNS server)
     SERVER=8.8.8.8
@@ -51,7 +51,7 @@ is_connected_to_internet() {
 
 }
 
-source_file() {
+network::source_file() {
 
 	TARGET="$1"
 
@@ -61,3 +61,12 @@ source_file() {
 	smu::load_file "$TARGET"
 
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+download() { network::download "$@"; }
+is_connected_to_internet() { network::is_connected_to_internet "$@"; }
+source_file() { network::source_file "$@"; }

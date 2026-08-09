@@ -9,7 +9,7 @@ smu::import apt
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # see: https://stackoverflow.com/a/22099005/5290011
-fix_broken_symlinks_in() {
+debian::fix_broken_symlinks_in() {
 
     TARGET="$1"
 
@@ -26,3 +26,10 @@ fix_broken_symlinks_in() {
     fi
 
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+fix_broken_symlinks_in() { debian::fix_broken_symlinks_in "$@"; }

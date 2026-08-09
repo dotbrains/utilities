@@ -9,7 +9,7 @@ smu::import base
 
 # APT functions
 
-add_key() {
+apt::add_key() {
 
     wget -qO - "$1" | sudo apt-key add - &> /dev/null
     #     │└─ write output to file
@@ -17,21 +17,21 @@ add_key() {
 
 }
 
-add_ppa() {
+apt::add_ppa() {
 
     sudo add-apt-repository -y ppa:"$1" &> /dev/null \
         && sudo apt-get update --fix-missing &> /dev/null
 
 }
 
-add_gpg_key_with_dearmor() {
+apt::add_gpg_key_with_dearmor() {
 
     sudo curl -s "$1" | gpg --dearmor > "$2" \
         && sudo mv "$2" /etc/apt/trusted.gpg.d/"$2"
 
 }
 
-add_to_source_list() {
+apt::add_to_source_list() {
 
 
     if ! [[ -e "/etc/apt/sources.list.d/$2" ]]; then
@@ -41,7 +41,7 @@ add_to_source_list() {
 
 }
 
-auto_remove() {
+apt::auto_remove() {
 
     # Remove packages that were automatically installed to satisfy
     # dependencies for other packages and are no longer needed.
@@ -50,7 +50,7 @@ auto_remove() {
 
 }
 
-apt_update() {
+apt::apt_update() {
 
     # Resynchronize the package index files.
 
@@ -58,7 +58,7 @@ apt_update() {
 
 }
 
-apt_upgrade() {
+apt::apt_upgrade() {
 
     # Install the newest versions of all packages installed.
 
@@ -66,25 +66,25 @@ apt_upgrade() {
 
 }
 
-package_is_installed() {
+apt::package_is_installed() {
 
     dpkg -s "$1" &> /dev/null
 
 }
 
-snap_is_installed() {
+apt::snap_is_installed() {
 
     snap list | grep "$1" &> /dev/null
 
 }
 
-umake_is_installed() {
+apt::umake_is_installed() {
 
 	[[ -d "$HOME/.local/share/umake/$2/$1" ]]
 
 }
 
-remove_system_package() {
+apt::remove_system_package() {
 
     declare -r PACKAGE="$1"
 
@@ -97,7 +97,7 @@ remove_system_package() {
 
 }
 
-remove_package() {
+apt::remove_package() {
 
     declare -r PACKAGE="$1"
 
@@ -112,7 +112,7 @@ remove_package() {
 
 }
 
-upgrade_package() {
+apt::upgrade_package() {
 
     declare -r PACKAGE="$1"
 
@@ -124,7 +124,7 @@ upgrade_package() {
 
 }
 
-install_package() {
+apt::install_package() {
 
     declare -r PACKAGE="$1"
 
@@ -138,7 +138,7 @@ install_package() {
 
 }
 
-install_snap_package() {
+apt::install_snap_package() {
 
     declare -r PACKAGE="$1"
 	declare -r ARGUMENTS="$2"
@@ -163,7 +163,7 @@ install_snap_package() {
 
 }
 
-install_umake_package() {
+apt::install_umake_package() {
 
     declare -r PACKAGE="$1"
 	declare -r CATEGORY="$2"
@@ -184,7 +184,7 @@ install_umake_package() {
 }
 
 # see: https://unix.stackexchange.com/a/332979/173825
-install_gdebi() {
+apt::install_gdebi() {
 
     declare -r URL="$1"
     declare -r FILE_NAME="$2"
@@ -210,7 +210,7 @@ install_gdebi() {
 }
 
 # see: https://unix.stackexchange.com/a/159114/173825
-install_deb() {
+apt::install_deb() {
 
     declare -r URL="$1"
     declare -r FILE_NAME="$2"
@@ -232,7 +232,7 @@ install_deb() {
 
 }
 
-apt_install_from_file() {
+apt::apt_install_from_file() {
 
     declare -r FILE_PATH="$1"
 
@@ -318,7 +318,7 @@ apt_install_from_file() {
 
 }
 
-apt_remove_from_file() {
+apt::apt_remove_from_file() {
 
     declare -r FILE_PATH="$1"
 
@@ -389,7 +389,7 @@ apt_remove_from_file() {
 
 }
 
-scan_pkg_for_virus() {
+apt::scan_pkg_for_virus() {
 
 	declare -r FILE_PATH="$1"
 
@@ -418,3 +418,30 @@ scan_pkg_for_virus() {
 	fi
 
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+add_key() { apt::add_key "$@"; }
+add_ppa() { apt::add_ppa "$@"; }
+add_gpg_key_with_dearmor() { apt::add_gpg_key_with_dearmor "$@"; }
+add_to_source_list() { apt::add_to_source_list "$@"; }
+auto_remove() { apt::auto_remove "$@"; }
+apt_update() { apt::apt_update "$@"; }
+apt_upgrade() { apt::apt_upgrade "$@"; }
+package_is_installed() { apt::package_is_installed "$@"; }
+snap_is_installed() { apt::snap_is_installed "$@"; }
+umake_is_installed() { apt::umake_is_installed "$@"; }
+remove_system_package() { apt::remove_system_package "$@"; }
+remove_package() { apt::remove_package "$@"; }
+upgrade_package() { apt::upgrade_package "$@"; }
+install_package() { apt::install_package "$@"; }
+install_snap_package() { apt::install_snap_package "$@"; }
+install_umake_package() { apt::install_umake_package "$@"; }
+install_gdebi() { apt::install_gdebi "$@"; }
+install_deb() { apt::install_deb "$@"; }
+apt_install_from_file() { apt::apt_install_from_file "$@"; }
+apt_remove_from_file() { apt::apt_remove_from_file "$@"; }
+scan_pkg_for_virus() { apt::scan_pkg_for_virus "$@"; }

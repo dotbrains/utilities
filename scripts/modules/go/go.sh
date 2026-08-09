@@ -8,7 +8,7 @@ smu::import base
 
 # go functions
 
-is_go_installed() {
+go::is_go_installed() {
 
     if ! cmd_exists "go"; then
         return 1
@@ -16,7 +16,7 @@ is_go_installed() {
 
 }
 
-go_install() {
+go::go_install() {
 
     local package="$1"
     local PACKAGE_READABLE_NAME
@@ -40,3 +40,11 @@ go_install() {
     fi
 
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+is_go_installed() { go::is_go_installed "$@"; }
+go_install() { go::go_install "$@"; }

@@ -8,25 +8,25 @@ smu::import base
 
 # fisher functions
 
-does_fish_plugins_exist() {
+fisher::does_fish_plugins_exist() {
 
     [[ -f fish_plugins ]] || [[ -f "$HOME"/.config/fish/fish_plugins ]]
 
 }
 
-is_fisher_installed() {
+fisher::is_fisher_installed() {
 
     fish_cmd_exists "fisher" && does_fish_plugins_exist
 
 }
 
-is_fisher_pkg_installed() {
+fisher::is_fisher_pkg_installed() {
 
     does_fish_plugins_exist && fish -c "fisher list | grep $1" &> /dev/null
 
 }
 
-fisher_install() {
+fisher::fisher_install() {
 
     declare -r PACKAGE="$1"
 
@@ -46,7 +46,7 @@ fisher_install() {
 
 }
 
-fisher_install_from_file() {
+fisher::fisher_install_from_file() {
 
     # Check if `fisher` is installed.
 
@@ -73,7 +73,7 @@ fisher_install_from_file() {
     fi
 }
 
-fisher_update() {
+fisher::fisher_update() {
 
     # Check if `fisher` is installed.
 
@@ -86,3 +86,15 @@ fisher_update() {
     fish -c "fisher update"
 
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+does_fish_plugins_exist() { fisher::does_fish_plugins_exist "$@"; }
+is_fisher_installed() { fisher::is_fisher_installed "$@"; }
+is_fisher_pkg_installed() { fisher::is_fisher_pkg_installed "$@"; }
+fisher_install() { fisher::fisher_install "$@"; }
+fisher_install_from_file() { fisher::fisher_install_from_file "$@"; }
+fisher_update() { fisher::fisher_update "$@"; }

@@ -8,7 +8,7 @@ smu::import base
 
 # pyenv functions
 
-is_pyenv_installed() {
+pyenv::is_pyenv_installed() {
 
     if ! cmd_exists "pyenv"; then
         return 1
@@ -16,7 +16,7 @@ is_pyenv_installed() {
 
 }
 
-is_pyenv_plugin_installed() {
+pyenv::is_pyenv_plugin_installed() {
 
     local PLUGIN_READABLE_NAME="$1"
     local PYENV_PLUGINS_DIRECTORY="$HOME/.pyenv/plugins/"
@@ -29,7 +29,7 @@ is_pyenv_plugin_installed() {
 
 }
 
-pyenv_install() {
+pyenv::pyenv_install() {
 
     local PLUGIN_GIT_URL="$1"
     local PLUGIN_READABLE_NAME
@@ -65,3 +65,12 @@ pyenv_install() {
     fi
 
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+is_pyenv_installed() { pyenv::is_pyenv_installed "$@"; }
+is_pyenv_plugin_installed() { pyenv::is_pyenv_plugin_installed "$@"; }
+pyenv_install() { pyenv::pyenv_install "$@"; }

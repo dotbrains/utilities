@@ -8,7 +8,7 @@ smu::import base
 
 # brew functions
 
-get_brew_default_path() {
+brew::get_brew_default_path() {
 
     local path=""
 
@@ -32,7 +32,7 @@ get_brew_default_path() {
 
 }
 
-initialize_brew() {
+brew::initialize_brew() {
 
     # Manually initialize Homebrew if it is not already initialized
 
@@ -64,7 +64,7 @@ initialize_brew() {
 
 }
 
-is_brew_installed() {
+brew::is_brew_installed() {
 
     # Attempt to initialize brew in the current shell context
     # If brew truly is not installed, preceding existence check will fail
@@ -82,7 +82,7 @@ is_brew_installed() {
 
 }
 
-brew_cleanup() {
+brew::brew_cleanup() {
 
     # By default brew does not uninstall older versions
     # of formulas so, in order to remove them, `brew cleanup`
@@ -96,7 +96,7 @@ brew_cleanup() {
 
 use_python3=false # Set a default value for use_python3
 
-show_help() {
+brew::show_help() {
 
     echo "Usage: $0 [-f file_path] [-p]"
     echo "  -f, --file    Path to the Brewfile"
@@ -104,7 +104,7 @@ show_help() {
     echo "  -h, --help    Display this help message"
 }
 
-reset_args() {
+brew::reset_args() {
 
     file_path=""
     use_python3=false
@@ -114,7 +114,7 @@ reset_args() {
 
 }
 
-parse_args() {
+brew::parse_args() {
 
     while [[ "$#" -gt 0 ]]; do
         case "$1" in
@@ -154,7 +154,7 @@ parse_args() {
 
 }
 
-brew_bundle_install() {
+brew::brew_bundle_install() {
 
     # Get current directory path relative to this script
     local script_dir=""
@@ -215,7 +215,7 @@ brew_bundle_install() {
 
 }
 
-brew_install() {
+brew::brew_install() {
 
     declare -r CMD="$3"
     declare -r FORMULA="$1"
@@ -248,7 +248,7 @@ brew_install() {
 
 }
 
-brew_prefix() {
+brew::brew_prefix() {
 
     local path=""
 
@@ -269,7 +269,7 @@ brew_prefix() {
 
 }
 
-brew_tap() {
+brew::brew_tap() {
 
     # Check if `brew` is installed.
 
@@ -281,7 +281,7 @@ brew_tap() {
 
 }
 
-brew_update() {
+brew::brew_update() {
 
     # Check if `brew` is installed.
 
@@ -293,13 +293,13 @@ brew_update() {
 
 }
 
-brew_upgrade() {
+brew::brew_upgrade() {
 
     brew upgrade
 
 }
 
-brew_upgrade_formulae() {
+brew::brew_upgrade_formulae() {
 
     # Check if `brew` is installed.
 
@@ -310,3 +310,23 @@ brew_upgrade_formulae() {
     brew upgrade "$2"
 
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+get_brew_default_path() { brew::get_brew_default_path "$@"; }
+initialize_brew() { brew::initialize_brew "$@"; }
+is_brew_installed() { brew::is_brew_installed "$@"; }
+brew_cleanup() { brew::brew_cleanup "$@"; }
+show_help() { brew::show_help "$@"; }
+reset_args() { brew::reset_args "$@"; }
+parse_args() { brew::parse_args "$@"; }
+brew_bundle_install() { brew::brew_bundle_install "$@"; }
+brew_install() { brew::brew_install "$@"; }
+brew_prefix() { brew::brew_prefix "$@"; }
+brew_tap() { brew::brew_tap "$@"; }
+brew_update() { brew::brew_update "$@"; }
+brew_upgrade() { brew::brew_upgrade "$@"; }
+brew_upgrade_formulae() { brew::brew_upgrade_formulae "$@"; }

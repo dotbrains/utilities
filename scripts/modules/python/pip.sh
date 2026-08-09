@@ -8,7 +8,7 @@ smu::import base
 
 # pip functions
 
-is_pip_installed() {
+pip::is_pip_installed() {
 
     if ! cmd_exists "pip"; then
         return 1
@@ -16,13 +16,13 @@ is_pip_installed() {
 
 }
 
-is_pip_pkg_installed() {
+pip::is_pip_pkg_installed() {
 
     pip list | grep "$1" > /dev/null 2>&1
 
 }
 
-pip_install() {
+pip::pip_install() {
 
     declare -r PACKAGE="$1"
 
@@ -40,7 +40,7 @@ pip_install() {
 
 }
 
-pip_install_from_file() {
+pip::pip_install_from_file() {
 
     declare -r FILE_PATH="$1"
 
@@ -61,3 +61,13 @@ pip_install_from_file() {
     fi
 
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+is_pip_installed() { pip::is_pip_installed "$@"; }
+is_pip_pkg_installed() { pip::is_pip_pkg_installed "$@"; }
+pip_install() { pip::pip_install "$@"; }
+pip_install_from_file() { pip::pip_install_from_file "$@"; }

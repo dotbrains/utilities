@@ -34,7 +34,7 @@ fi
 SMU_IMPORT_LOADED="true"
 
 # Version
-export UTILITIES_VERSION="1.2.0"
+export UTILITIES_VERSION="1.3.0"
 
 # Configuration
 UTILITIES_DEBUG="${UTILITIES_DEBUG:-false}"

@@ -7,7 +7,7 @@ smu::import base
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-function install_from_URL {
+function darwin::install_from_URL {
 
   set -x
 
@@ -87,7 +87,7 @@ function install_from_URL {
 }
 
 # see: https://apple.stackexchange.com/a/311511/291269
-function install_dmg {
+function darwin::install_dmg {
 
   set -x
 
@@ -130,7 +130,7 @@ function install_dmg {
 
 # dock.sh - contributed by @rpavlick
 # https://github.com/rpavlick/add_to_dock
-function add_app_to_dock {
+function darwin::add_app_to_dock {
   # adds an application to macOS Dock
   # usage: add_app_to_dock "Application Name"
   # example add_app_to_dock "Terminal"
@@ -146,7 +146,7 @@ function add_app_to_dock {
   fi
 }
 
-function add_folder_to_dock {
+function darwin::add_folder_to_dock {
   # adds a folder to macOS Dock
   # usage: add_folder_to_dock "Folder Path" -s n -d n -v n
   # example: add_folder_to_dock "~/Downloads" -d 0 -s 2 -v 1
@@ -211,21 +211,34 @@ function add_folder_to_dock {
   fi
 }
 
-function add_spacer_to_dock {
+function darwin::add_spacer_to_dock {
   # adds an empty space to macOS Dock
 
   defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="small-spacer-tile";}'
 }
 
-function clear_dock {
+function darwin::clear_dock {
   # removes all persistent icons from macOS Dock
 
   defaults write com.apple.dock persistent-apps -array
 }
 
-function reset_dock {
+function darwin::reset_dock {
   # reset macOS Dock to default settings
 
   defaults write com.apple.dock
   killall Dock
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+install_from_URL() { darwin::install_from_URL "$@"; }
+install_dmg() { darwin::install_dmg "$@"; }
+add_app_to_dock() { darwin::add_app_to_dock "$@"; }
+add_folder_to_dock() { darwin::add_folder_to_dock "$@"; }
+add_spacer_to_dock() { darwin::add_spacer_to_dock "$@"; }
+clear_dock() { darwin::clear_dock "$@"; }
+reset_dock() { darwin::reset_dock "$@"; }

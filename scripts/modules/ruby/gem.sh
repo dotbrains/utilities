@@ -8,7 +8,7 @@ smu::import base
 
 # gem functions
 
-is_ruby_installed() {
+gem::is_ruby_installed() {
 
     if ! cmd_exists "gem"; then
         return 1
@@ -16,7 +16,7 @@ is_ruby_installed() {
 
 }
 
-gem_install() {
+gem::gem_install() {
 
     local gem="$1"
 
@@ -33,3 +33,11 @@ gem_install() {
     fi
 
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+is_ruby_installed() { gem::is_ruby_installed "$@"; }
+gem_install() { gem::gem_install "$@"; }

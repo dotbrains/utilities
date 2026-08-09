@@ -8,7 +8,7 @@ smu::import base
 
 # omf functions
 
-is_omf_installed() {
+omf::is_omf_installed() {
 
     if ! fish_cmd_exists "omf" && [[ ! -d "$HOME/.local/share/omf" ]]; then
         return 1
@@ -16,13 +16,13 @@ is_omf_installed() {
 
 }
 
-is_omf_pkg_installed() {
+omf::is_omf_pkg_installed() {
 
     fish -c "omf list | grep $1" &> /dev/null
 
 }
 
-omf_install() {
+omf::omf_install() {
 
     declare -r PACKAGE="$1"
 
@@ -42,7 +42,7 @@ omf_install() {
 
 }
 
-omf_install_from_file() {
+omf::omf_install_from_file() {
 
     declare -r FILE_PATH="$1"
 
@@ -64,7 +64,7 @@ omf_install_from_file() {
 
 }
 
-omf_update() {
+omf::omf_update() {
 
     # Check if `omf` is installed.
 
@@ -77,3 +77,14 @@ omf_update() {
     fish -c "omf update"
 
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+is_omf_installed() { omf::is_omf_installed "$@"; }
+is_omf_pkg_installed() { omf::is_omf_pkg_installed "$@"; }
+omf_install() { omf::omf_install "$@"; }
+omf_install_from_file() { omf::omf_install_from_file "$@"; }
+omf_update() { omf::omf_update "$@"; }

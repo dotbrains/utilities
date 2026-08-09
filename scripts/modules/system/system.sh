@@ -9,7 +9,7 @@ smu::import base
 
 # System functions
 
-add_to_path_if_not_exists() {
+system::add_to_path_if_not_exists() {
 
     local new_path=$1
     # shellcheck disable=SC2034
@@ -31,7 +31,7 @@ add_to_path_if_not_exists() {
 
 }
 
-is_debian() {
+system::is_debian() {
 
     if [[ "$(uname -s)" == "Linux" ]]; then
         if [[ -e "/etc/debian_version" ]]; then
@@ -43,7 +43,7 @@ is_debian() {
 
 }
 
-is_macos() {
+system::is_macos() {
 
     # returns true if the OS is macOS
 
@@ -51,7 +51,7 @@ is_macos() {
 
 }
 
-is_arch_linux() {
+system::is_arch_linux() {
 
     # returns true if the OS is Arch Linux
 
@@ -59,13 +59,13 @@ is_arch_linux() {
 
 }
 
-read_kernel_name() {
+system::read_kernel_name() {
 
     uname -s
 
 }
 
-read_os_name() {
+system::read_os_name() {
 
     local kernelName=""
 
@@ -89,7 +89,7 @@ read_os_name() {
 
 }
 
-read_os_version() {
+system::read_os_version() {
 
     local kernelName=""
 
@@ -113,7 +113,7 @@ read_os_version() {
 
 }
 
-get_os() {
+system::get_os() {
 
     local os=""
     local kernelName=""
@@ -142,13 +142,13 @@ get_os() {
 
 }
 
-get_os_version() {
+system::get_os_version() {
 
 	printf "%s" "$(read_os_version)"
 
 }
 
-is_supported_version() {
+system::is_supported_version() {
 
     declare -a v1=("${1//./ }")
     declare -a v2=("${2//./ }")
@@ -176,14 +176,14 @@ is_supported_version() {
 
 }
 
-set_trap() {
+system::set_trap() {
 
     trap -p "$1" | grep "$2" &>/dev/null ||
         trap '$2' "$1"
 
 }
 
-symlink() {
+system::symlink() {
 
     local sourceFile=""
     local targetFile=""
@@ -215,7 +215,7 @@ symlink() {
 
 }
 
-cmd_exists() {
+system::cmd_exists() {
 
     LOCAL_BASH_CONFIG_FILE="$HOME/.bash.local"
 
@@ -233,7 +233,7 @@ cmd_exists() {
 
 }
 
-mkd() {
+system::mkd() {
 
     if [[ -n "$1" ]]; then
         if [[ -e "$1" ]]; then
@@ -249,7 +249,7 @@ mkd() {
 
 }
 
-set_default_shell() {
+system::set_default_shell() {
 
     declare -r EXECUTABLE_PATH="$1"
 
@@ -269,7 +269,7 @@ set_default_shell() {
 # USAGE: append_to_bashrc "source $HOME/.asdf/asdf.sh" 1
 # If "1" is present, then it will skip a new line in the file.
 # see: https://github.com/thoughtbot/laptop/blob/master/mac#L14:1
-append_to_bashrc() {
+system::append_to_bashrc() {
 
     local text="$1"
     local skip_new_line="${2:-0}"
@@ -292,7 +292,7 @@ append_to_bashrc() {
 }
 
 # extract any type of compressed file
-function extract {
+function system::extract {
 
     echo Extracting "$1" ...
     if [[ -f "$1" ]]; then
@@ -317,7 +317,7 @@ function extract {
 }
 
 #see: https://stackoverflow.com/a/8106460/5290011
-add_cron_job() {
+system::add_cron_job() {
 
     local FREQUENCY="$1"
     local CMD="$2"
@@ -328,7 +328,7 @@ add_cron_job() {
 
 }
 
-uncomment_str() {
+system::uncomment_str() {
 
 	FILE="$1"
 	KEY="$2"
@@ -342,7 +342,7 @@ uncomment_str() {
 }
 
 # see: https://unix.stackexchange.com/a/416596/173825
-add_value_and_uncomment() {
+system::add_value_and_uncomment() {
 
 	FILE="$1"
 	KEY="$2"
@@ -356,7 +356,7 @@ add_value_and_uncomment() {
 
 }
 
-replace_str() {
+system::replace_str() {
 
 	FILE="$1"
 	KEY="$2"
@@ -371,7 +371,7 @@ replace_str() {
 
 }
 
-jq_replace() {
+system::jq_replace() {
 
 	x="$1"
 	field="$2"
@@ -397,3 +397,31 @@ jq_replace() {
 	fi
 
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+add_to_path_if_not_exists() { system::add_to_path_if_not_exists "$@"; }
+is_debian() { system::is_debian "$@"; }
+is_macos() { system::is_macos "$@"; }
+is_arch_linux() { system::is_arch_linux "$@"; }
+read_kernel_name() { system::read_kernel_name "$@"; }
+read_os_name() { system::read_os_name "$@"; }
+read_os_version() { system::read_os_version "$@"; }
+get_os() { system::get_os "$@"; }
+get_os_version() { system::get_os_version "$@"; }
+is_supported_version() { system::is_supported_version "$@"; }
+set_trap() { system::set_trap "$@"; }
+symlink() { system::symlink "$@"; }
+cmd_exists() { system::cmd_exists "$@"; }
+mkd() { system::mkd "$@"; }
+set_default_shell() { system::set_default_shell "$@"; }
+append_to_bashrc() { system::append_to_bashrc "$@"; }
+extract() { system::extract "$@"; }
+add_cron_job() { system::add_cron_job "$@"; }
+uncomment_str() { system::uncomment_str "$@"; }
+add_value_and_uncomment() { system::add_value_and_uncomment "$@"; }
+replace_str() { system::replace_str "$@"; }
+jq_replace() { system::jq_replace "$@"; }

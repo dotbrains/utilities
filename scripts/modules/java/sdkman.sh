@@ -8,7 +8,7 @@ smu::import base
 
 # sdkman functions
 
-is_sdkman_installed() {
+sdkman::is_sdkman_installed() {
 
     if ! cmd_exists "sdk"; then
         return 1
@@ -16,7 +16,7 @@ is_sdkman_installed() {
 
 }
 
-sdk_install() {
+sdkman::sdk_install() {
 
     local -r candidate="${1}"
 
@@ -32,7 +32,7 @@ sdk_install() {
 
 }
 
-set_default_sdk() {
+sdkman::set_default_sdk() {
 
     local -r candidate="${1}"
     local -r version="${2}"
@@ -42,3 +42,12 @@ set_default_sdk() {
     sdk default "$candidate" "$version"
 
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+is_sdkman_installed() { sdkman::is_sdkman_installed "$@"; }
+sdk_install() { sdkman::sdk_install "$@"; }
+set_default_sdk() { sdkman::set_default_sdk "$@"; }

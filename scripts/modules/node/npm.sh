@@ -8,7 +8,7 @@ smu::import base
 
 # npm functions
 
-is_npm_installed() {
+npm::is_npm_installed() {
 
     if ! cmd_exists "npm"; then
         return 1
@@ -16,7 +16,7 @@ is_npm_installed() {
 
 }
 
-is_npx_installed() {
+npm::is_npx_installed() {
 
     if ! cmd_exists "npx"; then
         return 1
@@ -24,7 +24,7 @@ is_npx_installed() {
 
 }
 
-is_npm_pkg_installed() {
+npm::is_npm_pkg_installed() {
 
     local LOCAL_BASH_CONFIG_FILE="$HOME/.bash.local"
 
@@ -35,7 +35,7 @@ is_npm_pkg_installed() {
 
 }
 
-is_yarn_pkg_installed() {
+npm::is_yarn_pkg_installed() {
 
     local LOCAL_BASH_CONFIG_FILE="$HOME/.bash.local"
 
@@ -46,7 +46,7 @@ is_yarn_pkg_installed() {
 
 }
 
-sudo_npm_install() {
+npm::sudo_npm_install() {
 
     declare -r PACKAGE="$1"
 
@@ -76,7 +76,7 @@ sudo_npm_install() {
 }
 
 
-npm_install() {
+npm::npm_install() {
 
     declare -r PACKAGE="$1"
 
@@ -105,7 +105,7 @@ npm_install() {
 
 }
 
-npx_install() {
+npm::npx_install() {
 
     declare -r PACKAGE="$1"
 
@@ -128,7 +128,7 @@ npx_install() {
 
 }
 
-npm_install_from_file() {
+npm::npm_install_from_file() {
 
     declare -r FILE_PATH="$1"
 
@@ -149,3 +149,17 @@ npm_install_from_file() {
     fi
 
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+is_npm_installed() { npm::is_npm_installed "$@"; }
+is_npx_installed() { npm::is_npx_installed "$@"; }
+is_npm_pkg_installed() { npm::is_npm_pkg_installed "$@"; }
+is_yarn_pkg_installed() { npm::is_yarn_pkg_installed "$@"; }
+sudo_npm_install() { npm::sudo_npm_install "$@"; }
+npm_install() { npm::npm_install "$@"; }
+npx_install() { npm::npx_install "$@"; }
+npm_install_from_file() { npm::npm_install_from_file "$@"; }

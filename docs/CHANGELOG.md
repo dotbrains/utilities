@@ -124,6 +124,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   dependencies from `master`); load modules through `import.sh` or
   `utilities.sh` instead
 
+## [1.3.0] - 2026-08-09
+
+### Added
+
+- Namespaced function names: every library function is now defined as
+  `<module>::<name>` (e.g. `base::execute`, `system::cmd_exists`,
+  `brew::brew_install`, `apt::install_package`), eliminating name
+  collisions between modules (e.g. `apt::install_package` vs
+  `pacman::install_package`)
+- Integration test covering namespaced names and legacy shims
+
+### Changed
+
+- All pre-1.3.0 unnamespaced names remain available as one-line shims
+  that delegate to the namespaced functions; existing consumers keep
+  working unchanged. New code should prefer the namespaced names.
+- `set_github_ssh_key.sh` is unchanged (it is a standalone script, not
+  library API)
+
 ## [Unreleased]
 
 ### Planned
@@ -133,6 +152,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[1.3.0]: https://github.com/dotbrains/utilities/releases/tag/v1.3.0
 [1.2.0]: https://github.com/dotbrains/utilities/releases/tag/v1.2.0
 [1.1.1]: https://github.com/dotbrains/utilities/releases/tag/v1.1.1
 [1.1.0]: https://github.com/dotbrains/utilities/releases/tag/v1.1.0

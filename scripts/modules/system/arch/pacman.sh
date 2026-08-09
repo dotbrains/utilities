@@ -9,7 +9,7 @@ smu::import base
 
 # Pacman functions for Arch Linux
 
-pacman_update() {
+pacman::pacman_update() {
 
 	# Synchronize the package databases.
 
@@ -17,7 +17,7 @@ pacman_update() {
 
 }
 
-pacman_upgrade() {
+pacman::pacman_upgrade() {
 
 	# Upgrade all packages that are out of date.
 
@@ -25,19 +25,19 @@ pacman_upgrade() {
 
 }
 
-package_is_installed() {
+pacman::package_is_installed() {
 
 	pacman -Qi "$1" &> /dev/null
 
 }
 
-aur_helper_is_installed() {
+pacman::aur_helper_is_installed() {
 
 	command -v "$1" &> /dev/null
 
 }
 
-auto_remove() {
+pacman::auto_remove() {
 
 	# Remove packages that were installed as dependencies
 	# and are no longer required by any package.
@@ -51,7 +51,7 @@ auto_remove() {
 
 }
 
-remove_package() {
+pacman::remove_package() {
 
 	declare -r PACKAGE="$1"
 
@@ -63,7 +63,7 @@ remove_package() {
 
 }
 
-install_package() {
+pacman::install_package() {
 
 	declare -r PACKAGE="$1"
 
@@ -75,7 +75,7 @@ install_package() {
 
 }
 
-install_aur_package() {
+pacman::install_aur_package() {
 
 	declare -r PACKAGE="$1"
 	declare -r AUR_HELPER="${2:-yay}" # Default to yay if not specified
@@ -96,7 +96,7 @@ install_aur_package() {
 
 }
 
-pacman_install_from_file() {
+pacman::pacman_install_from_file() {
 
 	declare -r FILE_PATH="$1"
 
@@ -138,3 +138,18 @@ pacman_install_from_file() {
 	fi
 
 }
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Backwards-compatible aliases (pre-1.3.0 unnamespaced names).
+# New code should call the namespaced functions above.
+
+pacman_update() { pacman::pacman_update "$@"; }
+pacman_upgrade() { pacman::pacman_upgrade "$@"; }
+package_is_installed() { pacman::package_is_installed "$@"; }
+aur_helper_is_installed() { pacman::aur_helper_is_installed "$@"; }
+auto_remove() { pacman::auto_remove "$@"; }
+remove_package() { pacman::remove_package "$@"; }
+install_package() { pacman::install_package "$@"; }
+install_aur_package() { pacman::install_aur_package "$@"; }
+pacman_install_from_file() { pacman::pacman_install_from_file "$@"; }

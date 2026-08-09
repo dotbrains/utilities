@@ -29,7 +29,11 @@ main() {
         -e SC2155 \
         -e SC2164 \
         -e SC2009 \
+        -e SC2119 \
+        -e SC2120 \
         {} +
+        # SC2119/SC2120 are false positives triggered by the
+        # backwards-compatible shims (`foo() { ns::foo "$@"; }`).
 
 }
 

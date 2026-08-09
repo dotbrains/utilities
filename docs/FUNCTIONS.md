@@ -2,6 +2,11 @@
 
 Complete alphabetical index of all available functions across all modules.
 
+Since 1.3.0 every function listed here is also defined under its module
+namespace (`base::execute`, `system::cmd_exists`, `apt::install_package`,
+…). The unnamespaced names below are kept as compatibility shims; new
+code should prefer the namespaced form.
+
 ## Base Module
 
 | Function | Description | Module |
