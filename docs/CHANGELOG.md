@@ -90,6 +90,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed `test/` directory to `tests/` for better naming convention
 - Updated all references to test scripts in documentation and CI workflows
 
+## [1.2.0] - 2026-08-09
+
+### Added
+
+- `import.sh`: import-based library entry point defining `smu::import`
+- Selective, file-granular module imports with idempotent loading
+  (each file is sourced at most once per shell)
+- Module dependency declarations: every module file declares its own
+  dependencies via `smu::import` (e.g. `homebrew` pulls in `base`)
+- Remote fetches are pinned to the release tag matching
+  `UTILITIES_VERSION`, with fallback to `master` and override via
+  `UTILITIES_REF`
+- Integration tests for no-side-effect sourcing, selective import,
+  idempotent import, and unknown-module errors
+
+### Changed
+
+- `utilities.sh` is now a thin backwards-compatible facade over
+  `import.sh`; sourcing it still loads the full library filtered by
+  `UTILITIES_MODULES`
+- Module files no longer download `base/base.sh` from `master` at
+  source time; the embedded `curl` calls were replaced with
+  `smu::import` declarations (removes ~20 network calls per load and
+  the unpinned dependency on `master`)
+- `source_file()` in the network module now resolves through the
+  importer (local checkout, cache, then pinned remote)
+
+### Removed
+
+- Direct standalone sourcing of individual module files without the
+  importer (previously possible because each file self-downloaded its
+  dependencies from `master`); load modules through `import.sh` or
+  `utilities.sh` instead
+
 ## [Unreleased]
 
 ### Planned
@@ -99,6 +133,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[1.2.0]: https://github.com/dotbrains/utilities/releases/tag/v1.2.0
 [1.1.1]: https://github.com/dotbrains/utilities/releases/tag/v1.1.1
 [1.1.0]: https://github.com/dotbrains/utilities/releases/tag/v1.1.0
 [1.0.0]: https://github.com/dotbrains/utilities/releases/tag/v1.0.0

@@ -2,7 +2,13 @@
 
 # shellcheck source=/dev/null
 
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/master/scripts/base/base.sh")"
+# This file is a standalone script (it runs main at the bottom), so it
+# bootstraps the importer itself when executed directly.
+if ! declare -F smu::import >/dev/null 2>&1; then
+    source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)/import.sh"
+fi
+
+smu::import base
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

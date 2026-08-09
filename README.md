@@ -11,37 +11,68 @@ A curated collection of bash utility functions and modules for streamlined shell
 
 ## Overview
 
-This repository provides 20+ reusable bash functions organized into modules covering package managers, version control, programming languages, and system utilities. The entire library can be sourced with a single command, making it ideal for bootstrap scripts, dotfile management, and automation tasks.
+This repository provides 20+ reusable bash functions organized into modules covering package managers, version control, programming languages, and system utilities. The library is import-based: source `import.sh` once, then import only the modules a script actually needs — similar to selective imports in other languages.
 
-**Version:** 1.0.0
+**Version:** 1.2.0
 
 ## Quick Start
 
 ### Basic Usage
 
-Source the utilities in your bash script with a single command:
+Source `import.sh` and import the modules you need:
 
 ```bash
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/master/utilities.sh")"
+source "$HOME/set-me-up/dotfiles/utilities/import.sh"
+
+smu::import base
+smu::import homebrew
+```
+
+Sourcing `import.sh` has no side effects: it only defines the `smu::*`
+functions. Modules are loaded on `smu::import`, each file is sourced at
+most once, and modules declare their own dependencies (importing
+`homebrew` automatically loads `base`).
+
+Module resolution is local-first: a local checkout next to `import.sh`
+is used when present, then the cache (`UTILITIES_CACHE_DIR`), and only
+then a remote fetch pinned to the release matching `UTILITIES_VERSION`.
+
+### Remote Bootstrap
+
+Without a local checkout, bootstrap the importer remotely (pin to a tag
+for production use):
+
+```bash
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.2.0/import.sh")"
+
+smu::import base
 ```
 
 **Note:** The `/dev/stdin` syntax is required due to [bash 3.2 compatibility on macOS](https://stackoverflow.com/a/32596626/5290011).
 
-### Version Pinning (Recommended)
+### Legacy Facade
 
-For production use, pin to a specific version to ensure stability:
+Sourcing `utilities.sh` still works and loads the whole library
+(filtered by `UTILITIES_MODULES`), preserving the historical behavior
+for existing consumers:
 
 ```bash
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.0.0/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.2.0/utilities.sh")"
 ```
+
+New scripts should prefer `import.sh` with explicit imports.
 
 ### Example Script
 
 ```bash
 #!/bin/bash
 
-# Load utilities
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.0.0/utilities.sh")"
+# Load only what this script uses
+source "$HOME/set-me-up/dotfiles/utilities/import.sh"
+
+smu::import base
+smu::import system
+smu::import homebrew
 
 # Use utility functions
 bot "Starting setup..."
@@ -125,11 +156,35 @@ source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/uti
 
 ### Selective Module Loading
 
-Load only specific modules for faster sourcing:
+Prefer explicit imports per script:
+
+```bash
+source "$HOME/set-me-up/dotfiles/utilities/import.sh"
+
+smu::import homebrew
+smu::import git
+```
+
+Fine-grained names are also supported (e.g. `smu::import pip3` instead
+of the whole `python` group, or a path such as
+`smu::import homebrew/brew`).
+
+When using the legacy `utilities.sh` facade, `UTILITIES_MODULES` filters
+which module groups are loaded:
 
 ```bash
 export UTILITIES_MODULES="homebrew,git"
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.0.0/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.2.0/utilities.sh")"
+```
+
+### Pinning the Remote Ref
+
+Remote fetches are pinned to the release tag matching
+`UTILITIES_VERSION` (falling back to `master` when the tag is
+unavailable). Override with `UTILITIES_REF`:
+
+```bash
+export UTILITIES_REF="v1.2.0"
 ```
 
 ### Local Caching
@@ -138,7 +193,7 @@ Cache scripts locally to improve performance and enable offline usage:
 
 ```bash
 export UTILITIES_CACHE_DIR="$HOME/.cache/dotbrains/utilities"
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.0.0/utilities.sh")"
+source "$HOME/set-me-up/dotfiles/utilities/import.sh"
 ```
 
 ## Documentation

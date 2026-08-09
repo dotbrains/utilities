@@ -106,11 +106,11 @@ test_caching() {
     # Clean up any existing dirs
     rm -rf "$cache_dir" "$temp_dir"
     
-    # Copy only utilities.sh to an isolated temp dir (no scripts/ dir).
-    # This forces the remote download + caching code path, since
-    # source_file_from_utilities won't find local files alongside it.
+    # Copy only utilities.sh and import.sh to an isolated temp dir (no
+    # scripts/ dir). This forces the remote download + caching code path,
+    # since smu::load_file won't find local module files alongside them.
     mkdir -p "$temp_dir"
-    cp "$REPO_ROOT/utilities.sh" "$temp_dir/"
+    cp "$REPO_ROOT/utilities.sh" "$REPO_ROOT/import.sh" "$temp_dir/"
     
     # First run - should download from GitHub and populate cache
     bash -c "cd '$temp_dir' && export UTILITIES_CACHE_DIR='$cache_dir' && export UTILITIES_DEBUG=true && source utilities.sh" > /dev/null 2>&1
@@ -171,6 +171,83 @@ test_base_functions_available() {
     return 1
 }
 
+test_import_no_side_effects() {
+    # Sourcing import.sh alone must not load any module.
+    local output
+    output=$(bash -c "
+        cd '$REPO_ROOT' && source import.sh || exit 1
+        type smu::import >/dev/null 2>&1 || { echo 'missing smu::import'; exit 1; }
+        type execute >/dev/null 2>&1 && { echo 'base was loaded eagerly'; exit 1; }
+        echo 'No side effects'
+    ")
+
+    if [[ "$output" == "No side effects" ]]; then
+        echo "  import.sh defines smu::import without loading modules"
+        return 0
+    fi
+
+    echo "  $output"
+    return 1
+}
+
+test_selective_import() {
+    # Importing one module must not load the others.
+    local output
+    output=$(bash -c "
+        cd '$REPO_ROOT' && source import.sh && smu::import git || exit 1
+        type clone_git_repo_in >/dev/null 2>&1 || { echo 'git module missing'; exit 1; }
+        type brew_install >/dev/null 2>&1 && { echo 'homebrew should not be loaded'; exit 1; }
+        type execute >/dev/null 2>&1 || { echo 'base dependency of git missing'; exit 1; }
+        echo 'Selective import works'
+    ")
+
+    if [[ "$output" == "Selective import works" ]]; then
+        echo "  smu::import loads requested modules plus dependencies only"
+        return 0
+    fi
+
+    echo "  $output"
+    return 1
+}
+
+test_import_idempotent() {
+    # A module must only be sourced once, however many times it is
+    # imported (directly or as a dependency of another module).
+    local output
+    output=$(bash -c "
+        cd '$REPO_ROOT' && export UTILITIES_DEBUG=true
+        source import.sh && smu::import base && smu::import base && smu::import homebrew
+    " 2>&1)
+
+    local loads
+    loads=$(echo "$output" | grep -c "Loading: base/base.sh")
+
+    if [[ "$loads" -eq 1 ]]; then
+        echo "  base/base.sh sourced exactly once across repeated imports"
+        return 0
+    fi
+
+    echo "  Expected 1 load of base/base.sh, saw $loads"
+    return 1
+}
+
+test_import_unknown_module() {
+    local output
+    local exit_code=0
+
+    output=$(bash -c "
+        cd '$REPO_ROOT' && source import.sh
+        smu::import 'nonexistent/module'
+    " 2>&1) || exit_code=$?
+
+    if [[ $exit_code -ne 0 ]] || echo "$output" | grep -q "ERROR"; then
+        echo "  Unknown module import fails gracefully"
+        return 0
+    fi
+
+    return 1
+}
+
 test_error_handling() {
     # Test with invalid URL (simulated by using wrong branch)
     local output
@@ -211,6 +288,10 @@ main() {
     run_test "Selective module loading" test_selective_loading
     run_test "Caching mechanism" test_caching
     run_test "Base functions available" test_base_functions_available
+    run_test "import.sh has no side effects" test_import_no_side_effects
+    run_test "Selective smu::import" test_selective_import
+    run_test "Idempotent smu::import" test_import_idempotent
+    run_test "Unknown module import fails" test_import_unknown_module
     run_test "Error handling" test_error_handling || true  # Don't fail on this one
     
     # Summary
