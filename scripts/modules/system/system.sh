@@ -59,6 +59,14 @@ system::is_arch_linux() {
 
 }
 
+system::is_omarchy() {
+
+    # returns true if running on Omarchy (https://github.com/basecamp/omarchy)
+
+    [[ -d "/usr/share/omarchy" ]]
+
+}
+
 system::read_kernel_name() {
 
     uname -s
@@ -407,6 +415,7 @@ add_to_path_if_not_exists() { system::add_to_path_if_not_exists "$@"; }
 is_debian() { system::is_debian "$@"; }
 is_macos() { system::is_macos "$@"; }
 is_arch_linux() { system::is_arch_linux "$@"; }
+is_omarchy() { system::is_omarchy "$@"; }
 read_kernel_name() { system::read_kernel_name "$@"; }
 read_os_name() { system::read_os_name "$@"; }
 read_os_version() { system::read_os_version "$@"; }

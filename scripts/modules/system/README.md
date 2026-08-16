@@ -47,6 +47,12 @@ Check if running on Arch-based Linux.
 
 **Returns:** 0 if Arch Linux, 1 otherwise
 
+#### `is_omarchy()`
+
+Check if running on Omarchy (a Hyprland-based Arch Linux distribution).
+
+**Returns:** 0 if Omarchy, 1 otherwise
+
 #### `read_kernel_name()`
 
 Get the kernel name (Darwin, Linux, etc.).
