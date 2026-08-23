@@ -2,7 +2,7 @@
 
 # shellcheck source=/dev/null
 
-# import.sh - the library entry point for the dotbrains utilities.
+# import.sh - the library entry point for the smeltery utilities.
 #
 # Consumers source this file once and then import only the modules they
 # need, similar to selective imports in other languages:
@@ -40,7 +40,7 @@ export UTILITIES_VERSION="1.3.0"
 UTILITIES_DEBUG="${UTILITIES_DEBUG:-false}"
 UTILITIES_CACHE_DIR="${UTILITIES_CACHE_DIR:-}"
 UTILITIES_REF="${UTILITIES_REF:-v$UTILITIES_VERSION}"
-UTILITIES_REMOTE="${UTILITIES_REMOTE:-https://raw.githubusercontent.com/dotbrains/utilities}"
+UTILITIES_REMOTE="${UTILITIES_REMOTE:-https://raw.githubusercontent.com/smeltery/utilities}"
 
 # Registry of modules that have already been imported.
 # A space-delimited string keeps this compatible with bash 3.2 (macOS),

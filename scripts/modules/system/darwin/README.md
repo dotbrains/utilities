@@ -134,7 +134,7 @@ reset_dock
 #!/bin/bash
 
 # Load utilities
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/master/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/master/utilities.sh")"
 
 if is_macos; then
     action "Installing macOS applications"
@@ -154,7 +154,7 @@ fi
 #!/bin/bash
 
 # Load utilities
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/master/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/master/utilities.sh")"
 
 if is_macos; then
     action "Customizing Dock"
@@ -188,7 +188,7 @@ fi
 #!/bin/bash
 
 # Load utilities
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/master/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/master/utilities.sh")"
 
 if is_macos; then
     bot "Setting up macOS"

@@ -19,17 +19,17 @@ This library is designed to be sourced directly from GitHub via curl. While conv
 
 ```bash
 # Instead of master branch
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/master/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/master/utilities.sh")"
 
 # Use tagged releases
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.0.0/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/v1.0.0/utilities.sh")"
 ```
 
 **2. Review Code Before Use**
 
 ```bash
 # Download and review first
-curl -o utilities.sh "https://raw.githubusercontent.com/dotbrains/utilities/v1.0.0/utilities.sh"
+curl -o utilities.sh "https://raw.githubusercontent.com/smeltery/utilities/v1.0.0/utilities.sh"
 less utilities.sh  # Review the code
 
 # Then use it
@@ -44,7 +44,7 @@ For production or airgapped environments:
 # Cache locally
 mkdir -p "$HOME/.local/lib/utilities"
 cd "$HOME/.local/lib/utilities"
-git clone https://github.com/dotbrains/utilities.git
+git clone https://github.com/smeltery/utilities.git
 cd utilities
 git checkout v1.0.0  # Pin to specific version
 
@@ -58,8 +58,8 @@ Future releases may include checksums for verification:
 
 ```bash
 # Download
-curl -o utilities.sh "https://raw.githubusercontent.com/dotbrains/utilities/v1.0.0/utilities.sh"
-curl -o utilities.sh.sha256 "https://raw.githubusercontent.com/dotbrains/utilities/v1.0.0/utilities.sh.sha256"
+curl -o utilities.sh "https://raw.githubusercontent.com/smeltery/utilities/v1.0.0/utilities.sh"
+curl -o utilities.sh.sha256 "https://raw.githubusercontent.com/smeltery/utilities/v1.0.0/utilities.sh.sha256"
 
 # Verify
 sha256sum -c utilities.sh.sha256

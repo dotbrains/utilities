@@ -41,7 +41,7 @@ fi
 ```bash
 #!/bin/bash
 
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.0.0/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/v1.0.0/utilities.sh")"
 
 if ! is_ruby_installed; then
     error "Ruby not installed"

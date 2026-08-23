@@ -133,7 +133,7 @@ fix_broken_symlinks_in "/usr/local/bin"
 #!/bin/bash
 
 # Load utilities
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/master/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/master/utilities.sh")"
 
 # Check if running on Arch Linux
 if is_arch_linux; then

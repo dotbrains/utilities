@@ -4,10 +4,10 @@
       "pattern": "^http://localhost"
     },
     {
-      "pattern": "^https://raw.githubusercontent.com/dotbrains/utilities/(master|v\\d+\\.\\d+\\.\\d+)/"
+      "pattern": "^https://raw.githubusercontent.com/smeltery/utilities/(master|v\\d+\\.\\d+\\.\\d+)/"
     },
     {
-      "pattern": "^https://github.com/dotbrains/utilities/releases/tag/"
+      "pattern": "^https://github.com/smeltery/utilities/releases/tag/"
     },
     {
       "pattern": "^https://www.gnu.org/software/bash/"
@@ -22,7 +22,7 @@
   "replacementPatterns": [
     {
       "pattern": "^scripts/",
-      "replacement": "https://github.com/dotbrains/utilities/blob/master/scripts/"
+      "replacement": "https://github.com/smeltery/utilities/blob/master/scripts/"
     }
   ],
   "httpHeaders": [

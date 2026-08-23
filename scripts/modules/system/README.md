@@ -343,7 +343,7 @@ add_cron_job "0 2 * * *" "~/scripts/backup.sh"
 ```bash
 #!/bin/bash
 
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.0.0/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/v1.0.0/utilities.sh")"
 
 OS=$(get_os)
 case "$OS" in
@@ -375,7 +375,7 @@ success "Environment validated"
 ```bash
 #!/bin/bash
 
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.0.0/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/v1.0.0/utilities.sh")"
 
 # Create directory structure
 mkd "$HOME/.config/myapp"

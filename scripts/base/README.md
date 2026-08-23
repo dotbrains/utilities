@@ -439,7 +439,7 @@ echo -e "${bold}Important${normal}"
 ```bash
 #!/bin/bash
 
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.0.0/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/v1.0.0/utilities.sh")"
 
 bot "Starting installation"
 
@@ -465,7 +465,7 @@ ok "Installation complete!"
 ```bash
 #!/bin/bash
 
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.0.0/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/v1.0.0/utilities.sh")"
 
 # Skip prompts if -y flag present
 if skip_questions "$@"; then

@@ -121,7 +121,7 @@ mas "Xcode", id: 497799835
 ```bash
 #!/bin/bash
 
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.0.0/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/v1.0.0/utilities.sh")"
 
 if ! is_brew_installed; then
     error "Homebrew not installed"
@@ -141,7 +141,7 @@ brew_cleanup
 ```bash
 #!/bin/bash
 
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.0.0/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/v1.0.0/utilities.sh")"
 
 if is_macos; then
     if is_brew_installed; then
@@ -166,7 +166,7 @@ fi
 ```bash
 #!/bin/bash
 
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.0.0/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/v1.0.0/utilities.sh")"
 
 # Use Python script for advanced processing
 brew_bundle_install -f "Brewfile.extended" -p

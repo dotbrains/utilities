@@ -49,7 +49,7 @@ fi
 ```bash
 #!/bin/bash
 
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.0.0/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/v1.0.0/utilities.sh")"
 
 # Clone dotfiles if not present
 DOTFILES_DIR="$HOME/.dotfiles"

@@ -261,7 +261,7 @@ fix_broken_symlinks_in "/usr/local/bin"
 #!/bin/bash
 
 # Load utilities
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/master/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/master/utilities.sh")"
 
 if is_debian; then
     action "Updating system"
@@ -286,7 +286,7 @@ fi
 #!/bin/bash
 
 # Load utilities
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/master/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/master/utilities.sh")"
 
 if is_debian; then
     bot "Setting up development environment"
@@ -332,7 +332,7 @@ fi
 #!/bin/bash
 
 # Load utilities
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/master/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/master/utilities.sh")"
 
 if is_debian; then
     bot "Installing packages from file"

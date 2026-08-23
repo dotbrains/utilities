@@ -1,8 +1,8 @@
 # Utilities
 
-[![Tests](https://github.com/dotbrains/utilities/actions/workflows/tests.yml/badge.svg)](https://github.com/dotbrains/utilities/actions/workflows/tests.yml)
-[![Lint](https://github.com/dotbrains/utilities/actions/workflows/lint.yml/badge.svg)](https://github.com/dotbrains/utilities/actions/workflows/lint.yml)
-[![Release](https://img.shields.io/github/v/release/dotbrains/utilities)](https://github.com/dotbrains/utilities/releases/latest)
+[![Tests](https://github.com/smeltery/utilities/actions/workflows/tests.yml/badge.svg)](https://github.com/smeltery/utilities/actions/workflows/tests.yml)
+[![Lint](https://github.com/smeltery/utilities/actions/workflows/lint.yml/badge.svg)](https://github.com/smeltery/utilities/actions/workflows/lint.yml)
+[![Release](https://img.shields.io/github/v/release/smeltery/utilities)](https://github.com/smeltery/utilities/releases/latest)
 [![License: PolyForm Shield 1.0.0](https://img.shields.io/badge/License-PolyForm%20Shield%201.0.0-blue.svg)](https://polyformproject.org/licenses/shield/1.0.0)
 [![Shell](https://img.shields.io/badge/shell-bash%203.2%2B-blue)](https://www.gnu.org/software/bash/)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-black)](#platform-support)
@@ -52,7 +52,7 @@ Without a local checkout, bootstrap the importer remotely (pin to a tag
 for production use):
 
 ```bash
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.3.0/import.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/v1.3.0/import.sh")"
 
 smu::import base
 ```
@@ -66,7 +66,7 @@ Sourcing `utilities.sh` still works and loads the whole library
 for existing consumers:
 
 ```bash
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.3.0/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/v1.3.0/utilities.sh")"
 ```
 
 New scripts should prefer `import.sh` with explicit imports.
@@ -160,7 +160,7 @@ Enable verbose logging to see which modules are being loaded:
 
 ```bash
 export UTILITIES_DEBUG=true
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.0.0/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/v1.0.0/utilities.sh")"
 ```
 
 ### Selective Module Loading
@@ -183,7 +183,7 @@ which module groups are loaded:
 
 ```bash
 export UTILITIES_MODULES="homebrew,git"
-source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/dotbrains/utilities/v1.3.0/utilities.sh")"
+source /dev/stdin <<<"$(curl -s "https://raw.githubusercontent.com/smeltery/utilities/v1.3.0/utilities.sh")"
 ```
 
 ### Pinning the Remote Ref
@@ -201,7 +201,7 @@ export UTILITIES_REF="v1.3.0"
 Cache scripts locally to improve performance and enable offline usage:
 
 ```bash
-export UTILITIES_CACHE_DIR="$HOME/.cache/dotbrains/utilities"
+export UTILITIES_CACHE_DIR="$HOME/.cache/smeltery/utilities"
 source "$HOME/set-me-up/dotfiles/utilities/import.sh"
 ```
 

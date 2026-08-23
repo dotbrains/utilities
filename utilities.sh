@@ -30,7 +30,7 @@ UTILITIES_MODULES="${UTILITIES_MODULES:-all}"
 if [[ -z "${SMU_IMPORT_LOADED:-}" ]]; then
 
     smu_bootstrap_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)"
-    smu_bootstrap_remote="${UTILITIES_REMOTE:-https://raw.githubusercontent.com/dotbrains/utilities}"
+    smu_bootstrap_remote="${UTILITIES_REMOTE:-https://raw.githubusercontent.com/smeltery/utilities}"
     smu_bootstrap_ref="${UTILITIES_REF:-master}"
     smu_bootstrap_url="$smu_bootstrap_remote/$smu_bootstrap_ref/import.sh"
 
